@@ -1,0 +1,16 @@
+PROJECT MEETING LOG
+===================
+
+Date: 9/3/25
+Time: 5:35PM - 6:25PM
+Duration: 50 Mins
+Attendees: Zang, Stephen, Dylan, Harry, Nathan
+Notes: Prepared for presentation, made sure we all knew our speaking roles and decided who was going to screenshare the document.
+---
+
+Date: 9/8/25
+Time: 8:30PM
+Duration: 40 Mins
+Attendees: Stephen, Dylan, Harry, Nathan
+Notes: Put the initial work into the SRS
+---
