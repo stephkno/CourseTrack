@@ -14,3 +14,10 @@ Duration: 40 Mins
 Attendees: Stephen, Dylan, Harry, Nathan
 Notes: Put the initial work into the SRS
 ---
+
+Date: 9/29/25
+Time: 7:20PM-8:22PM
+Duration: 66Mins
+Attendees: Stephen, Dylan, Harry, Nathan, Zang
+Notes: Talked about UML document, got git eclipse working and one push from each user in the group, started working on the slides for the presentation.  
+---
