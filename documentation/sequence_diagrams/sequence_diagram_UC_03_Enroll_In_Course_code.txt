@@ -1,0 +1,32 @@
+https://sequencediagram.org/
+
+title UC-03: Enroll in Course
+
+actor Student
+participant ClientHandler
+participant Server
+participant Course
+
+Student->ClientHandler: Request course enrollment (course ID)
+ClientHandler->Server: Forward enrollment request
+Server->Course: VerifyPrereqs(Student)
+Course-->Server: Prereqs valid/invalid
+Server->Course: Check seat availability
+
+alt Seats available
+    Server->Course: Enroll(Student)
+    Course-->Server: Enrollment confirmed
+    Server-->ClientHandler: Enrollment success
+    ClientHandler-->Student: Show success message
+end
+
+alt Course full
+    Server->Course: Add student to waitlist
+    Server-->ClientHandler: Added to waitlist
+    ClientHandler-->Student: Show waitlist message
+end
+
+alt Invalid prereqs or conflict
+    Server-->ClientHandler: Enrollment denied
+    ClientHandler-->Student: Show error message
+end

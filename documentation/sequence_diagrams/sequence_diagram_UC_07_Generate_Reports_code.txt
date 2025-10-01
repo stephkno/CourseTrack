@@ -1,0 +1,23 @@
+https://sequencediagram.org/
+
+title UC-07: Generate Reports
+
+actor Admin
+participant ClientHandler
+participant Server
+participant Campus
+participant Course
+
+Admin->ClientHandler: Request report (type + filters)
+ClientHandler->Server: Forward report request
+Server->Campus: GetEnrollmentReport()
+Campus-->Server: Enrollment data
+Server->Course: Get course + student data
+Course-->Server: Course data
+Server-->ClientHandler: Send compiled report
+ClientHandler-->Admin: Display/export report
+
+alt No data
+    Server-->ClientHandler: Empty report
+    ClientHandler-->Admin: Show "no data available"
+end

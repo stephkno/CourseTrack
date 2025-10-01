@@ -1,0 +1,34 @@
+https://sequencediagram.org/
+
+title UC-04: Drop Course + UC-01: Waitlist Auto-Enrollment
+
+actor Student
+participant ClientHandler
+participant Server
+participant Course
+participant Notification
+
+Student->ClientHandler: Request to drop course
+ClientHandler->Server: Forward drop request
+Server->Course: Drop(Student)
+Course-->Server: Student removed
+
+alt Waitlist not empty
+    Server->Course: Get next waitlisted student
+    Server->Course: Enroll(waitlisted Student)
+    Course-->Server: Enrollment confirmed
+    Server->Notification: Send enrollment notification
+    Notification-->Server: Notification created
+    Server-->ClientHandler: Forward notification
+    ClientHandler-->Student: Display auto-enroll message
+end
+
+alt No waitlist
+    Server-->ClientHandler: Drop confirmed
+    ClientHandler-->Student: Show confirmation
+end
+
+alt Invalid drop
+    Server-->ClientHandler: Error (student not enrolled)
+    ClientHandler-->Student: Show error
+end

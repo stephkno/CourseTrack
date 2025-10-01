@@ -1,0 +1,20 @@
+https://sequencediagram.org/
+
+title UC-06/09: Browse or Search Courses
+
+actor Student
+participant ClientHandler
+participant Server
+participant Course
+
+Student->ClientHandler: Request browse/search courses
+ClientHandler->Server: Forward request
+Server->Course: Query catalog (filters/keywords)
+Course-->Server: Return course list
+Server-->ClientHandler: Send results
+ClientHandler-->Student: Display available courses
+
+alt No results
+    Server-->ClientHandler: Empty list
+    ClientHandler-->Student: Show "no results found"
+end

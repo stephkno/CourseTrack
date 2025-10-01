@@ -1,0 +1,25 @@
+https://sequencediagram.org/
+
+title UC-02: Login
+
+actor Student
+actor Admin
+participant ClientHandler
+participant Server
+participant User
+
+Student->ClientHandler: Enter username + password
+ClientHandler->Server: Send credentials
+Server->User: Authenticate(username, password)
+User-->Server: Authentication result (role/student/admin)
+Server-->ClientHandler: Return login success/failure + role
+ClientHandler-->Student: Display main menu (student/admin)
+
+alt Invalid credentials
+    Server-->ClientHandler: Reject login
+    ClientHandler-->Student: Show error message
+end
+
+alt Server unavailable
+    ClientHandler-->Student: Show connection error
+end
