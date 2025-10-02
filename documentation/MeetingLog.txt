@@ -24,7 +24,14 @@ Notes: Talked about UML document, got git eclipse working and one push from each
 
 Date: 10/01/25
 Time: 5:20PM-6:27PM
-Duration: 66Mins
+Duration: 67Mins
 Attendees: Stephen, Dylan, Harry, Nathan, Zang
 Notes: Talked about talking parts for presentation, made last minute changes to slides, had a mock presentation to get timing right.
+---
+
+Date: 10/01/25
+Time: 7:41PM-8:02PM
+Duration: 21Mins
+Attendees: Stephen, Dylan, Harry, Nathan, Zang
+Notes: Made last minute changes to SRS, cleaned up formatting, cleaned up small mistakes.
 ---
