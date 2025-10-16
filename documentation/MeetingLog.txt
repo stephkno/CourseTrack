@@ -35,3 +35,10 @@ Duration: 51Mins
 Attendees: Stephen, Dylan, Harry, Nathan, Zang
 Notes: Made last minute changes to SRS, cleaned up formatting, cleaned up small mistakes.
 ---
+
+Date: 10/15/25
+Time: 7:15PM-7:45PM
+Duration: 30 Mins
+Attendees: Stephen, Dylan, Harry, Nathan, Zang
+Notes: Talked about up coming midterm, discussed what needs to be done for the design phase of the project. Created tasks document for assigning class tasks to users.
+---
