@@ -1,7 +1,7 @@
 package client.requests;
 
-import client.MessageType;
 import client.responses.LoginResponse;
+import global.*;
 import java.io.Serializable;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package client;
+package global;
 
 public enum MessageType {
     PING,

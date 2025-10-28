@@ -1,7 +1,5 @@
 package client;
 
-import java.io.Serializable;
-
 import client.requests.LoginRequest;
 import client.requests.UpdateRequest;
 import client.responses.LoginResponse;
@@ -9,6 +7,8 @@ import client.responses.UpdateResponse;
 import client.services.IAppGUIService;
 import client.services.IClientListenerService;
 import client.services.ILoginGUIService;
+import global.*;
+import java.io.Serializable;
 
 public class ClientController implements ILoginGUIService, IClientListenerService, IAppGUIService {
     private ClientListener clientListener;
@@ -67,7 +67,6 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
             return;
 
         appGUI.updateData(request.getArguments()[0]);
-
         client.sendResponse(new Message<UpdateResponse>(MessageType.UPDATE, MessageStatus.SUCCESS, null));
     }
 

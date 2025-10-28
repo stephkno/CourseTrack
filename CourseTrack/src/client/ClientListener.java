@@ -1,10 +1,11 @@
 package client;
 
-import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import client.requests.MessageTypeRegistry;
 import client.services.IClientListenerService;
+import global.*;
+
+import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientListener implements Runnable {
     private final Client client;
