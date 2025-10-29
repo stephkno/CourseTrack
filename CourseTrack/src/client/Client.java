@@ -60,7 +60,6 @@ public class Client {
             return (Message<TObjMessage>) inputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error reading response: " + e.getMessage());
-			e.printStackTrace();
             return null;
         }
     }
