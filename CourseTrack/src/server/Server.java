@@ -1,21 +1,20 @@
 package server;
 
+import client.requests.*;
 import global.*;
 import java.awt.*;
 import java.io.*;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.BindException;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import client.requests.*;
 
 // serverSocket handler manages the serverSocket and owns all client ServerSession connections
 public class Server{
@@ -259,7 +258,7 @@ public class Server{
 			);
 
 			// start server
-			server.Listen(1234);
+			server.Listen(7777);
 			
 		}
 	// end main
