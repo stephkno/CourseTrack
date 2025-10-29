@@ -208,7 +208,7 @@ public class Server{
 				String text = inputBox.getText();
 				inputBox.setText("");
 
-				Message msg = new Message(MessageType.PING, MessageStatus.REQUEST, new Ping[] { new Ping(text) });
+				Message msg = new Message(MessageType.PING, MessageStatus.REQUEST, new PingRequest[] { new PingRequest(text) });
 				server.Emit(msg);
 
 				Log.Log("Emit message: " + text);
@@ -225,12 +225,11 @@ public class Server{
 			server.OnRequest(
 				(Message msg, ServerConnection client) -> {
 					
-					// received message: send response
-					Log.Log("REQUEST from " + client.GetAddress() + ": [" + msg.getType() + "]:\n" + (String)msg.toString());
-					Log.Log("Sending RESPONSE to " + client.GetAddress());
+					if(msg.getType() == MessageType.PING && msg.getStatus() == MessageStatus.RESPONSE){
+						// received message: send response
+						Log.Log("RESPONSE from " + client.GetAddress() + ": [" + msg.getType() + "]:\n" + (String)msg.toString());
 
-					if(msg.getType() == MessageType.PING){
-						client.Send(new Message<client.requests.Ping>(MessageType.PING, MessageStatus.RESPONSE, new Ping[] { new Ping("Pong " + (i++)) } ));
+						//client.Send(new Message<client.requests.PingRequest>(MessageType.PING, MessageStatus.SUCCESS, new PingRequest[] { new PingRequest("Pong " + (i++)) } ));
 					}
 				
 				}

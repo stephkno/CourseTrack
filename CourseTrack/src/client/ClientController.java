@@ -1,6 +1,7 @@
 package client;
 
 import client.requests.LoginRequest;
+import client.requests.PingRequest;
 import client.requests.UpdateRequest;
 import client.responses.LoginResponse;
 import client.responses.UpdateResponse;
@@ -48,7 +49,8 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
                     return false;
                 }
                     
-                currentUser = resp.getArguments()[0].user();
+                //currentUser = resp.getArguments()[0].user();
+
                 return true;
             }
             case FAILURE -> {
@@ -67,22 +69,23 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
             return;
 
         appGUI.updateData(request.getArguments()[0]);
-        client.sendResponse(new Message<UpdateResponse>(MessageType.UPDATE, MessageStatus.SUCCESS, null));
+        client.sendResponse(new Message<UpdateResponse>(MessageType.UPDATE, MessageStatus.RESPONSE, null));
     }
 
-    // public void receivePingRequest(Message<PingRequest> request) {
-    //     if (request.getArguments().length != 1)
-    //         return;
+    public void receivePingRequest(Message<PingRequest> request) {
+         if (request.getArguments().length != 1)
+            return;
 
-    //     client.sendResponse(new Message<PingResponse>(MessageType.PING, MessageStatus.SUCCESS, null));
-    // }
+        System.out.println("Received PING request: " + ((PingRequest)request.getArguments()[0]).message());
+        client.sendResponse(new Message<>(MessageType.PING, MessageStatus.RESPONSE, null));
+    }
 
     @Override
     @SuppressWarnings("unchecked")
     public void handleServerMessage(Message<?> request, Class<? extends Serializable> tClass) {
         switch (request.getType()) {
             case UPDATE -> receiveUpdateRequest((Message<UpdateRequest>) request);
-            // case PING -> receivePingRequest((Message<PingRequest>) request);
+            case PING -> receivePingRequest((Message<PingRequest>) request);
             default -> System.err.println("Unhandled message type: " + request.getType());
         }
     }

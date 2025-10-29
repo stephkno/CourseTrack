@@ -4,8 +4,6 @@ import global.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.List;
 
 // ServerConnection is a single client socket connection
 public class ServerConnection implements Runnable {
@@ -45,11 +43,7 @@ public class ServerConnection implements Runnable {
     public void Send(Message msg){
 
         try {
-         
-            List<Message> messages = new ArrayList<>();
-            
-            messages.add(msg);            
-            objectOutputStream.writeObject(messages);
+            objectOutputStream.writeObject(msg);
             
         }
 		catch (IOException e) {
@@ -73,18 +67,10 @@ public class ServerConnection implements Runnable {
             while(run){
 
                 // scan for incoming messages
-                List<Message> listOfMessages = (List<Message>) objectInputStream.readObject(); // java.io.EOFException after first messages received
+                Message<?> message = (Message<?>) objectInputStream.readObject(); // java.io.EOFException after first messages received
 
-                if(listOfMessages.size() > 0){
-
-                    listOfMessages.forEach(msg -> {
-                        
-                        // create copy received message with client info
-                        messageCallback.call(msg, this);
-
-                    });
-                }
-                
+                // create copy received message with client info
+                messageCallback.call(message, this);
             }
             
         }
