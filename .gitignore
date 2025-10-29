@@ -69,6 +69,9 @@ coverage/
 *.swp
 *.swo
 *~
+# Office & LibreOffice temp files
+~$*
+.~lock.*
 
 # ------------------------------
 # Draw.io files
