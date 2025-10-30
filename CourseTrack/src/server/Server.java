@@ -143,129 +143,129 @@ public class Server{
 	}
 
 	// main 
-		static JFrame mainFrame = new JFrame();
+	static JFrame mainFrame = new JFrame();
 
-		static JPanel mainPanel = new JPanel(new GridBagLayout());
+	static JPanel mainPanel = new JPanel(new GridBagLayout());
 
-		static JButton button = new JButton("Emit");
-		static JTextArea textBox = new JTextArea(40,76);
+	static JButton button = new JButton("Emit");
+	static JTextArea textBox = new JTextArea(40,76);
+	
+	static JList clientList = new JList();
+	static DefaultListModel clientListModel;
+
+	static JTextField inputBox = new JTextField(64);
+
+	public static void main(String[] args) throws ClassNotFoundException
+	{
+				
+		JTextArea textBox = new JTextArea();
+		Log.SetTextArea(textBox);
+
+		JScrollPane scrollPane = new JScrollPane(textBox);
+		scrollPane.setPreferredSize(new Dimension(800, 600));
+
+		textBox.setEditable(false);	
 		
-		static JList clientList = new JList();
-		static DefaultListModel clientListModel;
+		mainFrame.add(mainPanel);	
+		mainPanel.setLayout(new GridBagLayout());
 
-		static JTextField inputBox = new JTextField(64);
+		clientListModel = new DefaultListModel();
+		clientList.setModel(clientListModel);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5, 5, 5, 5); 
 
-		public static void main(String[] args) throws ClassNotFoundException
-		{
-			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					
-			JTextArea textBox = new JTextArea();
-			Log.SetTextArea(textBox);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.weightx = 0.9;
+		c.weighty = 1.0;
+		c.fill = GridBagConstraints.BOTH;
+		mainPanel.add(scrollPane, c);
 
-			JScrollPane scrollPane = new JScrollPane(textBox);
-			scrollPane.setPreferredSize(new Dimension(800, 600));
+		c.gridx = 1;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.weightx = 0.1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.BOTH;
 
-			textBox.setEditable(false);	
-			
-			mainFrame.add(mainPanel);	
-			mainPanel.setLayout(new GridBagLayout());
+		JScrollPane jListScrollPane = new JScrollPane(clientList);
+		mainPanel.add(jListScrollPane, c);
 
-			clientListModel = new DefaultListModel();
-			clientList.setModel(clientListModel);
-			
-			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(5, 5, 5, 5); 
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		c.weightx = 0.8;
+		c.weighty = 0.01;
+		mainPanel.add(inputBox, c);
 
-			c.gridx = 0;
-			c.gridy = 0;
-			c.gridwidth = 1;
-			c.weightx = 0.9;
-			c.weighty = 1.0;
-			c.fill = GridBagConstraints.BOTH;
-			mainPanel.add(scrollPane, c);
+		c.gridx = 1;
+		c.gridy = 1;
+		c.weightx = 0.2;
+		c.weighty = 0.01;
+		mainPanel.add(button, c);
 
-			c.gridx = 1;
-			c.gridy = 0;
-			c.gridwidth = 1;
-			c.weightx = 0.1;
-			c.weighty = 1;
-			c.fill = GridBagConstraints.BOTH;
+		server = Server.Get();
 
-			JScrollPane jListScrollPane = new JScrollPane(clientList);
-			mainPanel.add(jListScrollPane, c);
+		button.addActionListener(e -> {
 
-			c.gridx = 0;
-			c.gridy = 1;
-			c.gridwidth = 1;
-			c.weightx = 0.8;
-			c.weighty = 0.01;
-			mainPanel.add(inputBox, c);
+			String text = inputBox.getText();
+			inputBox.setText("");
 
-			c.gridx = 1;
-			c.gridy = 1;
-			c.weightx = 0.2;
-			c.weighty = 0.01;
-			mainPanel.add(button, c);
+			Message msg = new Message(MessageType.PING, MessageStatus.REQUEST, new PingRequest[] { new PingRequest(text) });
+			server.Emit(msg);
 
-			server = Server.Get();
+			Log.Msg("Emit message: " + text);
+		
+		});
+		
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setVisible(true);
+		mainFrame.setSize(1024, 768);
+		mainFrame.setLocationRelativeTo(null);
 
-			button.addActionListener(e -> {
+		// set server callback callback functions
 
-				String text = inputBox.getText();
-				inputBox.setText("");
-
-				Message msg = new Message(MessageType.PING, MessageStatus.REQUEST, new PingRequest[] { new PingRequest(text) });
-				server.Emit(msg);
-
-				Log.Msg("Emit message: " + text);
-			
-			});
-			
-			mainFrame.setVisible(true);
-			mainFrame.setSize(1024, 768);
-			mainFrame.setLocationRelativeTo(null);
-
-			// set server callback Callbacktions
-
-			// set callback for when Server receives a message
-			server.OnRequest(
-				(Message msg, ServerConnection client) -> {
-					
-					if(msg.getType() == MessageType.PING && msg.getStatus() == MessageStatus.RESPONSE){
-						// received message: send response
-						Log.Msg("RESPONSE from " + client.GetAddress() + ": [" + msg.getType() + "]:\n" + (String)msg.toString());
-
-						//client.Send(new Message<client.requests.PingRequest>(MessageType.PING, MessageStatus.SUCCESS, new PingRequest[] { new PingRequest("Pong " + (i++)) } ));
-					}
+		// set callback for when Server receives a message
+		server.OnRequest(
+			(Message msg, ServerConnection client) -> {
 				
+				if(msg.getType() == MessageType.PING && msg.getStatus() == MessageStatus.RESPONSE){
+					// received message: send response
+					Log.Msg("RESPONSE from " + client.GetAddress() + ": [" + msg.getType() + "]:\n" + (String)msg.toString());
+
+					//client.Send(new Message<client.requests.PingRequest>(MessageType.PING, MessageStatus.SUCCESS, new PingRequest[] { new PingRequest("Pong " + (i++)) } ));
 				}
-				
-			);
-
-			// set callback for when new client connects
-			server.OnConnect(
-				(ServerConnection client) -> {
-
-					Log.Msg("Client has connected: " + client.GetAddress());
-					clientListModel.addElement(client.GetAddress());
-
-				}
-			);
-
-			// set callback for when new client disconnects
-			server.OnDisconnect(
-				(ServerConnection client) -> {
-
-					Log.Msg("Client has disconnected: " + client.GetAddress());
-					clientListModel.removeElement(client.GetAddress());
-				
-				}
-			);
-
-			// start server
-			server.Listen(7777);
 			
-		}
+			}
+			
+		);
+
+		// set callback for when new client connects
+		server.OnConnect(
+			(ServerConnection client) -> {
+
+				Log.Msg("Client has connected: " + client.GetAddress());
+				clientListModel.addElement(client.GetAddress());
+
+			}
+		);
+
+		// set callback for when new client disconnects
+		server.OnDisconnect(
+			(ServerConnection client) -> {
+
+				Log.Msg("Client has disconnected: " + client.GetAddress());
+				clientListModel.removeElement(client.GetAddress());
+			
+			}
+		);
+
+		// start server
+		server.Listen(7777);
+		
+	}
 	// end main
 
 }

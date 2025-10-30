@@ -17,9 +17,16 @@ public class Log {
     }
 
 	public static void Msg(Object...args) {
-        
+        log("Msg", args);
         logCount++;
-
+	}
+    
+	public static void Err(Object...args) {
+        log("Err", args);
+        logCount++;
+	}
+	    
+    private static void log(String type, Object...args){
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         StackTraceElement e = stackTrace[2];
 
@@ -27,35 +34,16 @@ public class Log {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedNow = now.format(formatter);
 
-        String out = "\n[Log " + logCount + "](" + e.getClassName() + " @ " + e.getLineNumber() + ")<" + formattedNow + ">: ";
+        String out = "\n[" + type + " " + logCount + "](" + e.getClassName() + " @ " + e.getLineNumber() + ")<" + formattedNow + ">: ";
 
         for(Object arg : args) {
             out += arg;
         }
 
-        out += "\n ";
-
-        if(textArea != null){
+        if(textArea != null) {
             textArea.append(out);
             textArea.setCaretPosition(textArea.getDocument().getLength());
-        } 
-        if(debug) System.out.println(out);
-
-	}
-    
-	public static void Err(Object...args) {
-    
-        String out = "\n";
-        out += "Error: ";
-
-        for(Object arg : args) {
-            out += arg;
         }
-
-        
-        if(textArea != null) textArea.append(out);
         if(debug) System.err.println(out);
-
-	}
-	    
+    }
 }
