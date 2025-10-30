@@ -27,7 +27,7 @@ public class Log {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedNow = now.format(formatter);
 
-        String out = "[Log " + logCount + "](" + e.getClassName() + " @ " + e.getLineNumber() + ")<" + formattedNow + ">: ";
+        String out = "\n[Log " + logCount + "](" + e.getClassName() + " @ " + e.getLineNumber() + ")<" + formattedNow + ">: ";
 
         for(Object arg : args) {
             out += arg;
@@ -45,13 +45,14 @@ public class Log {
     
 	public static void Err(Object...args) {
     
-        String out = "";
+        String out = "\n";
         out += "Error: ";
 
         for(Object arg : args) {
             out += arg;
         }
 
+        
         if(textArea != null) textArea.append(out);
         if(debug) System.err.println(out);
 

@@ -71,6 +71,7 @@ public class ServerConnection implements Runnable {
 
                 // create copy received message with client info
                 messageCallback.call(message, this);
+            
             }
             
         }
@@ -96,6 +97,8 @@ public class ServerConnection implements Runnable {
             try {
                 // close the socket
                 socket.close();
+                Log.Msg("Closed connection to " + GetAddress());   
+                disconnectCallback.call(this);
             }
             catch (IOException e) {
                 e.printStackTrace();

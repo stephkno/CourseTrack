@@ -144,6 +144,7 @@ public class Server{
 
 	// main 
 		static JFrame mainFrame = new JFrame();
+
 		static JPanel mainPanel = new JPanel(new GridBagLayout());
 
 		static JButton button = new JButton("Emit");
@@ -156,6 +157,7 @@ public class Server{
 
 		public static void main(String[] args) throws ClassNotFoundException
 		{
+			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					
 			JTextArea textBox = new JTextArea();
 			Log.SetTextArea(textBox);
