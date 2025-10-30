@@ -21,6 +21,7 @@ public class Server{
 
 	// server class
 	int port;
+	private boolean running = false;
 
 	// server incoming connection listener
 	ServerSocket serverSocket = null;
@@ -88,11 +89,13 @@ public class Server{
 			serverSocket = new ServerSocket(port);
 			serverSocket.setReuseAddress(true);
 
-			Log.Log("Listening on port " + port);
+			Log.Msg("Listening on port " + port);
+
+			running = true;
 
 			// running infinite loop for getting
 			// client request
-			while (true) {
+			while (running) {
 
 				// socket object to receive incoming client
 				// requests
@@ -119,15 +122,18 @@ public class Server{
 		}
 		catch(BindException e){
 			e.printStackTrace();
-			Log.Err("Port " + port + " is already in use. Please choose another port.");			
+			Log.Err("Port " + port + " is already in use. Please choose another port.");
+			running = false;
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+			running = false;
 		}
 		finally {
 			if (serverSocket != null) {
 				try {
 					serverSocket.close();
+					running = false;
 				}
 				catch (IOException e) {
 					e.printStackTrace();
@@ -137,8 +143,6 @@ public class Server{
 	}
 
 	// main 
-		private static int i = 0;
-		
 		static JFrame mainFrame = new JFrame();
 		static JPanel mainPanel = new JPanel(new GridBagLayout());
 
@@ -211,7 +215,7 @@ public class Server{
 				Message msg = new Message(MessageType.PING, MessageStatus.REQUEST, new PingRequest[] { new PingRequest(text) });
 				server.Emit(msg);
 
-				Log.Log("Emit message: " + text);
+				Log.Msg("Emit message: " + text);
 			
 			});
 			
@@ -227,7 +231,7 @@ public class Server{
 					
 					if(msg.getType() == MessageType.PING && msg.getStatus() == MessageStatus.RESPONSE){
 						// received message: send response
-						Log.Log("RESPONSE from " + client.GetAddress() + ": [" + msg.getType() + "]:\n" + (String)msg.toString());
+						Log.Msg("RESPONSE from " + client.GetAddress() + ": [" + msg.getType() + "]:\n" + (String)msg.toString());
 
 						//client.Send(new Message<client.requests.PingRequest>(MessageType.PING, MessageStatus.SUCCESS, new PingRequest[] { new PingRequest("Pong " + (i++)) } ));
 					}
@@ -240,7 +244,7 @@ public class Server{
 			server.OnConnect(
 				(ServerConnection client) -> {
 
-					Log.Log("Client has connected: " + client.GetAddress());
+					Log.Msg("Client has connected: " + client.GetAddress());
 					clientListModel.addElement(client.GetAddress());
 
 				}
@@ -250,7 +254,7 @@ public class Server{
 			server.OnDisconnect(
 				(ServerConnection client) -> {
 
-					Log.Log("Client has disconnected: " + client.GetAddress());
+					Log.Msg("Client has disconnected: " + client.GetAddress());
 					clientListModel.removeElement(client.GetAddress());
 				
 				}

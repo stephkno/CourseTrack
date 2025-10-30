@@ -16,7 +16,7 @@ public class Log {
         textArea = t;
     }
 
-	public static void Log(Object...args) {
+	public static void Msg(Object...args) {
         
         logCount++;
 
