@@ -47,5 +47,12 @@ Date: 10/27/25
 Time: 7:10PM-7:57
 Duration: 
 Attendees: Stephen, Dylan, Harry, Nathan, Zang
-Notes: 
+Notes: Just discussed design decisions. 
+---
+
+Date: 10/27/25
+Time: 5:55PM-
+Duration: 
+Attendees: Stephen, Dylan, Nathan, Zang
+Notes: Prepared for the presentation.
 ---
