@@ -49,7 +49,7 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
                     return false;
                 }
                     
-                //currentUser = resp.getArguments()[0].user();
+                currentUser = resp.getArguments()[0].user();
 
                 return true;
             }

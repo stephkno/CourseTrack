@@ -1,5 +1,4 @@
 package server;
-
 import client.requests.*;
 import global.*;
 import java.awt.*;
@@ -157,7 +156,9 @@ public class Server{
 
 	public static void main(String[] args) throws ClassNotFoundException
 	{
-				
+		
+		ServerController controller = ServerController.Get();
+
 		JTextArea textBox = new JTextArea();
 		Log.SetTextArea(textBox);
 
@@ -231,13 +232,8 @@ public class Server{
 		server.OnRequest(
 			(Message msg, ServerConnection client) -> {
 				
-				if(msg.getType() == MessageType.PING && msg.getStatus() == MessageStatus.RESPONSE){
-					// received message: send response
-					Log.Msg("RESPONSE from " + client.GetAddress() + ": [" + msg.getType() + "]:\n" + (String)msg.toString());
-
-					//client.Send(new Message<client.requests.PingRequest>(MessageType.PING, MessageStatus.SUCCESS, new PingRequest[] { new PingRequest("Pong " + (i++)) } ));
-				}
-			
+				controller.HandleMessage(msg, client);
+				
 			}
 			
 		);
