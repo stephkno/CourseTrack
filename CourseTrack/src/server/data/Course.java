@@ -11,19 +11,19 @@ public class Course {
     // should have a reference to or own offered sections?
     LinkedList<Section> sections;
 
-    public boolean VerifyPrereqs(Student student){
+    public boolean verifyPrereqs(Student student){
         return false;
     }
 
-    public int GetUnits() {
+    public int getUnits() {
         return units;
     }
 
-    public String GetName() {
+    public String getName() {
         return name;
     }
 
-    public int GetNumber() {
+    public int getNumber() {
         return number;
     }
 

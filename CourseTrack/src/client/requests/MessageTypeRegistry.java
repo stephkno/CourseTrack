@@ -8,7 +8,7 @@ import java.util.Map;
 public final class MessageTypeRegistry {
     private static final Map<MessageType, Class<? extends Serializable>> TYPE_MAP = Map.of(
         MessageType.USER_LOGIN, LoginResponse.class,
-        MessageType.PING, PingRequest.class
+        MessageType.PingRequest, PingRequest.class
     );
 
     public static Class<? extends Serializable> getClassFor(MessageType type) {

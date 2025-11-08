@@ -1,7 +1,7 @@
 package global;
 
 public enum MessageType {
-    PING,
+    PingRequest,
     // Client to server requests
     USER_REGISTER,
     USER_LOGIN,

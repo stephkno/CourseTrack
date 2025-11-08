@@ -214,7 +214,7 @@ public class Server{
 			String text = inputBox.getText();
 			inputBox.setText("");
 
-			Message msg = new Message(MessageType.PING, MessageStatus.REQUEST, new PingRequest[] { new PingRequest(text) });
+			Message msg = new Message(MessageType.PingRequest, MessageStatus.REQUEST, new PingRequest[] { new PingRequest(text) });
 			server.Emit(msg);
 
 			Log.Msg("Emit message: " + text);

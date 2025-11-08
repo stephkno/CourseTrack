@@ -1,10 +1,7 @@
 package server;
 
-import global.*;
-
-import java.io.Serializable;
-
 import client.requests.PingRequest;
+import global.*;
 
 // facade class to implement all client-server event interactions
 public class ServerController {
@@ -21,8 +18,8 @@ public class ServerController {
 
         Log.Msg("Got message: " + msg.toString());
         switch(msg.getType()){
-            case MessageType.PING:{
-                HandlePing(msg, client);
+            case MessageType.PingRequest:{
+                HandlePing((Message<PingRequest>) msg, client);
             }
             default:{
 
@@ -31,8 +28,8 @@ public class ServerController {
 
     }
 
-    private void HandlePing(Message<Ping> msg, ServerConnection client){
-        Log.Msg("Ping: " + msg.toString());
+    private void HandlePing(Message<PingRequest> msg, ServerConnection client){
+        Log.Msg("PingRequest: " + msg.toString());
     }
 
     public void LoadData(String filepath){

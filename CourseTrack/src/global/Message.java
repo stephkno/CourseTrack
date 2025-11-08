@@ -13,7 +13,7 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
     private final TObjMessage[] arguments;
 
     private static final String[] messageTypes = {
-        "PING",
+        "PingRequest",
         "USER_REGISTER",
         "USER_LOGIN",
         "USER_LOGIN_SUCCESS",

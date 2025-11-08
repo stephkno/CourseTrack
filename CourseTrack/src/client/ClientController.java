@@ -76,8 +76,8 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
          if (request.getArguments().length != 1)
             return;
 
-        System.out.println("Received PING request: " + ((PingRequest)request.getArguments()[0]).message());
-        client.sendResponse(new Message<>(MessageType.PING, MessageStatus.RESPONSE, null));
+        System.out.println("Received PingRequest request: " + ((PingRequest)request.getArguments()[0]).message());
+        client.sendResponse(new Message<>(MessageType.PingRequest, MessageStatus.RESPONSE, null));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
     public void handleServerMessage(Message<?> request, Class<? extends Serializable> tClass) {
         switch (request.getType()) {
             case UPDATE -> receiveUpdateRequest((Message<UpdateRequest>) request);
-            case PING -> receivePingRequest((Message<PingRequest>) request);
+            case PingRequest -> receivePingRequest((Message<PingRequest>) request);
             default -> System.err.println("Unhandled message type: " + request.getType());
         }
     }
