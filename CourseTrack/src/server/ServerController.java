@@ -3,8 +3,12 @@ package server;
 import client.UserType;
 import client.requests.*;
 import client.responses.*;
-
 import global.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import server.data.*;
 
 // facade class to implement all client-server event interactions
@@ -58,13 +62,14 @@ public class ServerController {
 
     private void HandlePing(Message<PingRequest> msg, ServerConnection client) {
         Log.Msg("PingRequest: " + msg.toString());
+        client.SendMessage( MessageType.PingRequest, MessageStatus.RESPONSE, new PingResponse[] { new PingResponse("pong") } );
     }
 
     private void HandlePasswordChange(Message<PasswordChangeRequest> msg, ServerConnection client) {
 
         if(!client.IsLoggedIn()) {
             // return failure message
-            client.Send(new Message<PasswordChangeResponse>(MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse("") }));
+            client.SendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
             return;
         }
 
@@ -79,12 +84,12 @@ public class ServerController {
             // validate password
             if(!User.ValidatePassword(password)){
                 // respond with password error message
-                client.Send(new Message<PasswordChangeResponse>(MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse(password) }));
+                client.SendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
             }
 
             // update user password in user of this session
             client.GetUser().UpdatePassword(password);
-            client.Send(new Message<PasswordChangeResponse>(MessageType.USER_CHANGE_PASSWORD, MessageStatus.SUCCESS, new PasswordChangeResponse[] { new PasswordChangeResponse(password) }));
+            client.SendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.SUCCESS, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
 
         }
 
@@ -95,7 +100,7 @@ public class ServerController {
         // user should not be logged in
         if(client.IsLoggedIn()){
             // send failure response message
-            client.Send(new Message<RegisterResponse>(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse() }));
+            client.SendMessage( MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse() } );
             return;
         }
 
@@ -111,13 +116,13 @@ public class ServerController {
             // validate username
             if(users.Contains(username)){
                 // respond with error: username already exists
-                client.Send(new Message<RegisterResponse>(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse() }));
+                client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse() });
             }
 
             // validate password
             if(!User.ValidatePassword(password)){
                 // respond with password error
-
+                client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse() });
             }
 
             // create new user object
@@ -125,8 +130,7 @@ public class ServerController {
             users.Put(username, newUser);
 
             // send register success message
-            client.Send(new Message<RegisterResponse>(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse() }));
-
+            client.SendMessage(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse() });
 
         }
 
@@ -137,7 +141,7 @@ public class ServerController {
         // user should not be logged in
         if(client.IsLoggedIn()){
             // send fail response
-
+            client.SendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, new LoginResponse[] { new LoginResponse(null) });
             return;
         }
         
@@ -155,24 +159,41 @@ public class ServerController {
                 if(user.Authenticate(password)) {
 
                     Log.Msg("Login successful for user: " + username);
-                    client.Send(new Message<LoginResponse>(MessageType.LOGIN_SUCCESS, MessageStatus.SUCCESS, new LoginResponse[] { new LoginResponse(clientUser) }));
-                
+                    client.SendMessage(MessageType.LOGIN_SUCCESS, MessageStatus.SUCCESS, new LoginResponse[] { new LoginResponse(clientUser) });
+                    return;
+
                 } else {
                 
                     Log.Err("Wrong password for user: " + username);
-                    client.Send(new Message<LoginResponse>(MessageType.LOGIN_FAILURE, MessageStatus.FAILURE, null));
+                    client.SendMessage(MessageType.LOGIN_FAILURE, MessageStatus.FAILURE, null);
+                    return;
                 
                 }
             } else {
                 Log.Err("User not found: " + username);
-                client.Send(new Message<>(MessageType.LOGIN_FAILURE, MessageStatus.FAILURE, null));
+                client.SendMessage(MessageType.LOGIN_FAILURE, MessageStatus.FAILURE, null);
             }
         }
 
     }
 
-    public void LoadData(String filepath) {
+    public void Serialize(String filepath, boolean save) {
 
+        try {
+            
+            if(save) {
+                FileOutputStream fileStream = new FileOutputStream(filepath);
+                ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+                objectStream.writeObject(this);
+            } else {
+                FileInputStream fileStream = new FileInputStream(filepath);
+                ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+                //this = objectStream.readObject();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -64,6 +64,10 @@ public class ServerConnection implements Runnable {
 		}
     }
 
+    public <TObjMessage extends Serializable> void SendMessage(MessageType type, MessageStatus status, TObjMessage[] obj){
+        Send(new Message<>(type, status, obj));
+    }
+
     private void Hangup(){
         disconnectCallback.call(this); 
         server.RemoveClient(this);
