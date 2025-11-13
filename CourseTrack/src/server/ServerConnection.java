@@ -4,6 +4,7 @@ import global.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import server.data.*;
 
 // ServerConnection is a single client socket connection
 public class ServerConnection implements Runnable {
@@ -25,6 +26,18 @@ public class ServerConnection implements Runnable {
     // reference to server object
     private Server server;
 
+    // user logged in to this session
+    // starts null and becomes defined when login occurs
+    private User user;
+
+    public boolean IsLoggedIn(){
+        return user != null;
+    }
+
+    public User GetUser(){
+        return user;
+    }
+
     // Constructor
     public ServerConnection(Socket socket, Server server, RequestCallback<Message,ServerConnection> messageCallback, Callback<ServerConnection> disconnectCallback)
     {
@@ -35,12 +48,12 @@ public class ServerConnection implements Runnable {
     }
 
     // return inet address of this client
-    public String GetAddress(){
+    public String GetAddress() {
         return this.socket.getInetAddress().toString();
     }
 
     // send a message to just this client
-    public void Send(Message msg){
+    public void Send(Message msg) {
 
         try {
             objectOutputStream.writeObject(msg);
@@ -51,10 +64,19 @@ public class ServerConnection implements Runnable {
 		}
     }
 
+    private void Hangup(){
+        disconnectCallback.call(this); 
+        server.RemoveClient(this);
+        try {
+            socket.close();
+        } catch (Exception e) {
+
+        }
+    }
+
     // Run the connection socket loop
     public void run()
     {
-
         try {
             // open socket stream
             InputStream inputStream = socket.getInputStream();
@@ -64,7 +86,7 @@ public class ServerConnection implements Runnable {
             objectOutputStream = new ObjectOutputStream(outputStream);
 
             // loop thread
-            while(run){
+            while(run) {
 
                 // scan for incoming messages
                 Message<?> message = (Message<?>) objectInputStream.readObject(); // java.io.EOFException after first messages received
@@ -73,36 +95,27 @@ public class ServerConnection implements Runnable {
                 messageCallback.call(message, this);
             
             }
-            
         }
         catch (ClassNotFoundException e) {
             Log.Err("Class not found: " + e.getMessage());
             e.printStackTrace();
+            Hangup();
         }
-        catch (EOFException | SocketException e) {
-            
-            Log.Err(e);
-            run = false;
-
-            // call disconnect
-            disconnectCallback.call(this); 
-            // remove client object from server's list
-            server.RemoveClient(this);
-
+        catch(EOFException e ) {
+            Log.Msg("Client closed connection");
+            Hangup();
+        }
+        catch ( SocketException e) {
+            Log.Msg("Client closed connection");
+            e.printStackTrace();
+            Hangup();
         } 
         catch (IOException e) {
             e.printStackTrace();
+            Hangup();
         }
         finally {
-            try {
-                // close the socket
-                socket.close();
-                Log.Msg("Closed connection to " + GetAddress());   
-                disconnectCallback.call(this);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
         }
+        
     }
 }

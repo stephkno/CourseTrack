@@ -12,7 +12,7 @@ public class Log {
 
     private Log() {}
     
-    public static void SetTextArea(JTextArea t){
+    public static void SetTextArea(JTextArea t) {
         textArea = t;
     }
 
@@ -26,7 +26,7 @@ public class Log {
         logCount++;
 	}
 	    
-    private static void log(String type, Object...args){
+    private static void log(String type, Object...args) {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         StackTraceElement e = stackTrace[2];
 

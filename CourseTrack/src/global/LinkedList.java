@@ -112,7 +112,7 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 	}
 	
 	@Override
-	public Iterator<T> iterator(){
+	public Iterator<T> iterator() {
 		
 		return new Iterator<T>() {
 			Node<T> item = first;

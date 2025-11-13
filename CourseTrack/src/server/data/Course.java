@@ -11,7 +11,7 @@ public class Course {
     // should have a reference to or own offered sections?
     LinkedList<Section> sections;
 
-    public boolean verifyPrereqs(Student student){
+    public boolean verifyPrereqs(Student student) {
         return false;
     }
 

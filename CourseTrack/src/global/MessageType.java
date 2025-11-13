@@ -6,6 +6,7 @@ public enum MessageType {
     USER_REGISTER,
     USER_LOGIN,
     USER_LOGOUT,
+    USER_CHANGE_PASSWORD,
     USER_SEARCH_COURSE,
     USER_ENROLL,
     USER_DROP,

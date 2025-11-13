@@ -1,4 +1,5 @@
 package server;
+
 import client.requests.*;
 import global.*;
 import java.awt.*;
@@ -34,29 +35,26 @@ public class Server{
 	private Callback<ServerConnection> disconnectCallback;
 
 	// singleton
-	private Server(){}
+	private Server() {}
 	static Server server = new Server();
-	static Server Get(){
+	static Server Get() {
 		return server;
 	}
 
-	public void OnConnect(Callback<ServerConnection> connectCallback)
-	{	
+	public void OnConnect(Callback<ServerConnection> connectCallback) {	
 		this.connectCallback = connectCallback;
 	}
 
-	public void OnDisconnect(Callback<ServerConnection> disconnectCallback)
-	{	
+	public void OnDisconnect(Callback<ServerConnection> disconnectCallback) {
 		this.disconnectCallback = disconnectCallback;
 	}
 
-	public void OnRequest(RequestCallback<Message, ServerConnection> requestCallback)
-	{	
+	public void OnRequest(RequestCallback<Message, ServerConnection> requestCallback) {
 		this.requestCallback = requestCallback;
 	}
 
 	// called to remove client from the server
-	public boolean RemoveClient(ServerConnection client){
+	public boolean RemoveClient(ServerConnection client) {
 		
 		String address = client.GetAddress();
 		return clients.Remove(address);
@@ -64,20 +62,20 @@ public class Server{
 	}
 
 	// send a message to all connected clients
-	public void Emit(Message<?> msg){
+	public void Emit(Message<?> msg) {
 		for(ServerConnection client : clients) client.Send(msg);
 	}
 	
 	// start server
-	public void Listen(int port){
+	public void Listen(int port) {
 
 		Server.mainFrame.setTitle("Server Listening on " + port);
 
-		if(disconnectCallback == null){
+		if(disconnectCallback == null) {
 			Log.Err("Disconnect callback is not set.");
 			return;
 		}
-		if(requestCallback == null){
+		if(requestCallback == null) {
 			Log.Err("Message callback is not set.");
 			return;
 		}
@@ -119,7 +117,7 @@ public class Server{
 			}
 		
 		}
-		catch(BindException e){
+		catch(BindException e) {
 			e.printStackTrace();
 			Log.Err("Port " + port + " is already in use. Please choose another port.");
 			running = false;
@@ -143,7 +141,6 @@ public class Server{
 
 	// main 
 	static JFrame mainFrame = new JFrame();
-
 	static JPanel mainPanel = new JPanel(new GridBagLayout());
 
 	static JButton button = new JButton("Emit");
@@ -154,8 +151,7 @@ public class Server{
 
 	static JTextField inputBox = new JTextField(64);
 
-	public static void main(String[] args) throws ClassNotFoundException
-	{
+	public static void main(String[] args) throws ClassNotFoundException {
 		
 		ServerController controller = ServerController.Get();
 

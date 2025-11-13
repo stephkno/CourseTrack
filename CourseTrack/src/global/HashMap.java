@@ -147,7 +147,7 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 			
 			try {
 				hti = chain.Get(i++);
-			}catch (IndexOutOfBoundsException e){
+			}catch (IndexOutOfBoundsException e) {
 				return null;
 			}
 			
@@ -218,7 +218,7 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 
 	}
 	
-	public String toString(){
+	public String toString() {
 		
 		String out = "{\n";
 

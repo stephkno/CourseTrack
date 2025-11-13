@@ -78,17 +78,18 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
     public long getId() { return id; }
     public MessageType getType() { return msgType; }
     public MessageStatus getStatus() { return msgStatus; }
+
     public TObjMessage[] getArguments() { return arguments; }
     
-    public String getTypeString(){
+    public String getTypeString() {
         return messageTypes[msgType.ordinal()];
     }
 
-    public String getStatusString(){
+    public String getStatusString() {
         return messageStatus[msgStatus.ordinal()];
     }
 
-    public String toString(){
+    public String toString() {
 
         String out = "\n+ Message +";
 

@@ -1,5 +1,6 @@
 package server.data;
 
+import client.UserType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class Student extends User {
     List<Section> enrolledSections;
 
     public Student(String name, String password, String studentId) {
-        super(name, password);
+        super(name, password, UserType.STUDENT);
         this.studentId = studentId;
         this.enrolledSections = new ArrayList<>();
     }
