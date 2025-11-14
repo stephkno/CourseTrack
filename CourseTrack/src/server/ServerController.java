@@ -41,16 +41,16 @@ public class ServerController {
 
         Log.Msg("Got message: " + msg.toString());
         switch(msg.getType()) {
-            case MessageType.PingRequest:{
+            case PingRequest:{
                 HandlePing((Message<PingRequest>) msg, client);
             }
-            case MessageType.USER_REGISTER:{
+            case USER_REGISTER:{
                 HandleRegister((Message<RegisterRequest>) msg, client);
             }
-            case MessageType.USER_CHANGE_PASSWORD:{
+            case USER_CHANGE_PASSWORD:{
                 HandlePasswordChange((Message<PasswordChangeRequest>)msg, client);
             }
-            case MessageType.USER_LOGIN:{
+            case USER_LOGIN:{
                 HandleLogin((Message<LoginRequest>) msg, client);
             }
             default:{
