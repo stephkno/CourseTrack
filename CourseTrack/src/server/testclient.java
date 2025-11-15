@@ -24,32 +24,42 @@ public class testclient {
 
 		String username = "testuser";
 		String password = "password123";
-
 		
 		{
+		
 			client.sendRequest(new Message<>(MessageType.USER_REGISTER, MessageStatus.REQUEST, new RegisterRequest[]{new RegisterRequest(username, password, UserType.ADMIN)}));
 			// await response
 			System.out.println("Sending admin register request");
 			Message<RegisterResponse> response = client.receiveResponse();
 			System.out.println(response);	
 			assert(response.getStatus() == MessageStatus.SUCCESS);
+		
 		}
 
 		client.User user;
 		{
+
 			System.out.println("Sending admin login request");
 			controller.sendLoginRequest(username, password);
 			Message<LoginResponse> response = client.receiveResponse();
 			assert(response.getStatus() == MessageStatus.SUCCESS);
 			user = response.getArguments()[0].user();
+			System.out.println(user);
 			assert(user != null);
 			
 		}
 		{
-			System.out.println("Sending admin login request");
+
+			System.out.println("Sending admin add campus request");
 			String campusName = "CSU East Bay";
-			controller.sendRequest(new Message<>(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.REQUEST, new AddCampusRequest[]{ new AddCampusRequest(campusName)}));
-			
+			client.sendRequest(new Message<>(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.REQUEST, new AddCampusRequest[]{ new AddCampusRequest(campusName)}));
+			Message<AddCampusRequest> response = client.receiveResponse();
+			assert(response.getStatus() == MessageStatus.SUCCESS);
+			String responseCampusName = response.getArguments()[0].campusName();
+			System.out.println(responseCampusName);
+			assert(responseCampusName.equals(campusName));
+
+
 		}
 	
     }
