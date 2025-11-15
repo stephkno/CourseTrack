@@ -1,4 +1,4 @@
 package client.responses;
 import java.io.Serializable;
 
-public record RegisterResponse () implements Serializable { }
+public record RegisterResponse (String msg) implements Serializable { }

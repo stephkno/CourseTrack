@@ -16,7 +16,7 @@ public class User {
     }
 
     public static boolean ValidatePassword(String password){
-        return password.length() <= 0 || password.length() > 32;
+        return password.length() > 0 || password.length() <= 32;
     }
 
     public void UpdatePassword(String newPassword) {

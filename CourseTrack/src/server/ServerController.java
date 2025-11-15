@@ -43,18 +43,26 @@ public class ServerController {
         switch(msg.getType()) {
             case PingRequest:{
                 HandlePing((Message<PingRequest>) msg, client);
+                break;
             }
             case USER_REGISTER:{
                 HandleRegister((Message<RegisterRequest>) msg, client);
+                break;
             }
             case USER_CHANGE_PASSWORD:{
                 HandlePasswordChange((Message<PasswordChangeRequest>)msg, client);
+                break;
             }
             case USER_LOGIN:{
                 HandleLogin((Message<LoginRequest>) msg, client);
+                break;
+            }
+            case ADMIN_ADD_CAMPUS:{
+                HandleAdminAddCampus((Message<AddCampusRequest>) msg, client);
+                break;
             }
             default:{
-
+                break;
             }
         }
 
@@ -100,7 +108,7 @@ public class ServerController {
         // user should not be logged in
         if(client.IsLoggedIn()){
             // send failure response message
-            client.SendMessage( MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse() } );
+            client.SendMessage( MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("User currently logged in") } );
             return;
         }
 
@@ -116,13 +124,15 @@ public class ServerController {
             // validate username
             if(users.Contains(username)){
                 // respond with error: username already exists
-                client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse() });
+                client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Username exists") });
+                continue;
             }
 
             // validate password
             if(!User.ValidatePassword(password)){
                 // respond with password error
-                client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse() });
+                client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Invalid password") });
+                continue;
             }
 
             // create new user object
@@ -130,7 +140,7 @@ public class ServerController {
             users.Put(username, newUser);
 
             // send register success message
-            client.SendMessage(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse() });
+            client.SendMessage(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("") });
 
         }
 
@@ -173,6 +183,29 @@ public class ServerController {
                 Log.Err("User not found: " + username);
                 client.SendMessage(MessageType.LOGIN_FAILURE, MessageStatus.FAILURE, null);
             }
+        }
+
+    }
+
+    private void HandleAdminAddCampus(Message<AddCampusRequest> msg, ServerConnection client) {
+        
+        client.ValidateAdmin();
+
+        for(AddCampusRequest request : msg.getArguments()) {
+            String campusName = request.campusName();
+
+            // validate campus name
+            if(campuses.Contains(campusName)) {
+                // send error response
+                client.SendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.FAILURE, new AddCampusResponse[] { new AddCampusResponse("Campus already exists!") });
+                continue;
+            }
+
+            Campus newCampus = new Campus(campusName);
+            campuses.Put(campusName, newCampus);
+            // return success
+            client.SendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse[] { new AddCampusResponse("") });
+
         }
 
     }

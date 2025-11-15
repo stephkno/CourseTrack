@@ -71,7 +71,7 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
         appGUI.updateData(request.getArguments()[0]);
         client.sendResponse(new Message<UpdateResponse>(MessageType.UPDATE, MessageStatus.RESPONSE, null));
     }
-
+    
     public void receivePingRequest(Message<PingRequest> request) {
          if (request.getArguments().length != 1)
             return;
@@ -88,6 +88,7 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
             case PingRequest -> receivePingRequest((Message<PingRequest>) request);
             default -> System.err.println("Unhandled message type: " + request.getType());
         }
+        
     }
 
     public User getCurrentUser() { return currentUser; }

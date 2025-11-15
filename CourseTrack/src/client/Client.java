@@ -58,7 +58,10 @@ public class Client {
     public <TObjMessage extends Serializable> Message<TObjMessage> receiveResponse() {
         try {
             return (Message<TObjMessage>) inputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException e){
+            System.err.println("Error: No such class " + e.getMessage());
+            return null;
+        } catch (IOException e) {
             System.err.println("Error reading response: " + e.getMessage());
             return null;
         }

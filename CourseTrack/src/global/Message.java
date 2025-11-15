@@ -95,7 +95,7 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
 
         out += "\n - Type: " + getTypeString();
         out += "\n - Status: " + getStatusString();
-        out += "\n - Args: ";
+        out += "\n - Args [" + arguments.length + "]:";
 
         int i = 0;
         if(arguments == null)

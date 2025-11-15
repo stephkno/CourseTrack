@@ -57,6 +57,7 @@ public class ServerConnection implements Runnable {
 
         try {
             objectOutputStream.writeObject(msg);
+            objectOutputStream.flush();
             
         }
 		catch (IOException e) {
@@ -76,6 +77,14 @@ public class ServerConnection implements Runnable {
         } catch (Exception e) {
 
         }
+    }
+
+    public boolean ValidateAdmin(){
+        return user instanceof Admin;
+    }
+
+    public boolean ValidateStudent(){
+        return user instanceof Student;
     }
 
     // Run the connection socket loop
