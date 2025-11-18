@@ -7,19 +7,22 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
     private static final long serialVersionUID = 1L;
     private static final AtomicLong counter = new AtomicLong(0);
 
-    private final long id;
-    private final MessageType msgType;
-    private final MessageStatus msgStatus;
-    private final TObjMessage[] arguments;
+    public static String[] messageStatus = {
+        "REQUEST",
+        "RESPONSE",
+        "SUCCESS",
+        "FAILURE"
+    };
 
-    private static final String[] messageTypes = {
-        "PingRequest",
+    public static String[] messageTypes = {
+        "PING_REQUEST",
         "USER_REGISTER",
         "USER_LOGIN",
-        "USER_LOGIN_SUCCESS",
-        "USER_LOGIN_FAILURE",
-        "USER_UPDATE",
         "USER_LOGOUT",
+        "USER_CHANGE_PASSWORD",
+        "USER_ENROLL",
+        "USER_DROP",
+        "USER_UPDATE",
         "STUDENT_SEARCH_COURSE",
         "STUDENT_ENROLL",
         "STUDENT_DROP",
@@ -61,12 +64,10 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
         "ERROR"
     };
 
-    private static final String[] messageStatus = {
-        "REQUEST",
-        "RESPONSE",
-        "SUCCESS",
-        "FAILURE"
-    };
+    private final long id;
+    private final MessageType msgType;
+    private final MessageStatus msgStatus;
+    private final TObjMessage[] arguments;
 
     public Message(MessageType type, MessageStatus status, TObjMessage[] arguments) {
         this.id = counter.incrementAndGet();

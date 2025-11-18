@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import javax.swing.tree.DefaultMutableTreeNode;
 import server.data.*;
 
 // facade class to implement all client-server event interactions
@@ -41,7 +42,7 @@ public class ServerController {
 
         Log.Msg("Got message: " + msg.toString());
         switch(msg.getType()) {
-            case PingRequest:{
+            case PING_REQUEST:{
                 HandlePing((Message<PingRequest>) msg, client);
                 break;
             }
@@ -69,8 +70,8 @@ public class ServerController {
     }
 
     private void HandlePing(Message<PingRequest> msg, ServerConnection client) {
-        Log.Msg("PingRequest: " + msg.toString());
-        client.SendMessage( MessageType.PingRequest, MessageStatus.RESPONSE, new PingResponse[] { new PingResponse("pong") } );
+        Log.Msg("PING_REQUEST: " + msg.toString());
+        client.SendMessage( MessageType.PING_REQUEST, MessageStatus.RESPONSE, new PingResponse[] { new PingResponse("pong") } );
     }
 
     private void HandlePasswordChange(Message<PasswordChangeRequest> msg, ServerConnection client) {
@@ -93,6 +94,7 @@ public class ServerController {
             if(!User.ValidatePassword(password)){
                 // respond with password error message
                 client.SendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
+                continue;
             }
 
             // update user password in user of this session
@@ -138,6 +140,9 @@ public class ServerController {
             // create new user object
             User newUser = new User(username, password, type);
             users.Put(username, newUser);
+            DefaultMutableTreeNode newUserNode = new DefaultMutableTreeNode(newUser.GetName());
+            ServerApp.userRoot.add(newUserNode);
+            ServerApp.ExpandTree();
 
             // send register success message
             client.SendMessage(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("") });
@@ -161,28 +166,26 @@ public class ServerController {
             String username = request.username();
             String password = request.password();
 
-            if(controller.HasUser(username)) {
-                User user = controller.GetUser(username);
-
-                client.User clientUser = new client.User(user.GetType());
-
-                if(user.Authenticate(password)) {
-
-                    Log.Msg("Login successful for user: " + username);
-                    client.SendMessage(MessageType.LOGIN_SUCCESS, MessageStatus.SUCCESS, new LoginResponse[] { new LoginResponse(clientUser) });
-                    return;
-
-                } else {
-                
-                    Log.Err("Wrong password for user: " + username);
-                    client.SendMessage(MessageType.LOGIN_FAILURE, MessageStatus.FAILURE, null);
-                    return;
-                
-                }
-            } else {
+            if(!controller.HasUser(username)) {
                 Log.Err("User not found: " + username);
-                client.SendMessage(MessageType.LOGIN_FAILURE, MessageStatus.FAILURE, null);
+                client.SendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, null);
+                continue;
             }
+        
+            User user = controller.GetUser(username);
+            client.User clientUser = new client.User(user.GetType());
+
+            if(!user.Authenticate(password)) {
+
+                Log.Err("Wrong password for user: " + username);
+                client.SendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, null);
+                continue;
+            
+            }
+
+            Log.Msg("Login successful for user: " + username);
+            client.SendMessage(MessageType.USER_LOGIN, MessageStatus.SUCCESS, new LoginResponse[] { new LoginResponse(clientUser) });
+            
         }
 
     }
@@ -203,6 +206,10 @@ public class ServerController {
 
             Campus newCampus = new Campus(campusName);
             campuses.Put(campusName, newCampus);
+            DefaultMutableTreeNode newCampusNode = new DefaultMutableTreeNode(newCampus.getCampusName());
+            ServerApp.campusRoot.add(newCampusNode);
+            ServerApp.ExpandTree();
+
             // return success
             client.SendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse[] { new AddCampusResponse("") });
 

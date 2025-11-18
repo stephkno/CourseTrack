@@ -69,7 +69,7 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
             return;
 
         appGUI.updateData(request.getArguments()[0]);
-        client.sendResponse(new Message<UpdateResponse>(MessageType.UPDATE, MessageStatus.RESPONSE, null));
+        client.sendResponse(new Message<UpdateResponse>(MessageType.CLIENT_UPDATE, MessageStatus.RESPONSE, null));
     }
     
     public void receivePingRequest(Message<PingRequest> request) {
@@ -77,15 +77,15 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
             return;
 
         System.out.println("Received PingRequest request: " + ((PingRequest)request.getArguments()[0]).message());
-        client.sendResponse(new Message<>(MessageType.PingRequest, MessageStatus.RESPONSE, null));
+        client.sendResponse(new Message<>(MessageType.PING_REQUEST, MessageStatus.RESPONSE, null));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void handleServerMessage(Message<?> request, Class<? extends Serializable> tClass) {
         switch (request.getType()) {
-            case UPDATE -> receiveUpdateRequest((Message<UpdateRequest>) request);
-            case PingRequest -> receivePingRequest((Message<PingRequest>) request);
+            case CLIENT_UPDATE -> receiveUpdateRequest((Message<UpdateRequest>) request);
+            case PING_REQUEST -> receivePingRequest((Message<PingRequest>) request);
             default -> System.err.println("Unhandled message type: " + request.getType());
         }
         

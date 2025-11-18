@@ -15,11 +15,13 @@ public class testclient {
         var client = new Client("localhost", 7777);
 
 		if (!client.connect()) {
-            System.err.println("Could not connect to server.");
+            
+			System.err.println("Could not connect to server.");
 			return;
+
 		}
 
-		var controller = new ClientController(client);
+		//var controller = new ClientController(client);
 		//controller.start();
 
 		String username = "testuser";
@@ -33,35 +35,38 @@ public class testclient {
 			Message<RegisterResponse> response = client.receiveResponse();
 			System.out.println(response);	
 			assert(response.getStatus() == MessageStatus.SUCCESS);
+			System.out.println("Received admin register response");
 		
 		}
-
 		client.User user;
 		{
 
 			System.out.println("Sending admin login request");
-			controller.sendLoginRequest(username, password);
+			client.sendRequest(new Message<>(MessageType.USER_LOGIN, MessageStatus.REQUEST, new LoginRequest[]{ new LoginRequest(username, password) }));
 			Message<LoginResponse> response = client.receiveResponse();
 			assert(response.getStatus() == MessageStatus.SUCCESS);
 			user = response.getArguments()[0].user();
 			System.out.println(user);
 			assert(user != null);
-			
+			System.out.println("Received admin login response");
+
 		}
 		{
 
 			System.out.println("Sending admin add campus request");
 			String campusName = "CSU East Bay";
 			client.sendRequest(new Message<>(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.REQUEST, new AddCampusRequest[]{ new AddCampusRequest(campusName)}));
-			Message<AddCampusRequest> response = client.receiveResponse();
+			Message<AddCampusResponse> response = client.receiveResponse();
 			assert(response.getStatus() == MessageStatus.SUCCESS);
-			String responseCampusName = response.getArguments()[0].campusName();
+			String responseCampusName = response.getArguments()[0].msg();
 			System.out.println(responseCampusName);
 			assert(responseCampusName.equals(campusName));
-
+			System.out.println("Received admin add campus response");
 
 		}
-	
+		
+		while(true){}
+		
     }
 
 }

@@ -34,4 +34,8 @@ public class User {
     public UserType GetType(){
         return type;
     }
+
+    public String GetName(){
+        return name;
+    }
 }

@@ -57,12 +57,13 @@ public class Server{
 
 	// send a message to all connected clients
 	public void Emit(Message<?> msg) {
+
 		for(ServerConnection client : clients) client.Send(msg);
+	
 	}
 	
 	// start server
 	public void Listen(int port) {
-
 
 		if(disconnectCallback == null) {
 			Log.Err("Disconnect callback is not set.");

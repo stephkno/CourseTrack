@@ -54,15 +54,18 @@ public class ServerConnection implements Runnable {
 
     // send a message to just this client
     public void Send(Message msg) {
-
+        Log.Msg("Sending msg " + msg.getTypeString());
         try {
+
             objectOutputStream.writeObject(msg);
             objectOutputStream.flush();
             
         }
 		catch (IOException e) {
+
 			e.printStackTrace();
-		}
+		
+        }
     }
 
     public <TObjMessage extends Serializable> void SendMessage(MessageType type, MessageStatus status, TObjMessage[] obj){

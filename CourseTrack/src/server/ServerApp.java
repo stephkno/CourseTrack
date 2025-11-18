@@ -13,10 +13,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ServerApp {
     
-	// main 
 	static JFrame mainFrame = new JFrame();
 	static JPanel mainPanel = new JPanel(new GridBagLayout());
 
@@ -24,13 +25,29 @@ public class ServerApp {
 	static JTextArea textBox = new JTextArea(40,76);
 	
 	static JList clientList = new JList();
+	static JList campusList = new JList();
+	
 	static DefaultListModel clientListModel;
+	static DefaultListModel campusListModel;
 
+	static JTree serverDataTree;
 	static JTextField inputBox = new JTextField(64);
+
+	static DefaultMutableTreeNode root;
+	static DefaultMutableTreeNode userRoot;
+	static DefaultMutableTreeNode campusRoot;
+	static DefaultMutableTreeNode termRoot;
+
+	static void ExpandTree(){
+		for (int i = 0; i < serverDataTree.getRowCount(); i++) {
+			serverDataTree.expandRow(i);
+		}
+	}
 
 	public static void main(String[] args) throws ClassNotFoundException {
 		
 		ServerController controller = ServerController.Get();
+		int port = 7777;
 
 		JTextArea textBox = new JTextArea();
 		Log.SetTextArea(textBox);
@@ -38,9 +55,9 @@ public class ServerApp {
 		JScrollPane scrollPane = new JScrollPane(textBox);
 		scrollPane.setPreferredSize(new Dimension(800, 600));
 
-		textBox.setEditable(false);	
+		textBox.setEditable(false);
 		
-		mainFrame.add(mainPanel);	
+		mainFrame.add(mainPanel);
 		mainPanel.setLayout(new GridBagLayout());
 
 		clientListModel = new DefaultListModel();
@@ -48,6 +65,28 @@ public class ServerApp {
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5, 5, 5, 5); 
+
+		root = new DefaultMutableTreeNode("Server");
+		userRoot = new DefaultMutableTreeNode("Users");
+		campusRoot = new DefaultMutableTreeNode("Campuses");
+		termRoot = new DefaultMutableTreeNode("Terms");
+
+		serverDataTree = new JTree(root);
+		root.add(campusRoot);
+		root.add(termRoot);
+		root.add(userRoot);
+
+        JScrollPane treeView = new JScrollPane(serverDataTree);
+		ServerApp.ExpandTree();
+
+		c.gridx = 2;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.weightx = 0.9;
+		c.weighty = 1.0;
+		c.fill = GridBagConstraints.BOTH;
+
+		mainPanel.add(treeView, c);
 
 		c.gridx = 0;
 		c.gridy = 0;
@@ -76,19 +115,18 @@ public class ServerApp {
 
 		c.gridx = 1;
 		c.gridy = 1;
-		c.weightx = 0.2;
+		c.weightx = 0.05;
 		c.weighty = 0.01;
 		mainPanel.add(button, c);
 
 		Server server = Server.Get();
-        mainFrame.setTitle("Server Listening on " + server.GetPort());
 
 		button.addActionListener(e -> {
 
 			String text = inputBox.getText();
 			inputBox.setText("");
 
-			Message msg = new Message(MessageType.PingRequest, MessageStatus.REQUEST, new PingRequest[] { new PingRequest(text) });
+			Message msg = new Message(MessageType.PING_REQUEST, MessageStatus.REQUEST, new PingRequest[] { new PingRequest(text) });
 			server.Emit(msg);
 
 			Log.Msg("Ping message: " + text);
@@ -133,8 +171,8 @@ public class ServerApp {
 		);
 
 		// start server
-		server.Listen(7777);
+        mainFrame.setTitle("Server Listening on " + port);
+		server.Listen(port);
 		
 	}
-	// end main
 }
