@@ -20,6 +20,7 @@ public class Client {
     public boolean connect() {
         try {
             socket = new Socket(host, port);
+            socket.setSoTimeout(5000);
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
             connected = true;
