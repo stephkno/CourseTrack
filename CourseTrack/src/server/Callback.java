@@ -1,6 +1,7 @@
 package server;
 
 @FunctionalInterface
-public interface Callback<T> {
-	void call(T t);
+public interface Callback {
+	void call();
 }
+

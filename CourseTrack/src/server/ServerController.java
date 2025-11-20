@@ -19,6 +19,7 @@ public class ServerController {
     private ServerController() {}
     static ServerController instance = new ServerController();
     public static ServerController Get() {
+                   
         return instance;
     }
 
@@ -61,6 +62,9 @@ public class ServerController {
             case ADMIN_ADD_CAMPUS:{
                 HandleAdminAddCampus((Message<AddCampusRequest>) msg, client);
                 break;
+            }
+            case ADMIN_ADD_COURSE:{
+              //  HandleAdminAddCourse((Message<AddCampusRequest>) msg, client);
             }
             default:{
                 break;
@@ -141,8 +145,6 @@ public class ServerController {
             User newUser = new User(username, password, type);
             users.Put(username, newUser);
             DefaultMutableTreeNode newUserNode = new DefaultMutableTreeNode(newUser.GetName());
-            ServerApp.userRoot.add(newUserNode);
-            ServerApp.ExpandTree();
 
             // send register success message
             client.SendMessage(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("") });
@@ -173,6 +175,7 @@ public class ServerController {
             }
         
             User user = controller.GetUser(username);
+            client.SetUser(user);
             client.User clientUser = new client.User(user.GetType());
 
             if(!user.Authenticate(password)) {
@@ -207,11 +210,27 @@ public class ServerController {
             Campus newCampus = new Campus(campusName);
             campuses.Put(campusName, newCampus);
             DefaultMutableTreeNode newCampusNode = new DefaultMutableTreeNode(newCampus.getCampusName());
-            ServerApp.campusRoot.add(newCampusNode);
-            ServerApp.ExpandTree();
 
             // return success
             client.SendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse[] { new AddCampusResponse("") });
+
+        }
+
+    }
+
+    private void HandleAdminAddCourse(Message<AddCourseRequest> msg, ServerConnection client) {
+
+        client.ValidateAdmin();
+
+        for(AddCourseRequest request : msg.getArguments()) {
+         
+            String courseName = request.name();
+            int units = request.units();
+            Department department = request.department();
+            Term term = request.term();
+
+            // check if term exists in server
+                        
 
         }
 

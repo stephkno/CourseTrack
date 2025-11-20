@@ -20,9 +20,9 @@ public class Server{
 	private HashMap<ServerConnection> clients = new HashMap<>();
 	
 	// callback functions
-	private RequestCallback<Message, ServerConnection> requestCallback;
-	private Callback<ServerConnection> connectCallback;
-	private Callback<ServerConnection> disconnectCallback;
+	private Callback_T_U<Message, ServerConnection> requestCallback;
+	private Callback_T<ServerConnection> connectCallback;
+	private Callback_T<ServerConnection> disconnectCallback;
 
 	// singleton
 	private Server() {}
@@ -35,15 +35,15 @@ public class Server{
 		return port;
 	}
 	
-	public void OnConnect(Callback<ServerConnection> connectCallback) {	
+	public void OnConnect(Callback_T<ServerConnection> connectCallback) {	
 		this.connectCallback = connectCallback;
 	}
 
-	public void OnDisconnect(Callback<ServerConnection> disconnectCallback) {
+	public void OnDisconnect(Callback_T<ServerConnection> disconnectCallback) {
 		this.disconnectCallback = disconnectCallback;
 	}
 
-	public void OnRequest(RequestCallback<Message, ServerConnection> requestCallback) {
+	public void OnRequest(Callback_T_U<Message, ServerConnection> requestCallback) {
 		this.requestCallback = requestCallback;
 	}
 

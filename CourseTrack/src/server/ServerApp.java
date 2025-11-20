@@ -1,142 +1,18 @@
 package server;
 
-import client.requests.PingRequest;
+import global.Log;
 import global.Message;
-import global.MessageStatus;
-import global.MessageType;
-import java.awt.*;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ServerApp {
+
+	static boolean run = true;
     
-	static JFrame mainFrame = new JFrame();
-	static JPanel mainPanel = new JPanel(new GridBagLayout());
-
-	static JButton button = new JButton("Ping All");
-	static JTextArea textBox = new JTextArea(40,76);
-	
-	static JList clientList = new JList();
-	static JList campusList = new JList();
-	
-	static DefaultListModel clientListModel;
-	static DefaultListModel campusListModel;
-
-	static JTree serverDataTree;
-	static JTextField inputBox = new JTextField(64);
-
-	static DefaultMutableTreeNode root;
-	static DefaultMutableTreeNode userRoot;
-	static DefaultMutableTreeNode campusRoot;
-	static DefaultMutableTreeNode termRoot;
-
-	static void ExpandTree(){
-		for (int i = 0; i < serverDataTree.getRowCount(); i++) {
-			serverDataTree.expandRow(i);
-		}
-	}
-
 	public static void main(String[] args) throws ClassNotFoundException {
 		
 		ServerController controller = ServerController.Get();
 		int port = 7777;
 
-		JTextArea textBox = new JTextArea();
-		Log.SetTextArea(textBox);
-
-		JScrollPane scrollPane = new JScrollPane(textBox);
-		scrollPane.setPreferredSize(new Dimension(800, 600));
-
-		textBox.setEditable(false);
-		
-		mainFrame.add(mainPanel);
-		mainPanel.setLayout(new GridBagLayout());
-
-		clientListModel = new DefaultListModel();
-		clientList.setModel(clientListModel);
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5); 
-
-		root = new DefaultMutableTreeNode("Server");
-		userRoot = new DefaultMutableTreeNode("Users");
-		campusRoot = new DefaultMutableTreeNode("Campuses");
-		termRoot = new DefaultMutableTreeNode("Terms");
-
-		serverDataTree = new JTree(root);
-		root.add(campusRoot);
-		root.add(termRoot);
-		root.add(userRoot);
-
-        JScrollPane treeView = new JScrollPane(serverDataTree);
-		ServerApp.ExpandTree();
-
-		c.gridx = 2;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 0.9;
-		c.weighty = 1.0;
-		c.fill = GridBagConstraints.BOTH;
-
-		mainPanel.add(treeView, c);
-
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 0.9;
-		c.weighty = 1.0;
-		c.fill = GridBagConstraints.BOTH;
-		mainPanel.add(scrollPane, c);
-
-		c.gridx = 1;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 0.1;
-		c.weighty = 1;
-		c.fill = GridBagConstraints.BOTH;
-
-		JScrollPane jListScrollPane = new JScrollPane(clientList);
-		mainPanel.add(jListScrollPane, c);
-
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 1;
-		c.weightx = 0.8;
-		c.weighty = 0.01;
-		mainPanel.add(inputBox, c);
-
-		c.gridx = 1;
-		c.gridy = 1;
-		c.weightx = 0.05;
-		c.weighty = 0.01;
-		mainPanel.add(button, c);
-
 		Server server = Server.Get();
-
-		button.addActionListener(e -> {
-
-			String text = inputBox.getText();
-			inputBox.setText("");
-
-			Message msg = new Message(MessageType.PING_REQUEST, MessageStatus.REQUEST, new PingRequest[] { new PingRequest(text) });
-			server.Emit(msg);
-
-			Log.Msg("Ping message: " + text);
-		
-		});
-		
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setVisible(true);
-		mainFrame.setSize(1024, 768);
-		mainFrame.setLocationRelativeTo(null);
 
 		// set server callback callback functions
 
@@ -155,7 +31,6 @@ public class ServerApp {
 			(ServerConnection client) -> {
 
 				Log.Msg("Client has connected: " + client.GetAddress());
-				clientListModel.addElement(client.GetAddress());
 
 			}
 		);
@@ -165,14 +40,18 @@ public class ServerApp {
 			(ServerConnection client) -> {
 
 				Log.Msg("Client has disconnected: " + client.GetAddress());
-				clientListModel.removeElement(client.GetAddress());
 			
 			}
 		);
 
+		// launch server menu thread
+		Shell shell = new Shell();
+		new Thread(shell).start();
+
 		// start server
-        mainFrame.setTitle("Server Listening on " + port);
+        Log.Msg("Server Listening on " + port);
 		server.Listen(port);
+
 		
 	}
 }

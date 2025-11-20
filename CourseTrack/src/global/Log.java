@@ -1,4 +1,4 @@
-package server;
+package global;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -6,7 +6,7 @@ import javax.swing.JTextArea;
 
 public class Log {
 	
-    public static boolean debug = false;
+    public static boolean debug = true;
     private static JTextArea textArea = null;
     private static int logCount = 0;
 
@@ -44,6 +44,8 @@ public class Log {
             textArea.append(out);
             textArea.setCaretPosition(textArea.getDocument().getLength());
         }
+        
         if(debug) System.err.println(out);
+
     }
 }

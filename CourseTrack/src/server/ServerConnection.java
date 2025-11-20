@@ -18,10 +18,10 @@ public class ServerConnection implements Runnable {
     private boolean run = true;
 
     // callback for when server receives message from this connection
-    private RequestCallback<Message, ServerConnection> messageCallback;
+    private Callback_T_U<Message, ServerConnection> messageCallback;
 
     // callback for when client disconnects from server
-    private Callback<ServerConnection> disconnectCallback;
+    private Callback_T<ServerConnection> disconnectCallback;
 
     // reference to server object
     private Server server;
@@ -33,13 +33,17 @@ public class ServerConnection implements Runnable {
     public boolean IsLoggedIn(){
         return user != null;
     }
+    
+    public void SetUser(User user){
+        this.user = user;
+    }
 
     public User GetUser(){
         return user;
     }
 
     // Constructor
-    public ServerConnection(Socket socket, Server server, RequestCallback<Message,ServerConnection> messageCallback, Callback<ServerConnection> disconnectCallback)
+    public ServerConnection(Socket socket, Server server, Callback_T_U<Message,ServerConnection> messageCallback, Callback_T<ServerConnection> disconnectCallback)
     {
         this.server = server;
         this.socket = socket;
@@ -73,8 +77,11 @@ public class ServerConnection implements Runnable {
     }
 
     private void Hangup(){
+        
         disconnectCallback.call(this); 
         server.RemoveClient(this);
+        user = null;
+
         try {
             socket.close();
         } catch (Exception e) {

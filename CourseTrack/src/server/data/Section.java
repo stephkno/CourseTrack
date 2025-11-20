@@ -12,9 +12,11 @@ public class Section {
     List<MeetTime> meetTimes;
     List<Student> students;
     Admin instructor;
+    int capacity;
 
-    public Section(String sectionId, Course course, Term term, Campus campus) {
+    public Section(String sectionId, int capacity, Course course, Term term, Campus campus) {
         this.sectionId = sectionId;
+        this.capacity = capacity;
         this.course = course;
         this.term = term;
         this.campus = campus;
@@ -60,6 +62,10 @@ public class Section {
 
     public Admin getInstructor() { 
         return instructor; 
+    }
+
+    public int getCapacity(){
+        return capacity;
     }
 
 }
