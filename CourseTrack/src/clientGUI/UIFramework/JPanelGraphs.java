@@ -1,4 +1,4 @@
-package UIFramework;
+package clientGUI.UIFramework;
 import javax.swing.JPanel;
 
 import java.awt.Graphics;

@@ -1,4 +1,4 @@
-package UIInformations;
+package clientGUI.UIInformations;
 
 public class UICourseInfo {
         public String code;

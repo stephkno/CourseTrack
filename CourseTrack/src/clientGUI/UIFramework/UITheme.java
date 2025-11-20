@@ -1,4 +1,4 @@
-package UIFramework;
+package clientGUI.UIFramework;
 import java.awt.*;
 
 public final class UITheme {

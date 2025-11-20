@@ -1,4 +1,4 @@
-package Pages;
+package clientGUI.Pages;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -6,9 +6,9 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
-import PageComponents.PageViews;
-import UIFramework.*;
-import UIInformations.*;
+import clientGUI.PageComponents.PageViews;
+import clientGUI.UIFramework.*;
+import clientGUI.UIInformations.*;
 
 public class StudentPage {
     //#region buildStudentHome

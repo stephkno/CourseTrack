@@ -1,11 +1,11 @@
-package PageComponents;
+package clientGUI.PageComponents;
 
 import java.awt.Component;
 import java.awt.Dimension;
 
-import UIFramework.*;
-import UIInformations.UICourseInfo;
-import UIInformations.UserRole;
+import clientGUI.UIFramework.*;
+import clientGUI.UIInformations.UICourseInfo;
+import clientGUI.UIInformations.UserRole;
 public class PageViews {
 
     //#region createBrowseView

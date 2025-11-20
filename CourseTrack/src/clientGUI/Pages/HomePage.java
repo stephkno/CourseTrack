@@ -1,10 +1,10 @@
-package Pages;
+package clientGUI.Pages;
 
 import java.awt.Component;
 import java.awt.Dimension;
 
-import UIFramework.*;
-import UIInformations.*;
+import clientGUI.UIFramework.*;
+import clientGUI.UIInformations.*;
 
 public class HomePage {
     public int sidebarWidth;

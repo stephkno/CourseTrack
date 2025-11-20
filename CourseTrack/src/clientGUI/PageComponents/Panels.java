@@ -1,4 +1,4 @@
-package PageComponents;
+package clientGUI.PageComponents;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -6,8 +6,8 @@ import java.awt.Graphics;
 
 import javax.swing.JFrame;
 
-import UIFramework.*;
-import UIInformations.*;
+import clientGUI.UIFramework.*;
+import clientGUI.UIInformations.*;
 
 public class Panels {
     public static class CourseItemPanel extends nPanel {

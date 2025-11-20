@@ -1,4 +1,4 @@
-package UIFramework;
+package clientGUI.UIFramework;
 import java.awt.GraphicsEnvironment;
 
 public class checkfontnames {

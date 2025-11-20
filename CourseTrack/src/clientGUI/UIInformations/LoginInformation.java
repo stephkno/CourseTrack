@@ -1,4 +1,4 @@
-package UIInformations;
+package clientGUI.UIInformations;
 
 public class LoginInformation{
         public String username = "";

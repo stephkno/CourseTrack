@@ -1,10 +1,10 @@
-package Pages;
+package clientGUI.Pages;
 
 import java.awt.Component;
 import java.awt.Dimension;
 
-import UIFramework.*;
-import UIInformations.LoginInformation;
+import clientGUI.UIFramework.*;
+import clientGUI.UIInformations.LoginInformation;
 
 public class LoginPage {
     LoginInformation loginInformation;

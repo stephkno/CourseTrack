@@ -1,12 +1,12 @@
-package Pages;
+package clientGUI.Pages;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import UIFramework.*;
-import PageComponents.*;
-import UIInformations.*;
+import clientGUI.UIFramework.*;
+import clientGUI.PageComponents.*;
+import clientGUI.UIInformations.*;
 public class AdminPage {
     
     public AdminPage(nFrame frame, UICourseInfo[] courses, HomePage homePage) {

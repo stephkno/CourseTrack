@@ -1,11 +1,12 @@
+package clientGUI;
 
-import Pages.LoginPage;
-import UIFramework.ButtonInterface;
-import UIInformations.LoginInformation;
-import UIFramework.*;
+import clientGUI.Pages.LoginPage;
+import clientGUI.UIFramework.ButtonInterface;
+import clientGUI.UIInformations.LoginInformation;
+import clientGUI.UIFramework.*;
 
 public class testing {
-    static ClientUI clientUI = new ClientUI();
+    static ClientUIManager clientUI = new ClientUIManager();
     static LoginInformation lInfo = new LoginInformation();
     static ButtonInterface logoutButton = new ButtonInterface() {
         @Override

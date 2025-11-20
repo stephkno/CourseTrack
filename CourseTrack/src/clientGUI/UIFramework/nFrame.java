@@ -1,4 +1,4 @@
-package UIFramework;
+package clientGUI.UIFramework;
 import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.Component;

@@ -1,15 +1,15 @@
+package clientGUI;
 
-
-import Pages.*;
-import UIFramework.*;
-import UIInformations.*;
+import clientGUI.Pages.*;
+import clientGUI.UIFramework.*;
+import clientGUI.UIInformations.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
 
-public class ClientUI {
+public class ClientUIManager {
     
     private final String title = "CourseTrack";
     private final int startingWidth = 500;
@@ -29,7 +29,7 @@ public class ClientUI {
         COURSES.add(new UICourseInfo("CS399", "Special Topics: Game Development", "Dr. Miller", "MW 15:30-16:45", "LAB 12"));
     }
 
-    public ClientUI(){
+    public ClientUIManager(){
         frame = new nFrame(title, startingWidth, startingHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setBackground(UITheme.BG_APP);
