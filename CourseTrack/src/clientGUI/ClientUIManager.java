@@ -4,6 +4,7 @@ import clientGUI.Pages.*;
 import clientGUI.UIFramework.*;
 import clientGUI.UIInformations.*;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,15 @@ public class ClientUIManager {
     public void GoLoginPage(LoginInformation loginInformation, ButtonInterface loginButtonAction) {
         cleanUp();
         new LoginPage(frame, loginInformation, loginButtonAction);
+    }
+    public void setLoginError(String errString) {
+        try {
+            
+            nFrame.ListLayout l = (nFrame.ListLayout) frame.getChildren()[0].comp;
+            JPanelPlainText errText = (JPanelPlainText) l.getComponents()[l.getComponentCount()-1];
+            errText.setText(errString);
+        } catch(Exception e) { e.printStackTrace(); }
+        
     }
     public void GoAdminPage(ButtonInterface logoutButtonAction) {
         cleanUp();

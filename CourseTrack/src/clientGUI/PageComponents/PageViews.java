@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import clientGUI.UIFramework.*;
 import clientGUI.UIInformations.UICourseInfo;
 import clientGUI.UIInformations.UserRole;
+@SuppressWarnings("unused")
 public class PageViews {
 
     //#region createBrowseView

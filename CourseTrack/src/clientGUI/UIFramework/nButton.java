@@ -4,19 +4,14 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A themed, rounded button that matches your other custom components.
- * - Uses RoundedPanel for the shape.
- * - Uses UITheme fonts/colors.
- * - Fires ActionListener on click, like JButton.
- */
+
 public class nButton extends RoundedPanel {
 
     private String text;
     private boolean hovered = false;
     private boolean pressed = false;
 
-    private Color baseColor; // <--- NEW
+    private Color baseColor;
 
     private final List<ActionListener> listeners = new ArrayList<>();
 

@@ -9,7 +9,7 @@ import clientGUI.UIInformations.LoginInformation;
 public class LoginPage {
     LoginInformation loginInformation;
     private ButtonInterface b;
-    public LoginPage(nFrame frame, LoginInformation _loginInformation, ButtonInterface loginButtonAction) {
+    public LoginPage(nFrame frame, LoginInformation _loginInformation, ButtonInterface loginButtonAction ) {
         b = loginButtonAction;
         loginInformation = _loginInformation;
         loginPage(frame);
@@ -44,12 +44,16 @@ public class LoginPage {
             passwordInput.setText("");
         });
 
+        JPanelPlainText errorText = new JPanelPlainText("");
+        errorText.textColor = UITheme.FAIL;
+
         Component[] components = {
                 userNamePrompt,
                 usernameInput,
                 passwordPrompt,
                 passwordInput,
-                loginButton
+                loginButton,
+                errorText
         };
 
         int width = 300;

@@ -16,9 +16,9 @@ public class nFrame extends JFrame {
     private final Dimension baseSize;
     private final List<TrackedChild> trackedChildren = new ArrayList<>();
 
-    private static class TrackedChild {
-        final Component comp;
-        final Rectangle initialBounds;
+    public static class TrackedChild {
+        public final Component comp;
+        public final Rectangle initialBounds;
 
         TrackedChild(Component comp) {
             this.comp = comp;
@@ -42,6 +42,10 @@ public class nFrame extends JFrame {
                 resizeChildren();
             }
         });
+    }
+
+    public TrackedChild[] getChildren() {
+        return trackedChildren.toArray(new TrackedChild[0]);
     }
 
     @Override

@@ -4,8 +4,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 import clientGUI.UIFramework.*;
-import clientGUI.UIInformations.*;
 
+@SuppressWarnings("unused")
 public class HomePage {
     public int sidebarWidth;
     public int sidebarHeight;

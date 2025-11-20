@@ -16,7 +16,7 @@ public class Panels {
         CourseItemPanel(UICourseInfo _course, UserRole role) {
             course = _course;
             setOpaque(false);
-            setLayout(null);                 // we'll manually place the button
+            setLayout(null);
             setPreferredSize(new Dimension(200, 70));
 
             
