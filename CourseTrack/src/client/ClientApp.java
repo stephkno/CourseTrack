@@ -12,6 +12,6 @@ public class ClientApp {
 		var controller = new ClientController(client);
 		controller.start();
 
-		return;
+		
 	}
 }
