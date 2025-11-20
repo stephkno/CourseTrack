@@ -11,7 +11,7 @@ public class AppGUI {
     }
 
     public void start() {
-        
+        start();
     }
 
     public Boolean updateData(UpdateRequest updateRequest) {
