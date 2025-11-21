@@ -17,6 +17,9 @@ public class ServerConnection implements Runnable {
     // thread loop condition
     private boolean run = true;
 
+    // todo: create account status enum?
+    private boolean banned = false;
+
     // callback for when server receives message from this connection
     private Callback_T_U<Message, ServerConnection> messageCallback;
 
@@ -30,15 +33,15 @@ public class ServerConnection implements Runnable {
     // starts null and becomes defined when login occurs
     private User user;
 
-    public boolean IsLoggedIn(){
+    public boolean IsLoggedIn() {
         return user != null;
     }
     
-    public void SetUser(User user){
+    public void SetUser(User user) {
         this.user = user;
     }
 
-    public User GetUser(){
+    public User GetUser() {
         return user;
     }
 
@@ -72,15 +75,16 @@ public class ServerConnection implements Runnable {
         }
     }
 
-    public <TObjMessage extends Serializable> void SendMessage(MessageType type, MessageStatus status, TObjMessage[] obj){
+    public <TObjMessage extends Serializable> void SendMessage(MessageType type, MessageStatus status, TObjMessage[] obj) {
         Send(new Message<>(type, status, obj));
     }
 
-    private void Hangup(){
+    public void Hangup() {
         
         disconnectCallback.call(this); 
         server.RemoveClient(this);
         user = null;
+        run = false;
 
         try {
             socket.close();
@@ -89,11 +93,15 @@ public class ServerConnection implements Runnable {
         }
     }
 
-    public boolean ValidateAdmin(){
+    public void Ban() {
+        this.banned = true;
+    }
+
+    public boolean ValidateAdmin() {
         return user instanceof Admin;
     }
 
-    public boolean ValidateStudent(){
+    public boolean ValidateStudent() {
         return user instanceof Student;
     }
 

@@ -238,39 +238,33 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 
 	}
 
-	// return array of items in hash map
-	public T[] toArray() {
-		
-	    int totalSize = 0;
-	    for (int b = 0; b < buckets.length; b++)
-	        if (buckets[b] != null) 
-	            totalSize += buckets[b].Length();
-	  
-	    T[] result = (T[]) new Object[totalSize];
-	    
-	    int i = 0;
-	    for (int b = 0; b < buckets.length; b++)
-	        if (buckets[b] != null)
-	            for (int ii = 0; ii < buckets[b].Length(); ii++) result[i++] = buckets[b].Get(ii).data;
-	        
-	    return result;
-	}
-	
 	// iterate over all items in hash map
 	@Override
 	public Iterator<T> iterator() {
-	    return new Iterator<T>() {
-	        private T[] array = toArray();
-	        private int i = 0;
-	        
-	        @Override
+		return new Iterator<T>() {
+	
+			private int b = 0;
+			private int e = 0;
+
+			@Override
 	        public boolean hasNext() {
-	            return i < array.length;
+				while(b < buckets.length) {
+					if(buckets[b] != null &&
+					e < buckets[b].Length()) {
+						return true;
+					}
+					b++;
+					e = 0;
+				}
+				return false;
 	        }
 	        
 	        @Override
 	        public T next() {
-	            return array[i++];
+				if(!hasNext())
+					throw new java.util.NoSuchElementException();
+
+				return buckets[b].Get(e++).data;
 	        }
 	    };
 	}

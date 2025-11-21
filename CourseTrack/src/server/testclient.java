@@ -65,7 +65,7 @@ public class testclient {
 
 		}
 		
-		while(true){}
+		while(true) {}
 		
     }
 

@@ -7,7 +7,6 @@ public class Course {
     int number;
     int units;
     Department department;
-    Term term;
 
     // should have a reference to or own offered sections?
     LinkedList<Section> sections;

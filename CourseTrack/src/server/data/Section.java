@@ -1,7 +1,6 @@
 package server.data;
 
-import java.util.ArrayList;
-import java.util.List;
+import global.LinkedList;
 
 public class Section {
    
@@ -9,8 +8,8 @@ public class Section {
     Course course;
     Term term;
     Campus campus;
-    List<MeetTime> meetTimes;
-    List<Student> students;
+    LinkedList<MeetTime> meetTimes;
+    LinkedList<Student> students;
     Admin instructor;
     int capacity;
 
@@ -20,8 +19,8 @@ public class Section {
         this.course = course;
         this.term = term;
         this.campus = campus;
-        this.meetTimes = new ArrayList<>();
-        this.students = new ArrayList<>();
+        this.meetTimes = new LinkedList<>();
+        this.students = new LinkedList<>();
     }
 
     public String getSectionId() { 
@@ -40,31 +39,31 @@ public class Section {
         return campus; 
     }
 
-    public List<MeetTime> getMeetTimes() { 
+    public LinkedList<MeetTime> getMeetTimes() { 
         return meetTimes; 
     }
 
     public void addMeetTime(MeetTime mt) { 
-        this.meetTimes.add(mt); 
+        this.meetTimes.Push(mt); 
     }
 
-    public List<Student> getStudents() { 
+    public LinkedList<Student> getStudents() { 
         return students; 
     }
 
     public void addStudent(Student student) { 
-        this.students.add(student); 
+        this.students.Push(student); 
     }
 
     public void removeStudent(Student student) { 
-        this.students.remove(student); 
+        this.students.Remove(student); 
     }
 
     public Admin getInstructor() { 
         return instructor; 
     }
 
-    public int getCapacity(){
+    public int getCapacity() {
         return capacity;
     }
 

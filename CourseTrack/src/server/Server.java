@@ -5,13 +5,35 @@ import java.io.*;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 
 // serverSocket handler manages the serverSocket and owns all client ServerSession connections
-public class Server{
+public class Server {
 
 	// server class
 	private int port;
-	private boolean running = false;
+	private boolean running = true;
+
+	private LocalDateTime start;
+
+	public String Uptime() {
+		
+		LocalDateTime end = LocalDateTime.now();
+
+		String outstring = "Uptime:";
+
+		long days = ChronoUnit.DAYS.between(start, end);
+		long hours = ChronoUnit.HOURS.between(start, end);
+		long mins = ChronoUnit.MINUTES.between(start, end);
+		long secs = ChronoUnit.SECONDS.between(start, end);
+
+		outstring += days + " days, " + hours + " hours, " + mins + " mins, and " + secs + " seconds.";
+
+		return outstring;
+
+	}
 
 	// server incoming connection listener
 	private ServerSocket serverSocket = null;
@@ -31,10 +53,50 @@ public class Server{
 		return server;
 	}
 
-	public int GetPort(){
+	public int GetPort() {
 		return port;
 	}
-	
+
+	public static boolean Running() {
+		return server.running;
+	}
+
+	public void Hangup() {
+		
+		running = false;
+		
+		for(ServerConnection client : clients) {
+
+			client.Hangup();
+		
+		}
+
+		try {
+		
+			serverSocket.close();  // may throw IOException
+		
+		} catch (IOException e) {
+		
+			e.printStackTrace();  // or log it
+		
+		}
+
+	}
+
+	String MessageStats(){
+		String outString = "";
+		outString += "\nMessages received:";
+		outString += "\nMessages sent:";
+		return outString;
+	}
+
+	String MemoryUsage(){
+		String outString = "";
+		long mem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		outString += String.valueOf(mem);
+		return outString;
+	}
+
 	public void OnConnect(Callback_T<ServerConnection> connectCallback) {	
 		this.connectCallback = connectCallback;
 	}
@@ -45,6 +107,23 @@ public class Server{
 
 	public void OnRequest(Callback_T_U<Message, ServerConnection> requestCallback) {
 		this.requestCallback = requestCallback;
+	}
+
+	public String[] GetClients() {
+
+		int num_clients = clients.Size();
+		String[] out_strings = new String[num_clients];
+		int i = 0;
+
+		for(ServerConnection client : clients){
+			out_strings[i++] = client.GetAddress();
+		}
+
+		return out_strings;
+	}
+
+	public ServerConnection GetClient(String key) {
+		return clients.Get(key);
 	}
 
 	// called to remove client from the server
@@ -64,6 +143,8 @@ public class Server{
 	
 	// start server
 	public void Listen(int port) {
+
+		start = LocalDateTime.now();
 
 		if(disconnectCallback == null) {
 			Log.Err("Disconnect callback is not set.");

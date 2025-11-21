@@ -1,6 +1,7 @@
 package server.data;
 
 import client.UserType;
+import server.ServerConnection;
 
 public class User {
 
@@ -8,6 +9,7 @@ public class User {
     int id;
     String name;
     String password;
+    public ServerConnection socket;
 
     public User(String name, String password, UserType type) {
         this.name = name;
@@ -15,7 +17,7 @@ public class User {
         this.type = type;
     }
 
-    public static boolean ValidatePassword(String password){
+    public static boolean ValidatePassword(String password) {
         return password.length() > 0 || password.length() <= 32;
     }
 
@@ -31,11 +33,12 @@ public class User {
         return id;
     }
 
-    public UserType GetType(){
+    public UserType GetType() {
         return type;
     }
 
-    public String GetName(){
+    public String GetName() {
         return name;
     }
+
 }

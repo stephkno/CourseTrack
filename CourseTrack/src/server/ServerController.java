@@ -19,13 +19,24 @@ public class ServerController {
     private ServerController() {}
     static ServerController instance = new ServerController();
     public static ServerController Get() {
-                   
         return instance;
     }
 
     HashMap<User> users = new HashMap<>();
     HashMap<Campus> campuses = new HashMap<>();
     LinkedList<Term> terms = new LinkedList<>();
+
+    public HashMap<User> GetUsers() {
+        return users;
+    }
+
+    public HashMap<Campus> GetCampuses() {
+        return campuses;
+    }
+
+    public LinkedList<Term> GetTerms() {
+        return terms;
+    }
 
     public User GetUser(String username) {
         return users.Get(username);
@@ -35,7 +46,7 @@ public class ServerController {
         return users.Contains(username);
     }
 
-    private boolean AuthorizeUser(User user, UserType type){
+    private boolean AuthorizeUser(User user, UserType type) {
         return user.GetType() == type;
     }
 
@@ -89,13 +100,13 @@ public class ServerController {
         // for each request
         PasswordChangeRequest[] requests = msg.getArguments();
         
-        for(PasswordChangeRequest request : requests){
+        for(PasswordChangeRequest request : requests) {
 
             // get data
             String password = request.password();
 
             // validate password
-            if(!User.ValidatePassword(password)){
+            if(!User.ValidatePassword(password)) {
                 // respond with password error message
                 client.SendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
                 continue;
@@ -112,7 +123,7 @@ public class ServerController {
     private void HandleRegister(Message<RegisterRequest> msg, ServerConnection client) {
 
         // user should not be logged in
-        if(client.IsLoggedIn()){
+        if(client.IsLoggedIn()) {
             // send failure response message
             client.SendMessage( MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("User currently logged in") } );
             return;
@@ -121,21 +132,21 @@ public class ServerController {
         // for each request
         RegisterRequest[] requests = msg.getArguments();
         
-        for(RegisterRequest request : requests){
+        for(RegisterRequest request : requests) {
             // get data
             String username = request.username();
             String password = request.password();
             UserType type = request.type();
 
             // validate username
-            if(users.Contains(username)){
+            if(users.Contains(username)) {
                 // respond with error: username already exists
                 client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Username exists") });
                 continue;
             }
 
             // validate password
-            if(!User.ValidatePassword(password)){
+            if(!User.ValidatePassword(password)) {
                 // respond with password error
                 client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Invalid password") });
                 continue;
@@ -156,7 +167,7 @@ public class ServerController {
     private void HandleLogin(Message<LoginRequest> msg, ServerConnection client) {
 
         // user should not be logged in
-        if(client.IsLoggedIn()){
+        if(client.IsLoggedIn()) {
             // send fail response
             client.SendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, new LoginResponse[] { new LoginResponse(null) });
             return;
@@ -177,6 +188,7 @@ public class ServerController {
             User user = controller.GetUser(username);
             client.SetUser(user);
             client.User clientUser = new client.User(user.GetType());
+            user.socket = client;
 
             if(!user.Authenticate(password)) {
 
@@ -209,7 +221,6 @@ public class ServerController {
 
             Campus newCampus = new Campus(campusName);
             campuses.Put(campusName, newCampus);
-            DefaultMutableTreeNode newCampusNode = new DefaultMutableTreeNode(newCampus.getCampusName());
 
             // return success
             client.SendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse[] { new AddCampusResponse("") });
@@ -225,31 +236,32 @@ public class ServerController {
         for(AddCourseRequest request : msg.getArguments()) {
          
             String courseName = request.name();
+            int number = request.number();
             int units = request.units();
             Department department = request.department();
-            Term term = request.term();
 
-            // check if term exists in server
-                        
 
+            // 
         }
 
     }
 
-    public void Serialize(String filepath, boolean save) {
+    public static void Serialize(String filepath, boolean save) {
 
         try {
             
             if(save) {
                 FileOutputStream fileStream = new FileOutputStream(filepath);
                 ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
-                objectStream.writeObject(this);
+                objectStream.writeObject(instance);
             } else {
                 FileInputStream fileStream = new FileInputStream(filepath);
                 ObjectInputStream objectStream = new ObjectInputStream(fileStream);
-                //this = objectStream.readObject();
+                instance = (ServerController)objectStream.readObject();
             }
 
+        } catch(ClassNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

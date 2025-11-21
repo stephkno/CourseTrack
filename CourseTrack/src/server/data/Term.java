@@ -25,4 +25,9 @@ public class Term {
     public String getDisplayName() {
         return season + " " + year;
     }
+
+    public boolean Equals(Term other) {
+        return season == other.season && year == other.year;
+    }
+
 }

@@ -9,6 +9,11 @@ public class Log {
     public static boolean debug = true;
     private static JTextArea textArea = null;
     private static int logCount = 0;
+    private static int logLevel = 1;
+
+    public static void SetLevel(int level) {
+        logLevel = level;
+    }
 
     private Log() {}
     
@@ -25,7 +30,20 @@ public class Log {
         log("Err", args);
         logCount++;
 	}
+
+    public static void Print(String... str) {
+        for(Object s : str) {
+            System.out.print(s);
+        }
+    }
 	    
+    public static void Println(String... str) {
+        for(Object s : str) {
+            System.out.print(s);
+        }
+        System.out.println("\n");
+    }
+
     private static void log(String type, Object...args) {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         StackTraceElement e = stackTrace[2];
@@ -45,7 +63,7 @@ public class Log {
             textArea.setCaretPosition(textArea.getDocument().getLength());
         }
         
-        if(debug) System.err.println(out);
+        if(debug) System.err.print(out);
 
     }
 }

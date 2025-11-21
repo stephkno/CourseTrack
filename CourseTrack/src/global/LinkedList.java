@@ -70,6 +70,29 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 		
 	}
 	
+	public void Remove(T t) {
+		
+		if(t == first.data) {
+			first = first.next;
+			numItems--;
+			return;
+		}
+
+		Node<T> curr = first;
+
+	    while(curr != null){
+			
+			if(curr.data == t) {
+				curr = curr.next;
+				break;
+			}
+
+			curr = curr.next;
+	    
+		} 
+
+	}
+	
 	public void Remove(int i) {
 		
 		if(i < 0 || i > numItems || first == null) {

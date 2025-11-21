@@ -5,8 +5,6 @@ import global.Message;
 
 public class ServerApp {
 
-	static boolean run = true;
-    
 	public static void main(String[] args) throws ClassNotFoundException {
 		
 		ServerController controller = ServerController.Get();
@@ -52,6 +50,5 @@ public class ServerApp {
         Log.Msg("Server Listening on " + port);
 		server.Listen(port);
 
-		
 	}
 }
