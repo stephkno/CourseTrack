@@ -3,6 +3,7 @@ package clientGUI.PageComponents;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.RenderingHints;
 
 import javax.swing.JFrame;
 
@@ -14,6 +15,8 @@ public class Panels {
         private final UICourseInfo course;
         private nButton[] buttonList;
         CourseItemPanel(UICourseInfo _course, UserRole role) {
+            setName("CourseItemPanel");
+
             course = _course;
             setOpaque(false);
             setLayout(null);
@@ -21,7 +24,7 @@ public class Panels {
 
             
             switch (role) {
-                case UserRole.admin:
+                case UserRole.admin -> {
                     nButton editButton = new nButton("Edit");
                     nButton deleteButton = new nButton("Delete");
                     editButton.setBackgroundColor(UITheme.SUCCESS);
@@ -30,17 +33,18 @@ public class Panels {
                     add(deleteButton);
                     buttonList = new nButton[2];
                     buttonList[1] = editButton; buttonList[0] = deleteButton;
-                    break;
+                }
             
-                default:
+                default -> {
                     nButton enrollButton = new nButton("Enroll");
                     enrollButton.setBackgroundColor(UITheme.SUCCESS);
                     add(enrollButton);
                     DoEnrollButton(enrollButton);
                     buttonList = new nButton[1];
                     buttonList[0] = enrollButton;
-                    break;
+                }
             }
+            doLayout();
         }
         private void DoEnrollButton(nButton EnrollButton){
             EnrollButton.addActionListener(e -> {
@@ -110,43 +114,33 @@ public class Panels {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            java.awt.Graphics2D g2 = (java.awt.Graphics2D) g.create();
-            try {
-                g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
-                        java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
-
-                int w = getWidth();
-                int h = getHeight();
-
-                g2.setColor(UITheme.BG_APP);
-                g2.fillRoundRect(0, 0, w - 1, h - 1, 16, 16);
-
-                g2.setColor(UITheme.BG_ELEVATED_ELEVATED);
-                g2.drawRoundRect(0, 0, w - 1, h - 1, 16, 16);
-
-                int x = 12;
-                int y = 10;
-
-                // Title line
-                g2.setFont(UITheme.FONT_BODY.deriveFont(java.awt.Font.BOLD));
-                g2.setColor(UITheme.TEXT_PRIMARY);
-                g2.drawString(course.code + " - " + course.title,
-                        x, y + g2.getFontMetrics().getAscent());
-                y += g2.getFontMetrics().getHeight();
-
-                // Instructor + time
-                g2.setFont(UITheme.FONT_BODY);
-                g2.setColor(UITheme.TEXT_MUTED);
-                g2.drawString(course.instructor + " | " + course.time,
-                        x, y + g2.getFontMetrics().getAscent());
-                y += g2.getFontMetrics().getHeight();
-
-                // Location
-                g2.drawString(course.location,
-                        x, y + g2.getFontMetrics().getAscent());
-            } finally {
-                g2.dispose();
-            }
+            java.awt.Graphics2D g2d = (java.awt.Graphics2D) g;
+            RenderingHints oldHints = g2d.getRenderingHints();
+            g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+                    java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+            int w = getWidth();
+            int h = getHeight();
+            g2d.setColor(UITheme.BG_APP);
+            g2d.fillRoundRect(0, 0, w - 1, h - 1, 16, 16);
+            g2d.setColor(UITheme.BG_ELEVATED_ELEVATED);
+            g2d.drawRoundRect(0, 0, w - 1, h - 1, 16, 16);
+            int x = 12;
+            int y = 10;
+            // Title line
+            g2d.setFont(UITheme.FONT_BODY.deriveFont(java.awt.Font.BOLD));
+            g2d.setColor(UITheme.TEXT_PRIMARY);
+            g2d.drawString(course.code + " - " + course.title,
+                    x, y + g2d.getFontMetrics().getAscent());
+            y += g2d.getFontMetrics().getHeight();
+            // Instructor + time
+            g2d.setFont(UITheme.FONT_BODY);
+            g2d.setColor(UITheme.TEXT_MUTED);
+            g2d.drawString(course.instructor + " | " + course.time,
+                    x, y + g2d.getFontMetrics().getAscent());
+            y += g2d.getFontMetrics().getHeight();
+            // Location
+            g2d.drawString(course.location,x, y + g2d.getFontMetrics().getAscent());
+            g2d.setRenderingHints(oldHints);
         }
     }
 }

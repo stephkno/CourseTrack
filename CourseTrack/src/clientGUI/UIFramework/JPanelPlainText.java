@@ -5,9 +5,11 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.geom.Rectangle2D;
 
 @SuppressWarnings("unused")
 public class JPanelPlainText extends nPanel {
@@ -106,14 +108,23 @@ public class JPanelPlainText extends nPanel {
         g2d.setColor(textColor);
         Dimension size = getSize();
         double cx = size.getWidth() / 2;// 2.0;
-        double cy = size.getHeight() / 2.0;
+        double cy = size.getHeight() / 2.0; //mainStringAlignment.CENTER
+        switch(mainAlignment) {
+                case MainStringAlignments.LEFT -> cx = 0;
+                case MainStringAlignments.RIGHT -> cx = size.getWidth();
+                case MainStringAlignments.CENTER -> {}
+            }
+            
         // draw the scaled, centered string
         textHeight = g.getFontMetrics().getHeight();
+        Rectangle2D textRect = g.getFontMetrics().getStringBounds(text, g2d);
+        scale = Math.min(size.getWidth()/textRect.getWidth(), 1);
         drawScaledAlignedString(g2d,text,cx,cy,scale,scale,crossAlignment,mainAlignment);
         if (drawUnderline) {
             int textWidth = fm.stringWidth(text);
             int baselineY = (int) (cy + fm.getAscent() * scale / 2.0);
-            int startX = (int) (cx - (textWidth * scale) / 2.0);
+            int startX = (int) (cx - (textWidth * scale) / 2.0); 
+            
             int endX = (int) (startX + textWidth * scale);
             g2d.drawLine(startX, baselineY + 2, endX, baselineY + 2);
         }

@@ -2,8 +2,6 @@ package clientGUI.Pages;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
 import clientGUI.UIFramework.*;
 import clientGUI.PageComponents.*;
 import clientGUI.UIInformations.*;
@@ -22,7 +20,7 @@ public class AdminPage {
     }
     private void buildAdminHome(nFrame frame, UICourseInfo[] courses, int sidebarX, int sidebarY, int sidebarWidth, int sidebarHeight, int mainX, int mainY, int mainW, int mainH) {
 
-        List<Component> navList = new ArrayList<>();
+        UIArrayList<Component> navList = new UIArrayList<>();
 
         Color navBg = UITheme.BG_APP;
         nButton navManage = new nButton("Manage Courses");
@@ -32,10 +30,10 @@ public class AdminPage {
         navManage.setBackgroundColor(navBg);
         navReports.setBackgroundColor(navBg);
 
-        navList.add(navManage);
-        navList.add(navReports);
+        navList.append(navManage);
+        navList.append(navReports);
 
-        Component[] navComponents = navList.toArray(new Component[0]);
+        Component[] navComponents = navList.toArray(new Component[navList.getLength()]);
 
         nFrame.ListLayout navLayout = new nFrame.ListLayout(frame,navComponents,new Dimension(sidebarWidth, sidebarHeight),sidebarX,sidebarY);
         navLayout.backgroundColor = UITheme.BG_ELEVATED2;

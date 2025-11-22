@@ -1,4 +1,4 @@
-package server.data;
+package global.data;
 
 import global.LinkedList;
 import java.io.Serializable;

@@ -1,6 +1,9 @@
-package server.data;
+package global.data;
 
 import global.LinkedList;
+import server.data.Admin;
+import server.data.Student;
+
 import java.io.Serializable;
 
 public class Section implements Serializable {

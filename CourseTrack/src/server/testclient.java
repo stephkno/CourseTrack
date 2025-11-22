@@ -4,6 +4,8 @@ import client.*;
 import global.Message;
 import global.MessageStatus;
 import global.MessageType;
+import global.data.Campus;
+import global.data.Course;
 import global.requests.*;
 import global.responses.*;
 import server.data.*;

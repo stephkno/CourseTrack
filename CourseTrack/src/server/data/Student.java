@@ -2,6 +2,8 @@ package server.data;
 
 import client.UserType;
 import global.LinkedList;
+import global.data.Section;
+
 import java.io.Serializable;
 
 public class Student extends User implements Serializable {

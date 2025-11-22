@@ -10,6 +10,8 @@ public class nPanel extends JPanel {
 
     public nPanel() {
         super();
+
+        setName("nPanel");
         setFont(UITheme.FONT_BODY);
         setOpaque(false);
     }

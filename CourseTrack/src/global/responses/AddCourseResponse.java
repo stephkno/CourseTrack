@@ -1,7 +1,8 @@
 package global.responses;
 
 import java.io.Serializable;
-import server.data.Course;
+
+import global.data.Course;
 
 public record AddCourseResponse(
     Course course

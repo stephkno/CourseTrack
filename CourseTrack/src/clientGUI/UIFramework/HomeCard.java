@@ -14,6 +14,8 @@ public class HomeCard extends nPanel {
     private int radius = 20;
 
     public HomeCard(String title, String description) {
+        setName("HomeCard");
+        
         this.title = title;
         this.description = description;
         setOpaque(false);

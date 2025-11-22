@@ -1,8 +1,8 @@
 package clientGUI.UIFramework;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import clientGUI.UIInformations.UIArrayList;
 
 
 public class nButton extends RoundedPanel {
@@ -13,9 +13,11 @@ public class nButton extends RoundedPanel {
 
     private Color baseColor;
 
-    private final List<ActionListener> listeners = new ArrayList<>();
+    private final UIArrayList<ActionListener> listeners = new UIArrayList<>();
 
     public nButton(String text) {
+        setName("nButton");
+
         this.text = text != null ? text : "";
         init();
     }
@@ -94,9 +96,7 @@ public class nButton extends RoundedPanel {
 
     private void fireActionEvent() {
         ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, text);
-        for (ActionListener l : listeners) {
-            l.actionPerformed(evt);
-        }
+        listeners.foreach(l -> l.actionPerformed(evt));
     }
 
     public void setText(String text) {
@@ -110,7 +110,7 @@ public class nButton extends RoundedPanel {
 
     public void addActionListener(ActionListener l) {
         if (l != null && !listeners.contains(l)) {
-            listeners.add(l);
+            listeners.append(l);
         }
     }
 

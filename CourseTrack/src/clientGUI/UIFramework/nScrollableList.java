@@ -1,13 +1,12 @@
 package clientGUI.UIFramework;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
+import clientGUI.UIInformations.*;
 
 
 public class nScrollableList extends nPanel implements MouseWheelListener {
 
-    private final List<nPanel> items = new ArrayList<>();
+    private final UIArrayList<nPanel> items = new UIArrayList<nPanel>();
     private int scrollOffset = 0;
     private int itemSpacing = 8;
     private int padding = 8;
@@ -15,36 +14,36 @@ public class nScrollableList extends nPanel implements MouseWheelListener {
 
     private int cornerRadius = 16;
 
-    public nScrollableList(List<nPanel> panels) {
+    public nScrollableList(UIArrayList<nPanel> panels) {
+        setName("ScrollableList");
+
         setLayout(null);
         setOpaque(false);
         if (panels != null) {
-            for (nPanel p : panels) {
-                addItem(p);
-            }
+            panels.foreach(p -> addItem(p));
         }
         addMouseWheelListener(this);
 
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                layoutItems();
+                //layoutItems();
             }
         });
     }
 
     public nScrollableList(nPanel[] panels) {
-        this(panels != null ? java.util.Arrays.asList(panels) : null);
+        this(new UIArrayList<nPanel>(panels));
     }
 
     public nScrollableList() {
-        this((List<nPanel>) null);
+        this((UIArrayList<nPanel>) null);
     }
 
     public void addItem(nPanel panel) {
         if (panel == null)
             return;
-        items.add(panel);
+        items.append(panel);
         add(panel);
         layoutItems();
     }
@@ -58,9 +57,7 @@ public class nScrollableList extends nPanel implements MouseWheelListener {
     }
 
     public void clearItems() {
-        for (nPanel p : items) {
-            remove(p);
-        }
+        items.foreach(p -> remove(p));
         items.clear();
         scrollOffset = 0;
         layoutItems();
@@ -81,22 +78,22 @@ public class nScrollableList extends nPanel implements MouseWheelListener {
         repaint();
     }
 
-    private void layoutItems() {
+    private int y;
+    public void layoutItems() {
         int w = getWidth();
-        int y = padding - scrollOffset;
+        
+        y = padding - scrollOffset;
+        items.foreach(p -> {
+            if (p != null) {
+                Dimension pref = p.getPreferredSize();
+                int h = (pref != null && pref.height > 0)
+                        ? pref.height
+                        : 40;
 
-        for (nPanel p : items) {
-            if (p == null)
-                continue;
-
-            Dimension pref = p.getPreferredSize();
-            int h = (pref != null && pref.height > 0)
-                    ? pref.height
-                    : 40;
-
-            p.setBounds(padding, y, w - padding * 2, h);
-            y += h + itemSpacing;
-        }
+                p.setBounds(padding, y, w - padding * 2, h);
+                y += h + itemSpacing;
+            } 
+        });
 
         contentHeight = y + scrollOffset - padding;
         clampScroll();

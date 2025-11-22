@@ -3,6 +3,9 @@ package server;
 import global.HashMap;
 import global.LinkedList;
 import global.Log;
+import global.data.Campus;
+import global.data.Term;
+
 import java.util.Scanner;
 import server.data.*;
 

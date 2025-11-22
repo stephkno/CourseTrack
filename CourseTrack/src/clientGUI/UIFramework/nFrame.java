@@ -1,5 +1,8 @@
 package clientGUI.UIFramework;
 import javax.swing.JFrame;
+
+import clientGUI.UIInformations.UIArrayList;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -9,12 +12,10 @@ import java.awt.RenderingHints;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public class nFrame extends JFrame {
     private final Dimension baseSize;
-    private final List<TrackedChild> trackedChildren = new ArrayList<>();
+    private final UIArrayList<TrackedChild> trackedChildren = new UIArrayList<>();
 
     public static class TrackedChild {
         public final Component comp;
@@ -45,31 +46,31 @@ public class nFrame extends JFrame {
     }
 
     public TrackedChild[] getChildren() {
-        return trackedChildren.toArray(new TrackedChild[0]);
+        return trackedChildren.toArray(new TrackedChild[trackedChildren.getLength()]);
     }
 
     @Override
     public Component add(Component comp) {
         Component c = super.add(comp);
-        trackedChildren.add(new TrackedChild(c));
+        trackedChildren.append(new TrackedChild(c));
         return c;
     }
 
-    private void resizeChildren() {
+    public void resizeChildren() {
         if (baseSize.width == 0 || baseSize.height == 0)
             return;
 
         double sx = getWidth() / (double) baseSize.width;
         double sy = getHeight() / (double) baseSize.height;
-
-        for (TrackedChild t : trackedChildren) {
+        trackedChildren.foreach(t -> {
             Rectangle r = t.initialBounds;
             int newX = (int) Math.round(r.x * sx);
             int newY = (int) Math.round(r.y * sy);
             int newW = (int) Math.round(r.width * sx);
             int newH = (int) Math.round(r.height * sy);
             t.comp.setBounds(newX, newY, newW, newH);
-        }
+        });
+
 
 
         revalidate();

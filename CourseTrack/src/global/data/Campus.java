@@ -1,6 +1,8 @@
-package server.data;
+package global.data;
 import global.HashMap;
 import global.LinkedList;
+import server.data.Student;
+
 import java.io.Serializable;
 
 public class Campus implements Serializable {

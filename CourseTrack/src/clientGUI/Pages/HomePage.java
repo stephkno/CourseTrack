@@ -32,12 +32,12 @@ public class HomePage {
         mainW = frameW - mainX - 20;
         mainH = sidebarHeight;
         JPanelPlainText title = new JPanelPlainText("courseTrack Home");
-        title.setAlignment(nPanel.CrossStringAlignments.BOTTOM, nPanel.MainStringAlignments.CENTER);
+        title.setAlignment(nPanel.CrossStringAlignments.BOTTOM, nPanel.MainStringAlignments.LEFT);
         title.textColor = UITheme.TEXT_PRIMARY;
 
         String roleText = headerRoleText;
         JPanelPlainText roleLabel = new JPanelPlainText(roleText);
-        roleLabel.setAlignment(nPanel.CrossStringAlignments.TOP, nPanel.MainStringAlignments.CENTER);
+        roleLabel.setAlignment(nPanel.CrossStringAlignments.TOP, nPanel.MainStringAlignments.LEFT);
         roleLabel.textColor = UITheme.TEXT_MUTED;
 
         nButton logoutButton = new nButton("Logout");
@@ -56,15 +56,15 @@ public class HomePage {
                 // title at top-left
                 title.setBounds(pad,
                         0,
-                        w / 6,
-                        h);
+                        w,
+                        50);
 
                 // role text below title
                 int roleHeight = 18;
                 roleLabel.setBounds(pad,
                         0,
-                        w / 6,
-                        h);
+                        w,
+                        50);
 
                 // logout button at topright
                 int btnWidth = 90;

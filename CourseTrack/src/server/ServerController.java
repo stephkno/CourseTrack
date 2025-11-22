@@ -2,6 +2,10 @@ package server;
 
 import client.UserType;
 import global.*;
+import global.data.Campus;
+import global.data.Course;
+import global.data.Department;
+import global.data.Term;
 import global.requests.*;
 import global.responses.*;
 import java.io.FileInputStream;

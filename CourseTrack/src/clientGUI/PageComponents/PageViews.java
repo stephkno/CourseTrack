@@ -1,6 +1,7 @@
 package clientGUI.PageComponents;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 
 import clientGUI.UIFramework.*;
@@ -55,7 +56,7 @@ public class PageViews {
 
         searchButton.addActionListener(e -> {
             String query = searchBox.getText();
-            searchScrollableList(courseList, query, courses, UserRole.student);
+            searchScrollableList(frame, courseList, query, courses, UserRole.student);
         });
 
         // content panel inside the card: heading at top, searchRow, then list filling
@@ -90,7 +91,7 @@ public class PageViews {
         content.add(courseList);
 
         Component[] comps = { content };
-
+        
         nFrame.ListLayout layout = new nFrame.ListLayout(frame,comps,new Dimension(w, h),x,y);
         layout.backgroundColor = UITheme.BG_ELEVATED2;
         layout.setPadding(10, 10);
@@ -294,7 +295,7 @@ public class PageViews {
 
         // wire up buttons
         searchButton.addActionListener(e -> {
-            searchScrollableList(manageCourseList, searchBox.getText(), courses, userRole);
+            searchScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
         });
 
         addButton.addActionListener(e -> {
@@ -380,7 +381,37 @@ public class PageViews {
                     continue;
             }
             list.addItem(new Panels.CourseItemPanel(c, userRole));
+            
+        }
+        
+        //printTree((Container) list, "root");
+        //for debuging
+    }
+    private static void searchScrollableList(nFrame frame, nScrollableList list, String query, UICourseInfo[] courses, UserRole userRole) {
+        String q = (query == null) ? "" : query.trim().toLowerCase();
+        list.clearItems();
+
+        for (UICourseInfo c : courses) {
+            if (!q.isEmpty()) {
+                String haystack = (c.code + " " + c.title + " " + c.instructor).toLowerCase();
+                if (!haystack.contains(q))
+                    continue;
+            }
+            list.addItem(new Panels.CourseItemPanel(c, userRole));
+            
+        }
+        frame.resizeChildren();
+        //printTree((Container) list, "root");
+        //for debuging
+    }
+    private static void printTree(Container c, String currText){
+        Component[] children = c.getComponents();
+        for(Component child : children) {
+            System.out.println(currText + "." + child.getName());
+            if(child instanceof Container) {
+                printTree((Container) child, currText + "." + child.getName());
+                child.repaint();
+            }
         }
     }
-
 }

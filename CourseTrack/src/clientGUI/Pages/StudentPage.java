@@ -3,8 +3,6 @@ package clientGUI.Pages;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
 
 import clientGUI.PageComponents.PageViews;
 import clientGUI.UIFramework.*;
@@ -25,7 +23,7 @@ public class StudentPage {
     }
     public void buildStudentHome(nFrame frame, UserRole role, UICourseInfo[] courses, int sidebarX, int sidebarY,int sidebarWidth, int sidebarHeight,int mainX, int mainY,int mainW, int mainH) {
 
-        List<Component> navList = new ArrayList<>();
+        UIArrayList<Component> navList = new UIArrayList<>();
 
         Color navBg = UITheme.BG_APP;
 
@@ -39,12 +37,12 @@ public class StudentPage {
         navSchedule.setBackgroundColor(navBg);
         navWaitlist.setBackgroundColor(navBg);
 
-        navList.add(navBrowse);
-        navList.add(navDrop);
-        navList.add(navSchedule);
-        navList.add(navWaitlist);
+        navList.append(navBrowse);
+        navList.append(navDrop);
+        navList.append(navSchedule);
+        navList.append(navWaitlist);
 
-        Component[] navComponents = navList.toArray(new Component[0]);
+        Component[] navComponents = navList.toArray(new Component[navList.getLength()]);
 
         nFrame.ListLayout navLayout = new nFrame.ListLayout(
                 frame,

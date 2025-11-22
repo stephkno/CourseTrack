@@ -1,4 +1,4 @@
-package server.data;
+package global.data;
 import java.io.Serializable;
 
 public class MeetTime implements Serializable {
