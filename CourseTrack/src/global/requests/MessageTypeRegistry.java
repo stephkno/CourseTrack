@@ -1,7 +1,7 @@
-package client.requests;
+package global.requests;
 
-import client.responses.LoginResponse;
 import global.*;
+import global.responses.LoginResponse;
 import java.io.Serializable;
 import java.util.Map;
 

@@ -1,9 +1,10 @@
 package global;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
-public final class Message<TObjMessage extends Serializable> implements Serializable {
+public final class Message<TObjMessage extends Serializable> implements Serializable, Iterable {
     private static final long serialVersionUID = 1L;
     private static final AtomicLong counter = new AtomicLong(0);
 
@@ -106,4 +107,25 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
 
         return out;
     }
+
+	@Override
+	public Iterator<TObjMessage> iterator() {
+		
+		return new Iterator<TObjMessage>() {
+			
+            int i = 0;
+			
+			@Override
+			public boolean hasNext() { return i < arguments.length; }
+			
+			@Override
+			public TObjMessage next() {
+				
+				if(!hasNext()) throw new java.util.NoSuchElementException();
+				
+				return arguments[i++];
+				
+			}
+		};
+	}
 }

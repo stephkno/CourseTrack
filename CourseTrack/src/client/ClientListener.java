@@ -1,8 +1,8 @@
 package client;
 
-import client.requests.MessageTypeRegistry;
 import client.services.IClientListenerService;
 import global.*;
+import global.requests.MessageTypeRegistry;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 

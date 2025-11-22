@@ -33,18 +33,7 @@ public class ServerConnection implements Runnable {
     // starts null and becomes defined when login occurs
     private User user;
 
-    public boolean IsLoggedIn() {
-        return user != null;
-    }
-    
-    public void SetUser(User user) {
-        this.user = user;
-    }
-
-    public User GetUser() {
-        return user;
-    }
-
+  
     // Constructor
     public ServerConnection(Socket socket, Server server, Callback_T_U<Message,ServerConnection> messageCallback, Callback_T<ServerConnection> disconnectCallback)
     {
@@ -55,8 +44,20 @@ public class ServerConnection implements Runnable {
     }
 
     // return inet address of this client
-    public String GetAddress() {
+    public String getAddress() {
         return this.socket.getInetAddress().toString();
+    }
+
+    public boolean isLoggedIn() {
+        return user != null;
+    }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     // send a message to just this client
@@ -75,7 +76,7 @@ public class ServerConnection implements Runnable {
         }
     }
 
-    public <TObjMessage extends Serializable> void SendMessage(MessageType type, MessageStatus status, TObjMessage[] obj) {
+    public <TObjMessage extends Serializable> void sendMessage(MessageType type, MessageStatus status, TObjMessage[] obj) {
         Send(new Message<>(type, status, obj));
     }
 
@@ -97,11 +98,11 @@ public class ServerConnection implements Runnable {
         this.banned = true;
     }
 
-    public boolean ValidateAdmin() {
+    public boolean validateAdmin() {
         return user instanceof Admin;
     }
 
-    public boolean ValidateStudent() {
+    public boolean validateStudent() {
         return user instanceof Student;
     }
 

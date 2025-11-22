@@ -15,15 +15,13 @@ public class Shell implements Runnable {
     }
 
     private Scanner scanner = new Scanner(System.in);
-    
-    private boolean run;
 
     private void PrintData(String[] args) {
 
         ServerController server = ServerController.Get();
-        HashMap<User> users = server.GetUsers();
-        HashMap<Campus> campuses = server.GetCampuses();
-        LinkedList<Term> terms = server.GetTerms();
+        HashMap<User> users = server.getUsers();
+        HashMap<Campus> campuses = server.getCampuses();
+        LinkedList<Term> terms = server.getTerms();
         
         Log.Println("Users:");
         for(Object user : users) {
@@ -81,9 +79,9 @@ public class Shell implements Runnable {
 
     void PrintClients()
     {
-        for(String clientAddress : Server.Get().GetClients()) {
+        for(String clientAddress : Server.Get().getClients()) {
             
-            ServerConnection client = Server.Get().GetClient(clientAddress);
+            ServerConnection client = Server.Get().getClient(clientAddress);
             Log.Print(client.toString());
 
         }
@@ -93,7 +91,7 @@ public class Shell implements Runnable {
     void PrintStatus() {
 
         Log.Print(Server.Get().Uptime());
-        Log.Print("\nPort: " + String.valueOf(Server.Get().GetPort()));
+        Log.Print("\nPort: " + String.valueOf(Server.Get().getPort()));
         Log.Print("\nStatus: " + Server.Get().MessageStats());
         Log.Println("\nMemory: " + Server.Get().MemoryUsage());
 
@@ -166,12 +164,12 @@ public class Shell implements Runnable {
                 }
                 case "kick":{
                     if(args.length <= 1) break;
-                    ServerController.Get().GetUser(args[1]).socket.Hangup();
+                    ServerController.Get().getUser(args[1]).socket.Hangup();
                     break;
                 }
                 case "ban":{
                     if(args.length <= 1) break;
-                    User user = ServerController.Get().GetUser(args[1]);
+                    User user = ServerController.Get().getUser(args[1]);
                     user.socket.Hangup();
                     user.socket.Ban();
                     break;

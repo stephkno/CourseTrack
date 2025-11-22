@@ -1,4 +1,4 @@
-package client.requests;
+package global.requests;
 import client.UserType;
 import java.io.Serializable;
 

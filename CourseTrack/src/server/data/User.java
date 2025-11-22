@@ -1,9 +1,10 @@
 package server.data;
 
 import client.UserType;
+import java.io.Serializable;
 import server.ServerConnection;
 
-public class User {
+public class User implements Serializable {
 
     UserType type;
     int id;
@@ -29,15 +30,15 @@ public class User {
         return password.equals(this.password);
     }
     
-    public int GetID() {
+    public int getID() {
         return id;
     }
 
-    public UserType GetType() {
+    public UserType getType() {
         return type;
     }
 
-    public String GetName() {
+    public String getName() {
         return name;
     }
 

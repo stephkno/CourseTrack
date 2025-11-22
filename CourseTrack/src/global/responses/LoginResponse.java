@@ -1,4 +1,4 @@
-package client.responses;
+package global.responses;
 
 import client.User;
 import java.io.Serializable;

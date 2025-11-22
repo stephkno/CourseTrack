@@ -1,9 +1,9 @@
 package server;
 
 import client.UserType;
-import client.requests.*;
-import client.responses.*;
 import global.*;
+import global.requests.*;
+import global.responses.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,56 +26,60 @@ public class ServerController {
     HashMap<Campus> campuses = new HashMap<>();
     LinkedList<Term> terms = new LinkedList<>();
 
-    public HashMap<User> GetUsers() {
+    public HashMap<User> getUsers() {
         return users;
     }
 
-    public HashMap<Campus> GetCampuses() {
+    public HashMap<Campus> getCampuses() {
         return campuses;
     }
+    
+    public Campus getCampus(String campusName) {
+        return campuses.Get(campusName);
+    }
 
-    public LinkedList<Term> GetTerms() {
+    public LinkedList<Term> getTerms() {
         return terms;
     }
 
-    public User GetUser(String username) {
+    public User getUser(String username) {
         return users.Get(username);
     }
 
-    public boolean HasUser(String username) {
+    public boolean hasUser(String username) {
         return users.Contains(username);
     }
 
-    private boolean AuthorizeUser(User user, UserType type) {
-        return user.GetType() == type;
+    private boolean authorizeUser(User user, UserType type) {
+        return user.getType() == type;
     }
 
-    public void HandleMessage(Message<?> msg, ServerConnection client) {
+    public void handleMessage(Message<?> msg, ServerConnection client) {
 
         Log.Msg("Got message: " + msg.toString());
         switch(msg.getType()) {
             case PING_REQUEST:{
-                HandlePing((Message<PingRequest>) msg, client);
+                handlePing((Message<PingRequest>) msg, client);
                 break;
             }
             case USER_REGISTER:{
-                HandleRegister((Message<RegisterRequest>) msg, client);
+                handleRegister((Message<RegisterRequest>) msg, client);
                 break;
             }
             case USER_CHANGE_PASSWORD:{
-                HandlePasswordChange((Message<PasswordChangeRequest>)msg, client);
+                handlePasswordChange((Message<PasswordChangeRequest>)msg, client);
                 break;
             }
             case USER_LOGIN:{
-                HandleLogin((Message<LoginRequest>) msg, client);
+                handleLogin((Message<LoginRequest>) msg, client);
                 break;
             }
             case ADMIN_ADD_CAMPUS:{
-                HandleAdminAddCampus((Message<AddCampusRequest>) msg, client);
+                handleAdminAddCampus((Message<AddCampusRequest>) msg, client);
                 break;
             }
             case ADMIN_ADD_COURSE:{
-              //  HandleAdminAddCourse((Message<AddCampusRequest>) msg, client);
+                handleAdminAddCourse((Message<AddCourseRequest>) msg, client);
             }
             default:{
                 break;
@@ -84,16 +88,16 @@ public class ServerController {
 
     }
 
-    private void HandlePing(Message<PingRequest> msg, ServerConnection client) {
+    private void handlePing(Message<PingRequest> msg, ServerConnection client) {
         Log.Msg("PING_REQUEST: " + msg.toString());
-        client.SendMessage( MessageType.PING_REQUEST, MessageStatus.RESPONSE, new PingResponse[] { new PingResponse("pong") } );
+        client.sendMessage( MessageType.PING_REQUEST, MessageStatus.RESPONSE, new PingResponse[] { new PingResponse("pong") } );
     }
 
-    private void HandlePasswordChange(Message<PasswordChangeRequest> msg, ServerConnection client) {
+    private void handlePasswordChange(Message<PasswordChangeRequest> msg, ServerConnection client) {
 
-        if(!client.IsLoggedIn()) {
+        if(!client.isLoggedIn()) {
             // return failure message
-            client.SendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
+            client.sendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
             return;
         }
 
@@ -108,24 +112,24 @@ public class ServerController {
             // validate password
             if(!User.ValidatePassword(password)) {
                 // respond with password error message
-                client.SendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
+                client.sendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.FAILURE, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
                 continue;
             }
 
             // update user password in user of this session
-            client.GetUser().UpdatePassword(password);
-            client.SendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.SUCCESS, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
+            client.getUser().UpdatePassword(password);
+            client.sendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.SUCCESS, new PasswordChangeResponse[] { new PasswordChangeResponse("") } );
 
         }
 
     }
     
-    private void HandleRegister(Message<RegisterRequest> msg, ServerConnection client) {
+    private void handleRegister(Message<RegisterRequest> msg, ServerConnection client) {
 
         // user should not be logged in
-        if(client.IsLoggedIn()) {
+        if(client.isLoggedIn()) {
             // send failure response message
-            client.SendMessage( MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("User currently logged in") } );
+            client.sendMessage( MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("User currently logged in") } );
             return;
         }
 
@@ -141,35 +145,35 @@ public class ServerController {
             // validate username
             if(users.Contains(username)) {
                 // respond with error: username already exists
-                client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Username exists") });
+                client.sendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Username exists") });
                 continue;
             }
 
             // validate password
             if(!User.ValidatePassword(password)) {
                 // respond with password error
-                client.SendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Invalid password") });
+                client.sendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Invalid password") });
                 continue;
             }
 
             // create new user object
             User newUser = new User(username, password, type);
             users.Put(username, newUser);
-            DefaultMutableTreeNode newUserNode = new DefaultMutableTreeNode(newUser.GetName());
+            DefaultMutableTreeNode newUserNode = new DefaultMutableTreeNode(newUser.getName());
 
             // send register success message
-            client.SendMessage(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("") });
+            client.sendMessage(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("") });
 
         }
 
     }
 
-    private void HandleLogin(Message<LoginRequest> msg, ServerConnection client) {
+    private void handleLogin(Message<LoginRequest> msg, ServerConnection client) {
 
         // user should not be logged in
-        if(client.IsLoggedIn()) {
+        if(client.isLoggedIn()) {
             // send fail response
-            client.SendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, new LoginResponse[] { new LoginResponse(null) });
+            client.sendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, new LoginResponse[] { new LoginResponse(null) });
             return;
         }
         
@@ -179,35 +183,35 @@ public class ServerController {
             String username = request.username();
             String password = request.password();
 
-            if(!controller.HasUser(username)) {
+            if(!controller.hasUser(username)) {
                 Log.Err("User not found: " + username);
-                client.SendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, null);
+                client.sendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, null);
                 continue;
             }
         
-            User user = controller.GetUser(username);
-            client.SetUser(user);
-            client.User clientUser = new client.User(user.GetType());
+            User user = controller.getUser(username);
+            client.setUser(user);
+            client.User clientUser = new client.User(user.getType());
             user.socket = client;
 
             if(!user.Authenticate(password)) {
 
                 Log.Err("Wrong password for user: " + username);
-                client.SendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, null);
+                client.sendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, null);
                 continue;
             
             }
 
             Log.Msg("Login successful for user: " + username);
-            client.SendMessage(MessageType.USER_LOGIN, MessageStatus.SUCCESS, new LoginResponse[] { new LoginResponse(clientUser) });
+            client.sendMessage(MessageType.USER_LOGIN, MessageStatus.SUCCESS, new LoginResponse[] { new LoginResponse(clientUser) });
             
         }
 
     }
 
-    private void HandleAdminAddCampus(Message<AddCampusRequest> msg, ServerConnection client) {
+    private void handleAdminAddCampus(Message<AddCampusRequest> msg, ServerConnection client) {
         
-        client.ValidateAdmin();
+        client.validateAdmin();
 
         for(AddCampusRequest request : msg.getArguments()) {
             String campusName = request.campusName();
@@ -215,7 +219,7 @@ public class ServerController {
             // validate campus name
             if(campuses.Contains(campusName)) {
                 // send error response
-                client.SendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.FAILURE, new AddCampusResponse[] { new AddCampusResponse("Campus already exists!") });
+                client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.FAILURE, new AddCampusResponse[] { new AddCampusResponse(null) });
                 continue;
             }
 
@@ -223,25 +227,42 @@ public class ServerController {
             campuses.Put(campusName, newCampus);
 
             // return success
-            client.SendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse[] { new AddCampusResponse("") });
+            client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse[] { new AddCampusResponse(newCampus) });
 
         }
 
     }
 
-    private void HandleAdminAddCourse(Message<AddCourseRequest> msg, ServerConnection client) {
+    private void handleAdminAddCourse(Message<AddCourseRequest> msg, ServerConnection client) {
 
-        client.ValidateAdmin();
+        client.validateAdmin();
 
         for(AddCourseRequest request : msg.getArguments()) {
          
             String courseName = request.name();
+            
             int number = request.number();
             int units = request.units();
-            Department department = request.department();
 
+            Campus campus = ServerController.Get().getCampus(request.campusName());
+            if(campus == null) {
+                // return failure response
+                client.sendMessage(MessageType.ADMIN_ADD_COURSE, MessageStatus.FAILURE, new AddCourseResponse[] { new AddCourseResponse(null) } );
+                continue;
+            }
 
-            // 
+            Department department = campus.getDepartment(request.departmentName());
+
+            Course newCourse = new Course(courseName, number, units, department);
+            
+            if(!campus.AddCourse(newCourse)){
+                // return error response
+                client.sendMessage(MessageType.ADMIN_ADD_COURSE, MessageStatus.FAILURE, new AddCourseResponse[] { new AddCourseResponse(null) } );
+            }
+
+            // send success response
+            client.sendMessage(MessageType.ADMIN_ADD_COURSE, MessageStatus.SUCCESS, new AddCourseResponse[] { new AddCourseResponse(newCourse) } );
+
         }
 
     }

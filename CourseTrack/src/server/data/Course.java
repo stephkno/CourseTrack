@@ -1,15 +1,25 @@
 package server.data;
 import global.LinkedList;
+import java.io.Serializable;
 
-public class Course {
+public class Course implements Serializable {
     
     String name;
     int number;
     int units;
     Department department;
+    Campus campus;
 
     // should have a reference to or own offered sections?
     LinkedList<Section> sections;
+
+    public Course(String name, int number, int units, Department department){
+        this.name = name;
+        this.number = number;
+        this.units = units;
+        this.department = department;
+        this.campus = department.getCampus();
+    }
 
     public boolean verifyPrereqs(Student student) {
         return false;
@@ -31,5 +41,8 @@ public class Course {
         return department; 
     }
 
+    public Campus getCampus() {
+        return campus;
+    }
     
 }

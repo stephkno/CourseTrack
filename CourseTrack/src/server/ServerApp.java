@@ -18,7 +18,7 @@ public class ServerApp {
 		server.OnRequest(
 			(Message msg, ServerConnection client) -> {
 				
-				controller.HandleMessage(msg, client);
+				controller.handleMessage(msg, client);
 				
 			}
 			
@@ -28,7 +28,7 @@ public class ServerApp {
 		server.OnConnect(
 			(ServerConnection client) -> {
 
-				Log.Msg("Client has connected: " + client.GetAddress());
+				Log.Msg("Client has connected: " + client.getAddress());
 
 			}
 		);
@@ -37,7 +37,7 @@ public class ServerApp {
 		server.OnDisconnect(
 			(ServerConnection client) -> {
 
-				Log.Msg("Client has disconnected: " + client.GetAddress());
+				Log.Msg("Client has disconnected: " + client.getAddress());
 			
 			}
 		);

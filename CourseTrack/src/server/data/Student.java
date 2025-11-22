@@ -2,8 +2,9 @@ package server.data;
 
 import client.UserType;
 import global.LinkedList;
+import java.io.Serializable;
 
-public class Student extends User {
+public class Student extends User implements Serializable {
     
     String studentId;
     LinkedList<Section> enrolledSections;

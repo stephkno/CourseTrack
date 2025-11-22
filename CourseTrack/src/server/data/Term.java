@@ -1,6 +1,7 @@
 package server.data;
+import java.io.Serializable;
 
-public class Term {
+public class Term implements Serializable {
     
     public enum Season {
         SPRING, SUMMER, FALL, WINTER

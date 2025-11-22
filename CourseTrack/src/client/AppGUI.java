@@ -1,7 +1,7 @@
 package client;
 
-import client.requests.UpdateRequest;
 import client.services.IAppGUIService;
+import global.requests.UpdateRequest;
 
 public class AppGUI {
     private final IAppGUIService appGUIService;

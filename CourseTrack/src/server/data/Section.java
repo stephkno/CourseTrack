@@ -1,8 +1,9 @@
 package server.data;
 
 import global.LinkedList;
+import java.io.Serializable;
 
-public class Section {
+public class Section implements Serializable {
    
     String sectionId;
     Course course;

@@ -53,7 +53,7 @@ public class Server {
 		return server;
 	}
 
-	public int GetPort() {
+	public int getPort() {
 		return port;
 	}
 
@@ -109,27 +109,27 @@ public class Server {
 		this.requestCallback = requestCallback;
 	}
 
-	public String[] GetClients() {
+	public String[] getClients() {
 
 		int num_clients = clients.Size();
 		String[] out_strings = new String[num_clients];
 		int i = 0;
 
 		for(ServerConnection client : clients){
-			out_strings[i++] = client.GetAddress();
+			out_strings[i++] = client.getAddress();
 		}
 
 		return out_strings;
 	}
 
-	public ServerConnection GetClient(String key) {
+	public ServerConnection getClient(String key) {
 		return clients.Get(key);
 	}
 
 	// called to remove client from the server
 	public boolean RemoveClient(ServerConnection client) {
 		
-		String address = client.GetAddress();
+		String address = client.getAddress();
 		return clients.Remove(address);
 
 	}
@@ -161,7 +161,7 @@ public class Server {
 			serverSocket = new ServerSocket(port);
 			serverSocket.setReuseAddress(true);
 
-			Log.Msg("Listening on port " + port);
+			Log.Msg("Starting server listener...");
 
 			running = true;
 
@@ -182,7 +182,7 @@ public class Server {
 					disconnectCallback
 				);
 
-				clients.Put(newConnection.GetAddress(), newConnection);
+				clients.Put(newConnection.getAddress(), newConnection);
 				connectCallback.call(newConnection);
 
 				// This thread will handle the client

@@ -1,4 +1,4 @@
-package client.requests;
+package global.responses;
 
 import java.io.Serializable;
 import server.data.*;

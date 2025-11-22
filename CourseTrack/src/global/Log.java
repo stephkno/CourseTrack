@@ -45,8 +45,11 @@ public class Log {
     }
 
     private static void log(String type, Object...args) {
+        
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        StackTraceElement e = stackTrace[2];
+        
+        // caller is always at element
+        StackTraceElement e = stackTrace[3];
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");

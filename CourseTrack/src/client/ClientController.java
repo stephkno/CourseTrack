@@ -1,14 +1,14 @@
 package client;
 
-import client.requests.LoginRequest;
-import client.requests.PingRequest;
-import client.requests.UpdateRequest;
-import client.responses.LoginResponse;
-import client.responses.UpdateResponse;
 import client.services.IAppGUIService;
 import client.services.IClientListenerService;
 import client.services.ILoginGUIService;
 import global.*;
+import global.requests.LoginRequest;
+import global.requests.PingRequest;
+import global.requests.UpdateRequest;
+import global.responses.LoginResponse;
+import global.responses.UpdateResponse;
 import java.io.Serializable;
 
 public class ClientController implements ILoginGUIService, IClientListenerService, IAppGUIService {

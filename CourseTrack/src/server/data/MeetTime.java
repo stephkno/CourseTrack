@@ -1,6 +1,7 @@
 package server.data;
+import java.io.Serializable;
 
-public class MeetTime {
+public class MeetTime implements Serializable {
 
     public enum Day {
         MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY

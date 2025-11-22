@@ -1,7 +1,7 @@
 module CourseTrack{
     exports client;
-    exports client.requests;
-    exports client.responses;
+    exports global.requests;
+    exports global.responses;
     exports client.services;
     exports server;
     exports server.data;
