@@ -4,7 +4,7 @@ module CourseTrack{
     exports global.responses;
     exports client.services;
     exports server;
-    exports server.data;
+    exports global.data;
     exports global;
     requires java.desktop;
 }

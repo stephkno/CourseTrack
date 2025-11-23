@@ -7,20 +7,32 @@ public class Department implements Serializable {
     
     String name;
     Campus campus;
-    LinkedList<Course> courses;
+    LinkedList<Course> courses = new LinkedList<>();
 
     public boolean addCourse(Course course){
         
-        if(!containsCourse(course)) {
-            courses.Push(course);
-            return true;
+        if(containsCourse(course)) {
+            return false;
         }
+        
+        courses.Push(course);
 
-        return false;
+        return true;
+
     }
 
     public boolean containsCourse(Course course){
         return courses.Contains(course);
+    }
+
+    // return course by id
+    public Course getCourse(int i){
+        for(Course course : courses){
+            if(course.getId() == i){
+                return course;
+            }
+        }
+        return null;
     }
 
     public Department(String name, Campus campus) {
@@ -34,6 +46,18 @@ public class Department implements Serializable {
     
     public String getName(){
         return name;
+    }
+
+    public String toString(){
+        String outstring = "Department: " + name;
+
+        outstring += "\nCourses:\n";
+
+        for(Course course : courses){
+            outstring += course.toString() + "\n";
+        }
+
+        return outstring;
     }
 
 }

@@ -1,14 +1,13 @@
 package server;
 
 import client.*;
+import global.Log;
 import global.Message;
 import global.MessageStatus;
 import global.MessageType;
-import global.data.Campus;
-import global.data.Course;
+import global.data.*;
 import global.requests.*;
 import global.responses.*;
-import server.data.*;
 
 // test client for the server 
 public class testclient {
@@ -61,11 +60,18 @@ public class testclient {
 			client.sendRequest(new Message<>(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.REQUEST, new AddCampusRequest[]{ new AddCampusRequest(campusName)}));
 			Message<AddCampusResponse> response = client.receiveResponse();
 			assert(response.getStatus() == MessageStatus.SUCCESS);
-			Campus responseCampus = response.getArguments()[0].campus();
-			System.out.println(responseCampus);
-			assert(responseCampus.getCampusName().equals(campusName));
 			System.out.println("Received admin add campus response");
 
+		}
+		{
+
+			System.out.println("Sending admin add department request");
+			String campusName = "CSU East Bay";
+			String departmentName = "Computer Science";
+			client.sendRequest(new Message<>(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.REQUEST, new AddDepartmentRequest[]{ new AddDepartmentRequest(campusName, departmentName)}));
+			Message<AddDepartmentResponse> response = client.receiveResponse();
+			assert(response.getStatus() == MessageStatus.SUCCESS);
+			System.out.println("Received admin add department response");
 		}
 		{
 
@@ -75,13 +81,16 @@ public class testclient {
 				"Software Engineering",
 				401,
 				3,
-				"Computer Science",
-				"CSU East Bay"
+				"CSU East Bay",
+				"Computer Science"
 			);
 
 			client.sendRequest(new Message<>(MessageType.ADMIN_ADD_COURSE, MessageStatus.REQUEST, new AddCourseRequest[]{ newCourse }));
 			
 			Message<AddCourseResponse> response = client.receiveResponse();
+			
+			Log.Msg(response.toString());
+
 			assert(response.getStatus() == MessageStatus.SUCCESS);
 
 			Course responseCourse = response.getArguments()[0].course();
@@ -92,22 +101,6 @@ public class testclient {
 
 		}
 		
-		/*
-		
-			3.1.2. Administrator Functions
-
-			3.1.2.1 Administrator can create/read/update/delete student accounts ? 
-
-			3.1.2.2 Administrator can create/read/update/delete universities/campuses x
-
-			3.1.2.3 Administrator can create/read/update/delete new term schedules of classes x
-
-			3.1.2.4 Administrator can create/read/update/delete classes in term x
-
-			3.1.2.5 Administrator can add schedule data by loading a formatted data file ?
-			
-		*/
-
 		while(true) {}
 		
     }

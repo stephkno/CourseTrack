@@ -110,6 +110,7 @@ public class ServerConnection implements Runnable {
     public void run()
     {
         try {
+            
             // open socket stream
             InputStream inputStream = socket.getInputStream();
             objectInputStream = new ObjectInputStream(inputStream);

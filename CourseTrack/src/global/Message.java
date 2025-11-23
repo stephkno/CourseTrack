@@ -42,7 +42,7 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
         "STUDENT_GET_WAITLIST_PLACE",
         "ADMIN_GET_SCHEDULE_REPORT",
         "ADMIN_GET_ENROLLMENT_REPORT",
-        "ADMIN_ADD_UNIVERSITY",
+        "ADMIN_ADD_CAMPUS",
         "ADMIN_REMOVE_UNIVERSITY",
         "ADMIN_ADD_DEPARTMENT",
         "ADMIN_REMOVE_DEPARTMENT",

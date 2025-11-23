@@ -1,14 +1,13 @@
 package global.data;
 
 import global.LinkedList;
+import java.io.Serializable;
 import server.data.Admin;
 import server.data.Student;
 
-import java.io.Serializable;
-
 public class Section implements Serializable {
    
-    String sectionId;
+    int number;
     Course course;
     Term term;
     Campus campus;
@@ -17,8 +16,8 @@ public class Section implements Serializable {
     Admin instructor;
     int capacity;
 
-    public Section(String sectionId, int capacity, Course course, Term term, Campus campus) {
-        this.sectionId = sectionId;
+    public Section(int number, int capacity, Course course, Term term, Campus campus) {
+        this.number = number;
         this.capacity = capacity;
         this.course = course;
         this.term = term;
@@ -27,8 +26,8 @@ public class Section implements Serializable {
         this.students = new LinkedList<>();
     }
 
-    public String getSectionId() { 
-        return sectionId; 
+    public int getNumber() { 
+        return number; 
     }
 
     public Course getCourse() { 

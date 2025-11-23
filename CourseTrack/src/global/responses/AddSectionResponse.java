@@ -1,10 +1,6 @@
 package global.responses;
-
 import java.io.Serializable;
-import server.data.*;
 
-public record Error(
-    
+public record AddSectionResponse(
     String msg
-
 ) implements Serializable { }

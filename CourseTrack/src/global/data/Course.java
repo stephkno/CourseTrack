@@ -1,12 +1,14 @@
 package global.data;
 import global.LinkedList;
-import server.data.Student;
-
+import global.Log;
 import java.io.Serializable;
+import server.data.Student;
 
 public class Course implements Serializable {
     
     String name;
+    int id;
+    static int nextId = 0;
     int number;
     int units;
     Department department;
@@ -21,10 +23,20 @@ public class Course implements Serializable {
         this.units = units;
         this.department = department;
         this.campus = department.getCampus();
+
+        if(this.campus == null){
+            Log.Err("Course added with null campus.");
+        }
+
+        this.id = nextId++;
     }
 
     public boolean verifyPrereqs(Student student) {
         return false;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public int getUnits() {
@@ -45,6 +57,12 @@ public class Course implements Serializable {
 
     public Campus getCampus() {
         return campus;
+    }
+
+    public String toString(){
+        String outstring = "";
+        outstring += name + " " + number;
+        return outstring;
     }
     
 }

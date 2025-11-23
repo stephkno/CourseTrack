@@ -5,7 +5,6 @@ import global.LinkedList;
 import global.Log;
 import global.data.Campus;
 import global.data.Term;
-
 import java.util.Scanner;
 import server.data.*;
 
@@ -22,9 +21,9 @@ public class Shell implements Runnable {
     private void PrintData(String[] args) {
 
         ServerController server = ServerController.Get();
-        HashMap<User> users = server.getUsers();
-        HashMap<Campus> campuses = server.getCampuses();
-        LinkedList<Term> terms = server.getTerms();
+        HashMap<User> users = User.get();
+        HashMap<Campus> campuses = Campus.get();
+        LinkedList<Term> terms = Term.get();
         
         Log.Println("Users:");
         for(Object user : users) {
@@ -32,13 +31,15 @@ public class Shell implements Runnable {
         }
 
         Log.Println("Campuses:");
+        int c = 0;
+        
         for(Object campus : campuses) {
-            Log.Println(campus.toString());
+            Log.Print(c++ + " " + campus.toString());
         }
 
         Log.Println("Terms:");
         for(Object term : terms) {
-            Log.Println(term.toString());
+            Log.Print(term.toString());
         }
     
     }
@@ -167,12 +168,12 @@ public class Shell implements Runnable {
                 }
                 case "kick":{
                     if(args.length <= 1) break;
-                    ServerController.Get().getUser(args[1]).socket.Hangup();
+                    User.get(args[1]).socket.Hangup();
                     break;
                 }
                 case "ban":{
                     if(args.length <= 1) break;
-                    User user = ServerController.Get().getUser(args[1]);
+                    User user = User.get(args[1]);
                     user.socket.Hangup();
                     user.socket.Ban();
                     break;

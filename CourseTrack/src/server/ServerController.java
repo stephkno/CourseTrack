@@ -2,10 +2,7 @@ package server;
 
 import client.UserType;
 import global.*;
-import global.data.Campus;
-import global.data.Course;
-import global.data.Department;
-import global.data.Term;
+import global.data.*;
 import global.requests.*;
 import global.responses.*;
 import java.io.FileInputStream;
@@ -13,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import javax.swing.tree.DefaultMutableTreeNode;
 import server.data.*;
 
 // facade class to implement all client-server event interactions
@@ -26,60 +22,40 @@ public class ServerController {
         return instance;
     }
 
-    HashMap<User> users = new HashMap<>();
-    HashMap<Campus> campuses = new HashMap<>();
-    LinkedList<Term> terms = new LinkedList<>();
-
-    public HashMap<User> getUsers() {
-        return users;
-    }
-
-    public HashMap<Campus> getCampuses() {
-        return campuses;
-    }
-    
-    public Campus getCampus(String campusName) {
-        return campuses.Get(campusName);
-    }
-
-    public LinkedList<Term> getTerms() {
-        return terms;
-    }
-
-    public User getUser(String username) {
-        return users.Get(username);
-    }
-
-    public boolean hasUser(String username) {
-        return users.Contains(username);
-    }
-
-    private boolean authorizeUser(User user, UserType type) {
-        return user.getType() == type;
-    }
-
     public void handleMessage(Message<?> msg, ServerConnection client) {
 
         Log.Msg("Got message: " + msg.toString());
+        if(!client.isLoggedIn()){
+            switch(msg.getType()) {
+                case USER_LOGIN:{
+                    handleLogin((Message<LoginRequest>) msg, client);
+                    return;
+                }
+                case USER_REGISTER:{
+                    handleRegister((Message<RegisterRequest>) msg, client);
+                    return;
+                }
+            }
+            // send response
+            client.sendMessage(MessageType.ERROR, MessageStatus.FAILURE, new ErrorResponse[] { new ErrorResponse("User is already logged in.") });
+            return;
+        }
+
         switch(msg.getType()) {
             case PING_REQUEST:{
                 handlePing((Message<PingRequest>) msg, client);
-                break;
-            }
-            case USER_REGISTER:{
-                handleRegister((Message<RegisterRequest>) msg, client);
                 break;
             }
             case USER_CHANGE_PASSWORD:{
                 handlePasswordChange((Message<PasswordChangeRequest>)msg, client);
                 break;
             }
-            case USER_LOGIN:{
-                handleLogin((Message<LoginRequest>) msg, client);
-                break;
-            }
             case ADMIN_ADD_CAMPUS:{
                 handleAdminAddCampus((Message<AddCampusRequest>) msg, client);
+                break;
+            }
+            case ADMIN_ADD_DEPARTMENT:{
+                handleAdminAddDepartment((Message<AddDepartmentRequest>) msg, client);
                 break;
             }
             case ADMIN_ADD_COURSE:{
@@ -133,7 +109,7 @@ public class ServerController {
         // user should not be logged in
         if(client.isLoggedIn()) {
             // send failure response message
-            client.sendMessage( MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("User currently logged in") } );
+            client.sendMessage( MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("User currently logged in") } );
             return;
         }
 
@@ -147,8 +123,9 @@ public class ServerController {
             UserType type = request.type();
 
             // validate username
-            if(users.Contains(username)) {
+            if(User.exists(username)) {
                 // respond with error: username already exists
+                Log.Err("handleRegister: Username already exists");
                 client.sendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Username exists") });
                 continue;
             }
@@ -156,14 +133,13 @@ public class ServerController {
             // validate password
             if(!User.ValidatePassword(password)) {
                 // respond with password error
+                Log.Err("handleRegister: Invalid password selected");
                 client.sendMessage(MessageType.USER_REGISTER, MessageStatus.FAILURE, new RegisterResponse[] { new RegisterResponse("Invalid password") });
                 continue;
             }
 
             // create new user object
-            User newUser = new User(username, password, type);
-            users.Put(username, newUser);
-            DefaultMutableTreeNode newUserNode = new DefaultMutableTreeNode(newUser.getName());
+            User.add(username, password, type);
 
             // send register success message
             client.sendMessage(MessageType.USER_REGISTER, MessageStatus.SUCCESS, new RegisterResponse[] { new RegisterResponse("") });
@@ -181,22 +157,21 @@ public class ServerController {
             return;
         }
         
-        ServerController controller = ServerController.Get();
-        
         for(LoginRequest request : msg.getArguments()) {
             String username = request.username();
             String password = request.password();
 
-            if(!controller.hasUser(username)) {
+            if(!User.exists(username)) {
                 Log.Err("User not found: " + username);
                 client.sendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, null);
                 continue;
             }
         
-            User user = controller.getUser(username);
-            client.setUser(user);
-            client.User clientUser = new client.User(user.getType());
+            User user = User.get(username);
             user.socket = client;
+            client.setUser(user);
+
+            client.User clientUser = new client.User(user.getType());
 
             if(!user.Authenticate(password)) {
 
@@ -218,20 +193,18 @@ public class ServerController {
         client.validateAdmin();
 
         for(AddCampusRequest request : msg.getArguments()) {
-            String campusName = request.campusName();
+            String campusName = request.campus();
 
-            // validate campus name
-            if(campuses.Contains(campusName)) {
-                // send error response
-                client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.FAILURE, new AddCampusResponse[] { new AddCampusResponse(null) });
+            if(Campus.exists(campusName)) {
+                client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.FAILURE, new AddCampusResponse[] { new AddCampusResponse() });
                 continue;
             }
 
-            Campus newCampus = new Campus(campusName);
-            campuses.Put(campusName, newCampus);
+            // add new campus
+            Campus.add(campusName);
 
             // return success
-            client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse[] { new AddCampusResponse(newCampus) });
+            client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse[] { new AddCampusResponse() });
 
         }
 
@@ -248,24 +221,99 @@ public class ServerController {
             int number = request.number();
             int units = request.units();
 
-            Campus campus = ServerController.Get().getCampus(request.campusName());
+            Campus campus = Campus.get(request.campus());
+            Log.Msg("Addr: " + campus);
+
             if(campus == null) {
-                // return failure response
+                Log.Err("Campus not found");
                 client.sendMessage(MessageType.ADMIN_ADD_COURSE, MessageStatus.FAILURE, new AddCourseResponse[] { new AddCourseResponse(null) } );
                 continue;
             }
 
-            Department department = campus.getDepartment(request.departmentName());
+            Department department = campus.getDepartment(request.department());
+            if(department == null){
+                Log.Err("Department not found");
+                client.sendMessage(MessageType.ADMIN_ADD_COURSE, MessageStatus.FAILURE, new AddCourseResponse[] { new AddCourseResponse(null) } );
+                continue;
+            }
 
             Course newCourse = new Course(courseName, number, units, department);
-            
-            if(!campus.AddCourse(newCourse)){
-                // return error response
+            if(!department.addCourse(newCourse)){
+                Log.Err("Course exists in department");
                 client.sendMessage(MessageType.ADMIN_ADD_COURSE, MessageStatus.FAILURE, new AddCourseResponse[] { new AddCourseResponse(null) } );
+                continue;
             }
 
             // send success response
             client.sendMessage(MessageType.ADMIN_ADD_COURSE, MessageStatus.SUCCESS, new AddCourseResponse[] { new AddCourseResponse(newCourse) } );
+
+        }
+
+    }
+
+    private void handleAdminAddDepartment(Message<AddDepartmentRequest> msg, ServerConnection client) {
+
+        client.validateAdmin();
+
+        for(AddDepartmentRequest request : msg.getArguments()) {
+         
+            String departmentName = request.name();
+            Campus campus = Campus.get(request.campus());
+            Log.Msg("Addr: " + campus);
+
+            if(campus == null) {
+                Log.Err("Campus not found");
+                client.sendMessage(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.FAILURE, new AddDepartmentResponse[] { new AddDepartmentResponse("") } );
+                continue;
+            }
+
+            // check if contains department
+            if(campus.hasDepartment(departmentName)){
+                Log.Err("Campus already contains department");
+                client.sendMessage(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.FAILURE, new AddDepartmentResponse[] { new AddDepartmentResponse("") } );
+                continue;
+            }
+            
+            campus.addDepartment(departmentName);
+            Log.Msg("Campus added department");
+
+            // send success response
+            client.sendMessage(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.SUCCESS, new AddDepartmentResponse[] { new AddDepartmentResponse("") } );
+
+        }
+
+    }
+
+    private void handleAdminAddSection(Message<AddSectionRequest> msg, ServerConnection client) {
+
+        client.validateAdmin();
+
+        for(AddSectionRequest request : msg.getArguments()) {
+         
+            String courseName = request.name();
+
+            Campus campus = Campus.get(request.campus());
+            if(campus == null) {
+                // return failure response
+                client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.FAILURE, new AddSectionResponse[] { new AddSectionResponse("") } );
+                continue;
+            }
+
+            Department department = campus.getDepartment(request.department());
+
+            // need to get course by name? id?
+            Course course = department.getCourse(request.courseId());
+            Term term = Term.get(request.term());
+
+            Section newSection = new Section(0, request.capacity(), course, request.term(), campus);
+            
+            if(!term.addSection(newSection)){
+                // return error response
+                client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.FAILURE, new AddSectionResponse[] { new AddSectionResponse("") } );
+            }
+
+            // send success response
+            client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.SUCCESS, new AddSectionResponse[] { new AddSectionResponse("") } );
 
         }
 
@@ -278,17 +326,22 @@ public class ServerController {
             if(save) {
                 FileOutputStream fileStream = new FileOutputStream(filepath);
                 ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
-                objectStream.writeObject(instance);
+                User.save(objectStream);
+                Term.save(objectStream);
+                Campus.save(objectStream);
             } else {
                 FileInputStream fileStream = new FileInputStream(filepath);
                 ObjectInputStream objectStream = new ObjectInputStream(fileStream);
-                instance = (ServerController)objectStream.readObject();
+                User.load(objectStream);
+                Term.load(objectStream);
+                Campus.load(objectStream);
             }
 
-        } catch(ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
+        
             e.printStackTrace();
+        
+        
         }
     }
 
