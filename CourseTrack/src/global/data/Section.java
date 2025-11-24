@@ -69,5 +69,10 @@ public class Section implements Serializable {
     public int getCapacity() {
         return capacity;
     }
-
+    
+    public String toString(){
+        String outstring = "";
+        outstring += course.getName() + " Section " + number + "\nCapacity: " + capacity + "\nAt: " + campus.getCampusName() + "\n" + students.Length() + " enrolled.";
+        return outstring;
+    }
 }

@@ -20,13 +20,13 @@ College Enrollment System
 
  - [ ] 3.1.2.1 Administrator can create/read/update/delete user accounts
 
- - [x] 3.1.2.2 Administrator can create/read/update/delete universities/campuses
+ - [x] 3.1.2.2 Administrator can create/read/update/delete campuses
 
- - [x] 3.1.2.3 Administrator can create/read/update/delete new term schedules of classes
+ - [x] 3.1.2.3 Administrator can create/read/update/delete courses in a campus
 
- - [x] 3.1.2.4 Administrator can create/read/update/delete classes in term
+ - [x] 3.1.2.4 Administrator can create/read/update/delete sections in a term
 
- - [x] 3.1.2.5 Administrator can add schedule data by loading a formatted data file
+ - [ ] 3.1.2.5 Administrator can add schedule data by loading a formatted data file
 
  - [ ] 3.1.3. Student Functions
 

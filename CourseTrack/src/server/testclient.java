@@ -73,6 +73,9 @@ public class testclient {
 			assert(response.getStatus() == MessageStatus.SUCCESS);
 			System.out.println("Received admin add department response");
 		}
+
+		int courseId = -1;
+
 		{
 
 			System.out.println("Sending admin add course request");
@@ -97,7 +100,53 @@ public class testclient {
 			System.out.println(newCourse.name());
 
 			assert(responseCourse.getName().equals("Software Engineering"));
+			
+			courseId = responseCourse.getId();
+
 			System.out.println("Received admin add course response");
+
+		}
+		{
+
+			System.out.println("Sending admin add section request");
+
+			AddSectionRequest newSection = new AddSectionRequest(
+				courseId,
+				"CSU East Bay",
+				"Computer Science",
+				new Term(Term.Season.SPRING, 2025),
+				"Christopher Smith",
+				30
+			);
+
+			client.sendRequest(new Message<>(MessageType.ADMIN_ADD_SECTION, MessageStatus.REQUEST, new AddSectionRequest[]{ newSection }));
+			
+			Message<AddSectionResponse> response = client.receiveResponse();
+			
+			Log.Msg(response.toString());
+
+			assert(response.getStatus() == MessageStatus.SUCCESS);
+
+			Section responseSection = response.getArguments()[0].section();
+			System.out.println(responseSection.getNumber());
+
+			assert(responseSection.getCourse().getName().equals("Software Engineering"));
+			System.out.println("Received admin add section response");
+
+		}
+		{
+
+			System.out.println("Sending logout request");
+
+			LogoutRequest LogoutRequest = new LogoutRequest(
+			);
+
+			client.sendRequest(new Message<>(MessageType.USER_LOGOUT, MessageStatus.REQUEST, new LogoutRequest[]{ new LogoutRequest() }));
+			
+			Message<LogoutResponse> response = client.receiveResponse();
+			assert(response.getStatus() == MessageStatus.SUCCESS);
+
+			client.disconnect();
 
 		}
 		

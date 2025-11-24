@@ -60,7 +60,7 @@ public class Term implements Serializable {
         }
     }
 
-    private Term(Season season, int year) {
+    public Term(Season season, int year) {
         this.season = season;
         this.year = year;
     }

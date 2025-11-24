@@ -25,6 +25,7 @@ public class ServerController {
     public void handleMessage(Message<?> msg, ServerConnection client) {
 
         Log.Msg("Got message: " + msg.toString());
+
         if(!client.isLoggedIn()){
             switch(msg.getType()) {
                 case USER_LOGIN:{
@@ -60,6 +61,15 @@ public class ServerController {
             }
             case ADMIN_ADD_COURSE:{
                 handleAdminAddCourse((Message<AddCourseRequest>) msg, client);
+                break;
+            }
+            case ADMIN_ADD_SECTION:{
+                handleAdminAddSection((Message<AddSectionRequest>) msg, client);
+                break;
+            }
+            case USER_LOGOUT:{
+                handleLogout((Message<LogoutRequest>) msg, client);
+                break;
             }
             default:{
                 break;
@@ -290,12 +300,17 @@ public class ServerController {
 
         for(AddSectionRequest request : msg.getArguments()) {
          
-            String courseName = request.name();
-
             Campus campus = Campus.get(request.campus());
             if(campus == null) {
                 // return failure response
-                client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.FAILURE, new AddSectionResponse[] { new AddSectionResponse("") } );
+                Log.Err("Campus not found");
+                client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.FAILURE, new AddSectionResponse[] { new AddSectionResponse(null) });
+                continue;
+            }
+
+            if(!campus.hasDepartment(request.department())){
+                Log.Err("Department not found");
+                client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.FAILURE, new AddSectionResponse[] { new AddSectionResponse(null) });
                 continue;
             }
 
@@ -309,11 +324,26 @@ public class ServerController {
             
             if(!term.addSection(newSection)){
                 // return error response
-                client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.FAILURE, new AddSectionResponse[] { new AddSectionResponse("") } );
+                Log.Err("Section already exists");
+                client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.FAILURE, new AddSectionResponse[] { new AddSectionResponse(null) } );
             }
 
             // send success response
-            client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.SUCCESS, new AddSectionResponse[] { new AddSectionResponse("") } );
+            client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.SUCCESS, new AddSectionResponse[] { new AddSectionResponse(newSection) } );
+
+        }
+
+    }
+    
+    private void handleLogout(Message<LogoutRequest> msg, ServerConnection client) {
+
+        for(LogoutRequest request : msg.getArguments()) {
+
+            // send success response
+            //client.sendMessage(MessageType.USER_LOGOUT, MessageStatus.SUCCESS, new LogoutResponse[] { new LogoutResponse() } );
+            
+            // too soon?
+            client.Hangup();
 
         }
 

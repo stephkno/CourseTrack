@@ -50,6 +50,8 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
         "ADMIN_REMOVE_TERM",
         "ADMIN_ADD_COURSE",
         "ADMIN_REMOVE_COURSE",
+        "ADMIN_ADD_SECTION",
+        "ADMIN_REMOVE_SECTION",
         "ADMIN_GET_USERS",
         "ADMIN_REMOVE_USER",
         "ADMIN_GET_CAMPUSES",

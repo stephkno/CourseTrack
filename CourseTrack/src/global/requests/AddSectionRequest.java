@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 public record AddSectionRequest(
     
-    String name,
     int courseId,
     String campus,
     String department,
