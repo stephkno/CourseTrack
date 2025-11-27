@@ -1,5 +1,6 @@
 package global.requests;
 import global.data.Term;
+import global.data.MeetTime;
 import java.io.Serializable;
 
 public record AddSectionRequest(
@@ -9,6 +10,7 @@ public record AddSectionRequest(
     String department,
     Term term,
     String instructor,
-    int capacity
+    int capacity,
+    MeetTime[] meetTimes
 
 ) implements Serializable { }

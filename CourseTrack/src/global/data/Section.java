@@ -1,29 +1,55 @@
 package global.data;
 
 import global.LinkedList;
+import global.Log;
 import java.io.Serializable;
 import server.data.Admin;
 import server.data.Student;
 
 public class Section implements Serializable {
    
+    int id;
+    static int nextId = 0;
+
     int number;
     Course course;
     Term term;
-    Campus campus;
-    LinkedList<MeetTime> meetTimes;
+    Department department;
+    MeetTime[] meetTimes;
     LinkedList<Student> students;
-    Admin instructor;
+    LinkedList<Student> waitlist;
+    String instructor;
     int capacity;
 
-    public Section(int number, int capacity, Course course, Term term, Campus campus) {
-        this.number = number;
+    public Section(int capacity, Course course, Term term, Department department, String instructor, MeetTime[] meetTimes) {
+        
         this.capacity = capacity;
         this.course = course;
         this.term = term;
-        this.campus = campus;
-        this.meetTimes = new LinkedList<>();
+        this.department = department;
         this.students = new LinkedList<>();
+        this.waitlist = new LinkedList<>();
+        this.id = Section.nextId++;
+        this.instructor = instructor;
+      
+        this.meetTimes = meetTimes;
+        // add section to this term
+        this.number = course.addSection(term, this);
+    
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public boolean Search(String q){
+        
+        q = q.toLowerCase();
+        if (course.getName().toLowerCase().contains(q)) return true;
+        if (instructor.toLowerCase().contains(q)) return true;
+
+        return false;
+    
     }
 
     public int getNumber() { 
@@ -38,16 +64,12 @@ public class Section implements Serializable {
         return term; 
     }
 
-    public Campus getCampus() { 
-        return campus; 
+    public Department getDepartment() {
+        return department; 
     }
 
-    public LinkedList<MeetTime> getMeetTimes() { 
+    public MeetTime[] getMeetTimes() { 
         return meetTimes; 
-    }
-
-    public void addMeetTime(MeetTime mt) { 
-        this.meetTimes.Push(mt); 
     }
 
     public LinkedList<Student> getStudents() { 
@@ -62,17 +84,50 @@ public class Section implements Serializable {
         this.students.Remove(student); 
     }
 
-    public Admin getInstructor() { 
+    public int addWaitlist(Student student){
+        this.waitlist.Push(student);
+        return this.waitlist.Length()-1;
+    }
+
+    public String getInstructor() { 
         return instructor; 
     }
 
     public int getCapacity() {
         return capacity;
     }
+
+    public int waitlistLength(){
+        return waitlist.Length();
+    }
+
+    public Student popWaitlist(){
+        Student student = waitlist.Get(0);
+        waitlist.Remove(0);
+        return student;
+    }
+    
+    public boolean full(){
+        return students.Length() >= capacity;
+    }
+
+    public boolean conflicts(MeetTime[] meetTimes){
+
+        for(MeetTime meetTimeA : getMeetTimes()){
+            for(MeetTime meetTimeB : meetTimes){
+                if(meetTimeA.overlaps(meetTimeB)){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
     
     public String toString(){
         String outstring = "";
-        outstring += course.getName() + " Section " + number + "\nCapacity: " + capacity + "\nAt: " + campus.getCampusName() + "\n" + students.Length() + " enrolled.";
+        long percentage = ( (long)students.Length() / (long)capacity ) * 100;
+        outstring += "Course: " + course.getName() + " \nSection no: " + number + "\nInstructor: " + instructor + "\nCampus: " + department.getCampus().getName() + "\nTotal Capacity: " + capacity + "\nTotal Enrolled:" + students.Length() + "\n" + percentage + "% full\n";
         return outstring;
     }
 }

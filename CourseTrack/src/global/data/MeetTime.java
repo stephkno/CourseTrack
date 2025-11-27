@@ -1,5 +1,6 @@
 package global.data;
 import java.io.Serializable;
+import java.time.LocalTime;
 
 public class MeetTime implements Serializable {
 
@@ -8,33 +9,38 @@ public class MeetTime implements Serializable {
     }
 
     Day day;
-    String startTime;
-    String endTime;
-    String room;
+    LocalTime startTime;
+    LocalTime endTime;
 
     public MeetTime() {}
 
-    public MeetTime(Day day, String startTime, String endTime, String room) {
+    public MeetTime(Day day, LocalTime startTime, LocalTime endTime) {
         this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.room = room;
     }
 
     public Day getDay() { 
         return day; 
     }
 
-    public String getStartTime() { 
+    public LocalTime getStartTime() { 
         return startTime; 
     }
 
-    public String getEndTime() { 
+    public LocalTime getEndTime() { 
         return endTime; 
     }
 
-    public String getRoom() { 
-        return room; 
+    // returns true if this meet time overlaps with other
+    public boolean overlaps(MeetTime other){
+        
+        if(other == null || 
+            this.day != other.day) return false;
+
+        return this.startTime.isBefore(other.endTime) &&
+            other.startTime.isBefore(this.endTime);
+
     }
 
 }

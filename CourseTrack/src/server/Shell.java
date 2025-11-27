@@ -21,8 +21,8 @@ public class Shell implements Runnable {
     private void PrintData(String[] args) {
 
         ServerController server = ServerController.Get();
-        HashMap<User> users = User.get();
-        HashMap<Campus> campuses = Campus.get();
+        HashMap<String, User> users = User.get();
+        HashMap<String, Campus> campuses = Campus.get();
         LinkedList<Term> terms = Term.get();
         
         Log.Println("Users:");

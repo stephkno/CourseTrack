@@ -3,30 +3,36 @@ package server.data;
 import client.UserType;
 import global.LinkedList;
 import global.data.Section;
+import global.data.Course;
 import java.io.Serializable;
 
 public class Student extends User implements Serializable {
     
-    String studentId;
+    int id;
+    static int nextId = 0;
 
     // list of currently enrolled sections
     LinkedList<Section> enrolledSections;
     
     // list of all sections previously taken by student
-    LinkedList<Section> pastSections;
+    LinkedList<Course> pastSections;
 
-    public Student(String name, String password, String studentId) {
+    public Student(String name, String password) {
         super(name, password, UserType.STUDENT);
-        this.studentId = studentId;
+        this.id = nextId++;
         this.enrolledSections = new LinkedList<>();
     }
 
-    public String getStudentId() { 
-        return studentId;
+    public int getStudentId() { 
+        return id;
     }
 
     public LinkedList<Section> getEnrolledSections() { 
         return enrolledSections; 
+    }
+    
+    public boolean hasTaken(Course course){
+        return pastSections.Contains(course);
     }
     
 }

@@ -44,12 +44,12 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
     
         switch (resp.getStatus()) {
             case SUCCESS -> {
-                if (resp.getArguments().length <= 0) {
+                if (resp.get() == null) {
                     System.err.println("Malformed login response.");
                     return false;
                 }
                     
-                currentUser = resp.getArguments()[0].user();
+                currentUser = resp.get().user();
 
                 return true;
             }
@@ -65,18 +65,18 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
     }
 
     public void receiveUpdateRequest(Message<UpdateRequest> request) {
-        if (request.getArguments().length != 1)
+        if (request.get() == null)
             return;
 
-        appGUI.updateData(request.getArguments()[0]);
+        appGUI.updateData(request.get());
         client.sendResponse(new Message<UpdateResponse>(MessageType.CLIENT_UPDATE, MessageStatus.RESPONSE, null));
     }
     
     public void receivePingRequest(Message<PingRequest> request) {
-         if (request.getArguments().length != 1)
+         if (request.get() == null)
             return;
 
-        System.out.println("Received PingRequest request: " + ((PingRequest)request.getArguments()[0]).message());
+        System.out.println("Received PingRequest request: " + ((PingRequest)request.get()).message());
         client.sendResponse(new Message<>(MessageType.PING_REQUEST, MessageStatus.RESPONSE, null));
     }
 

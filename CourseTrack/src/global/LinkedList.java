@@ -121,6 +121,17 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 	public int Length() {
 		return numItems;
 	}
+
+	public Object[] toArray(){
+		Object[] outArray = new Object[numItems];
+		
+		int i = 0;
+	    for(Node<T> curr = first; curr != null; curr = curr.next){
+			outArray[i++] = curr.data;
+		} 
+
+		return outArray;
+	}
 	
 	public String toString() {
 		 Node<T> curr = first;

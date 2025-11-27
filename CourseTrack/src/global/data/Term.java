@@ -76,6 +76,20 @@ public class Term implements Serializable {
         return true;
     }
 
+    public LinkedList<Section> getSections(){
+        return sections;
+    }
+
+    public Section getSection(int id){
+        // get section from term 
+        for(Section s : getSections()){
+            if(s.getId() == id){
+                return s;
+            }
+        }
+        return null;
+    }
+
     public Season getSeason() { 
         return season; 
     }

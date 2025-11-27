@@ -39,7 +39,7 @@ public class Server {
 	private ServerSocket serverSocket = null;
 
 	// list of connected clients
-	private HashMap<ServerConnection> clients = new HashMap<>();
+	private HashMap<String, ServerConnection> clients = new HashMap<>();
 	
 	// callback functions
 	private Callback_T_U<Message, ServerConnection> requestCallback;

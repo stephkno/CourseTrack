@@ -1,10 +1,6 @@
 package global.responses;
-
-import global.data.Section;
 import java.io.Serializable;
 
-public record BrowseSectionResponse(
+public record DropSectionResponse(
     
-    Section[] sections
-
 ) implements Serializable { }

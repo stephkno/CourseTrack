@@ -76,16 +76,16 @@ public class ServerConnection implements Runnable {
         }
     }
 
-    public <TObjMessage extends Serializable> void sendMessage(MessageType type, MessageStatus status, TObjMessage[] obj) {
+    public <TObjMessage extends Serializable> void sendMessage(MessageType type, MessageStatus status, TObjMessage obj) {
         Send(new Message<>(type, status, obj));
     }
 
     public void Hangup() {
         
-        disconnectCallback.call(this); 
-        server.RemoveClient(this);
         user = null;
         run = false;
+        disconnectCallback.call(this); 
+        server.RemoveClient(this);
 
         try {
             socket.close();

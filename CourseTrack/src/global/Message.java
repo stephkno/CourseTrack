@@ -1,10 +1,9 @@
 package global;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
-public final class Message<TObjMessage extends Serializable> implements Serializable, Iterable {
+public final class Message<TObjMessage extends Serializable> implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final AtomicLong counter = new AtomicLong(0);
 
@@ -30,7 +29,7 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
         "STUDENT_WAS_WAITLISTED",
         "STUDENT_WAS_ENROLLED",
         "STUDENT_WAITLIST_PROMOTION",
-        "STUDENT_GET_ENROLLED_COURSES",
+        "STUDENT_GET_SCHEDULE",
         "STUDENT_GENEREATE_SCHEDULE",
         "STUDENT_GET_UNITS",
         "STUDENT_GET_CLASSES_TAKEN",
@@ -70,20 +69,22 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
     private final long id;
     private final MessageType msgType;
     private final MessageStatus msgStatus;
-    private final TObjMessage[] arguments;
+    private final TObjMessage messageObject;
 
-    public Message(MessageType type, MessageStatus status, TObjMessage[] arguments) {
+    public Message(MessageType type, MessageStatus status, TObjMessage messageObject) {
         this.id = counter.incrementAndGet();
         this.msgType = type;
         this.msgStatus = status;
-        this.arguments = arguments;
+        this.messageObject = messageObject;
     }
 
     public long getId() { return id; }
     public MessageType getType() { return msgType; }
     public MessageStatus getStatus() { return msgStatus; }
 
-    public TObjMessage[] getArguments() { return arguments; }
+    public TObjMessage get() { 
+        return messageObject; 
+    }
     
     public String getTypeString() {
         return messageTypes[msgType.ordinal()];
@@ -99,35 +100,9 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
 
         out += "\n - Type: " + getTypeString();
         out += "\n - Status: " + getStatusString();
-        out += "\n - Args [" + arguments.length + "]:";
-
-        int i = 0;
-        if(arguments == null)
-            out += "0";
-        else
-            for(Object argument : arguments) out += "\n - - " + i++ + ": " + argument.toString();
+        out += "\n - Content: [" + messageObject.toString() + "]:";
 
         return out;
     }
 
-	@Override
-	public Iterator<TObjMessage> iterator() {
-		
-		return new Iterator<TObjMessage>() {
-			
-            int i = 0;
-			
-			@Override
-			public boolean hasNext() { return i < arguments.length; }
-			
-			@Override
-			public TObjMessage next() {
-				
-				if(!hasNext()) throw new java.util.NoSuchElementException();
-				
-				return arguments[i++];
-				
-			}
-		};
-	}
 }

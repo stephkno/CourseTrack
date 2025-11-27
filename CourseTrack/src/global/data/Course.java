@@ -3,6 +3,7 @@ import global.LinkedList;
 import global.Log;
 import java.io.Serializable;
 import server.data.Student;
+import global.HashMap;
 
 public class Course implements Serializable {
     
@@ -14,8 +15,10 @@ public class Course implements Serializable {
     Department department;
     Campus campus;
 
-    // should have a reference to or own offered sections?
-    LinkedList<Section> sections;
+    HashMap<Term, LinkedList<Section>> sections = new HashMap<>();
+
+    // list of required courses
+    LinkedList<Course> requirements = new LinkedList<>();
 
     public Course(String name, int number, int units, Department department){
         this.name = name;
@@ -28,11 +31,38 @@ public class Course implements Serializable {
             Log.Err("Course added with null campus.");
         }
 
-        this.id = nextId++;
+        this.id = Course.nextId++;
+    }
+
+    // add section to this course in this term and return id
+    public int addSection(Term term, Section section){
+        
+        LinkedList<Section> ll;
+        
+        Log.Msg(this);
+
+        if(sections.Contains(term)){
+            ll = sections.Get(term);
+            ll.Push(section);
+        }else{
+            ll = new LinkedList<Section>();
+            ll.Push(section);
+            sections.Put(term, ll);
+        }
+
+        return ll.Length();
+
     }
 
     public boolean verifyPrereqs(Student student) {
-        return false;
+
+        for(Course course : requirements){
+            if(student.hasTaken(course)) {
+                return false;
+            } 
+        }
+        
+        return true;
     }
 
     public int getId(){

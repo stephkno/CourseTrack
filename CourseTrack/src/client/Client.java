@@ -35,8 +35,10 @@ public class Client {
     public void disconnect() {
         try {
             connected = false;
-            if (socket != null) 
+            if (socket != null) {
                 socket.close();
+                socket = null;
+            }
             System.out.println("Disconnected.");
         } catch (IOException e) {
             System.out.println("Error during disconnection: " + e.getMessage());

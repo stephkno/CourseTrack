@@ -3,11 +3,6 @@ package global.requests;
 import global.data.Term;
 import java.io.Serializable;
 
-public record BrowseSectionRequest(
-    
-    String searchQuery,
-    String campus,
-    String department,
+public record GetScheduleRequest(
     Term term
-
 ) implements Serializable { }

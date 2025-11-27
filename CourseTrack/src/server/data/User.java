@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import server.ServerConnection;
+import java.time.LocalDateTime;
+import global.Message;
 
 public class User implements Serializable {
 
@@ -13,11 +15,20 @@ public class User implements Serializable {
     int id;
     String name;
     String password;
+
+    LocalDateTime lastLogin;
+    LocalDateTime lastActivity;
+    
     public ServerConnection socket;
 
-    public static HashMap<User> users = new HashMap<>();
+    public void Notify(String message){
+        // push notification to notifications list
+        // socket.Send(new Message(MessageType.STUDENT_WAS_ENROLLED, MessageStatus.REQUEST, new (message)));
+    }
+
+    public static HashMap<String, User> users = new HashMap<>();
     
-    public static HashMap<User> get(){
+    public static HashMap<String, User> get(){
         return users;
     }
 
@@ -26,7 +37,14 @@ public class User implements Serializable {
     }
 
     public static User add(String username, String password, UserType type) {
-        User newUser = new User(username, password, type);
+        User newUser;
+
+        if(type == UserType.STUDENT){
+            newUser = (User)new Student(username, password);
+        }else{
+            newUser = (User)new Admin(username, password);
+        }
+
         users.Put(username, newUser);
         return newUser;
     }
@@ -45,7 +63,7 @@ public class User implements Serializable {
     
     public static void load(ObjectInputStream objectStream) {
         try {
-            users = (HashMap<User>)objectStream.readObject();
+            users = (HashMap<String, User>)objectStream.readObject();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,19 +75,27 @@ public class User implements Serializable {
         this.type = type;
     }
 
+    public void login(){
+        lastLogin = LocalDateTime.now();
+    }
+
+    public void setActive(){
+        lastActivity = LocalDateTime.now();
+    }
+
     private boolean authorize(UserType type) {
         return getType() == type;
     }
 
-    public static boolean ValidatePassword(String password) {
+    public static boolean validatePassword(String password) {
         return password.length() > 0 || password.length() <= 32;
     }
 
-    public void UpdatePassword(String newPassword) {
+    public void updatePassword(String newPassword) {
         password = newPassword;
     }
         
-    public boolean Authenticate(String password) {
+    public boolean authenticate(String password) {
         return password.equals(this.password);
     }
     

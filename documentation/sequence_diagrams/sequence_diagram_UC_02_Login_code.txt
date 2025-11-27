@@ -10,7 +10,7 @@ participant User
 
 Student->ClientHandler: Enter username + password
 ClientHandler->Server: Send credentials
-Server->User: Authenticate(username, password)
+Server->User: authenticate(username, password)
 User-->Server: Authentication result (role/student/admin)
 Server-->ClientHandler: Return login success/failure + role
 ClientHandler-->Student: Display main menu (student/admin)

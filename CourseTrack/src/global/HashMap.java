@@ -3,50 +3,50 @@ package global;
 import java.util.Iterator;
 import java.io.Serializable;
 
-public class HashMap<T> implements Iterable<T>, Serializable{
+public class HashMap<K,V> implements Iterable<V>, Serializable{
 	
 	private int numBuckets = 8;
 	private int numElems = 0;
 	private float maxLoad = 1.0f;
 	
 	// hash table item stores both a key and data for search purposes
-	private class HashMapItem<T> implements Serializable{
+	private class HashMapItem<K,V> implements Serializable{
 		
-		public HashMapItem(String key, T data) {
+		public HashMapItem(K key, V value) {
 			this.key = key;
-			this.data = data;
+			this.value = value;
 		}
 		
-		public String key;
-		public T data;
+		public K key;
+		public V value;
 		
 	};
 	
 	// array of bucket/chains
-	private LinkedList<HashMapItem<T>>[] buckets;
+	private LinkedList<HashMapItem<K,V>>[] buckets;
 
 	// constructors
 	public HashMap() {	
 		this.numBuckets = 10;
 		buckets = new LinkedList[this.numBuckets];
-		for(LinkedList bucket : buckets) bucket = new LinkedList<HashMapItem<T>>();
+		for(LinkedList bucket : buckets) bucket = new LinkedList<HashMapItem<K,V>>();
 	}
 	
 	public HashMap(int numBuckets) {	
 		this.numBuckets = numBuckets;
 		buckets = new LinkedList[this.numBuckets];
-		for(LinkedList bucket : buckets) bucket = new LinkedList<HashMapItem<T>>();
+		for(LinkedList bucket : buckets) bucket = new LinkedList<HashMapItem<K,V>>();
 	}
 	
 	// add a new item and key to map
-	public void Put(String key, T value) throws IllegalArgumentException{
+	public void Put(K key, V value) throws IllegalArgumentException{
 		
 		// handle null key values
 		if(key==null) throw new IllegalArgumentException();
 		
 		// get index from hashing key
 		int index = hash(key);
-		LinkedList<HashMapItem<T>> chain = buckets[index];
+		LinkedList<HashMapItem<K,V>> chain = buckets[index];
 		
 		if(chain == null) {
 			
@@ -57,17 +57,17 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 		}else {
 			
 			// overwrite old value
-			HashMapItem<T> item = this.find(chain, key);
+			HashMapItem<K,V> item = this.find(chain, key);
 		
 			if(item!= null) {			
-				item.data = value;
+				item.value = value;
 				return;
 			}
 			
 		}
 		
 		// add new value to chain
-		buckets[index].Push(new HashMapItem<T>(key, value));
+		buckets[index].Push(new HashMapItem<K,V>(key, value));
 		numElems++;
 		
 		// check load factor of table
@@ -76,24 +76,24 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 	}
 	
 	// return value from table with key
-	public T Get(String key) throws IllegalArgumentException{
+	public V Get(K key) throws IllegalArgumentException{
 	
 		// disallow null keys
 		if(key==null) throw new IllegalArgumentException();
 		
 		// get bucket index from key
 		int index = hash(key);
-		
+
 		if(buckets[index] == null) return null;
 		
 		// get chain from buckets
-		LinkedList<HashMapItem<T>> chain = buckets[index];
-		HashMapItem<T> item = this.find(chain, key);
+		LinkedList<HashMapItem<K,V>> chain = buckets[index];
+		HashMapItem<K,V> item = this.find(chain, key);
 		
 		if(item == null) return null;
 		
 		// return value if found, null if not
-		return item.data;
+		return item.value;
 		
 	}
 
@@ -103,12 +103,12 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 	}
 	
 	// does contain key
-	public Boolean Contains(String key) {		
+	public Boolean Contains(K key) {		
 		return Get(key) != null;
 	}
 	
 	// remove element by key
-	public boolean Remove(String key) {
+	public boolean Remove(K key) {
 		
 		// disallow null keys
 		if(key==null) throw new IllegalArgumentException();
@@ -117,7 +117,7 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 		int index = hash(key);
 		
 		// get chain from buckets
-		LinkedList<HashMapItem<T>> chain = buckets[index];
+		LinkedList<HashMapItem<K,V>> chain = buckets[index];
 		if(chain == null) return false;
 		
 		int i = indexOfKey(chain, key);
@@ -132,18 +132,18 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 	}
 
 	// find element in chain with key
-	private HashMapItem<T> find(LinkedList<HashMapItem<T>> chain, String key) {
+	private HashMapItem<K,V> find(LinkedList<HashMapItem<K,V>> chain, K key) {
 		
 		if(chain == null) return null;
 		
 		int i = 0;
 		Boolean loop = true;
-		HashMapItem<T> value = null;
+		HashMapItem<K,V> value = null;
 		
 		// loop until found or end
 		while(loop) {
 			
-			HashMapItem<T> hti;
+			HashMapItem<K,V> hti;
 			
 			try {
 				hti = chain.Get(i++);
@@ -167,12 +167,12 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 	}
 	
 	// get index of item with key in chain
-	private int indexOfKey(LinkedList<HashMapItem<T>> chain, String key) {
+	private int indexOfKey(LinkedList<HashMapItem<K,V>> chain, K key) {
 		if(chain == null || key == null) return -1;
 		
 		int i = 0;
 		while(i < chain.Length()) {
-			HashMapItem<T> hti = chain.Get(i);
+			HashMapItem<K,V> hti = chain.Get(i);
 			if(hti != null && hti.key.equals(key)) {
 				return i;  // Found
 			}
@@ -185,16 +185,16 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 	private void rehash(int resize) {
 		
 		this.numBuckets = numBuckets*resize;
-		HashMap<T> newHashMap = new HashMap<T>(this.numBuckets);
+		HashMap<K,V> newHashMap = new HashMap<K,V>(this.numBuckets);
 		
 		for(int b = 0; b < buckets.length; b++) {
-			LinkedList<HashMapItem<T>> chain = buckets[b];
+			LinkedList<HashMapItem<K,V>> chain = buckets[b];
 			
 			if(chain != null) {
 				for(int j = 0; j < chain.Length(); j++) {
-					HashMapItem<T> item = chain.Get(j);
+					HashMapItem<K,V> item = chain.Get(j);
 					if(item != null) {
-						newHashMap.Put(item.key, item.data);
+						newHashMap.Put(item.key, item.value);
 					}
 				}
 			}
@@ -212,7 +212,7 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 	}
 	
 	// get hash map bucket index given key
-	private int hash(String input) {
+	private int hash(K input) {
 	
 		return Math.abs(input.hashCode()) % numBuckets;
 
@@ -223,12 +223,12 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 		String out = "{\n";
 
 		for(int b = 0; b < buckets.length; b++) {
-			LinkedList<HashMapItem<T>> chain = buckets[b];
+			LinkedList<HashMapItem<K,V>> chain = buckets[b];
 			
 			if(chain != null) {
 				for(int j = 0; j < chain.Length(); j++) {
-					HashMapItem<T> item = chain.Get(j);
-					out += "\t" + item.key + ": " + item.data + "\n";
+					HashMapItem<K,V> item = chain.Get(j);
+					out += "\t" + item.key + ": " + item.value + "\n";
 				}
 			}
 		}
@@ -240,8 +240,8 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 
 	// iterate over all items in hash map
 	@Override
-	public Iterator<T> iterator() {
-		return new Iterator<T>() {
+	public Iterator<V> iterator() {
+		return new Iterator<V>() {
 	
 			private int b = 0;
 			private int e = 0;
@@ -260,11 +260,11 @@ public class HashMap<T> implements Iterable<T>, Serializable{
 	        }
 	        
 	        @Override
-	        public T next() {
+	        public V next() {
 				if(!hasNext())
 					throw new java.util.NoSuchElementException();
 
-				return buckets[b].Get(e++).data;
+				return buckets[b].Get(e++).value;
 	        }
 	    };
 	}

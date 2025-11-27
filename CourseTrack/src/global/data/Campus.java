@@ -11,9 +11,12 @@ public class Campus implements Serializable {
     
     String campusName;
     
-    static HashMap<Campus> campuses = new HashMap<>();
+    int id;
+    static int nextId = 0;
     
-    public static HashMap<Campus> get() {
+    static HashMap<String, Campus> campuses = new HashMap<>();
+    
+    public static HashMap<String, Campus> get() {
         return campuses;
     }
 
@@ -47,21 +50,22 @@ public class Campus implements Serializable {
     
     public static void load(ObjectInputStream objectStream) {
         try {
-            campuses = (HashMap<Campus>)objectStream.readObject();
+            campuses = (HashMap<String, Campus>)objectStream.readObject();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    HashMap<Department> departments = new HashMap<>();
+    HashMap<String, Department> departments = new HashMap<>();
     LinkedList<Student> students = new LinkedList<>();
 
     private Campus(String campusName) {
         this.campusName = campusName;
+        this.id = Campus.nextId++;
     }
 
-    public String getCampusName() { 
+    public String getName() { 
         return campusName; 
     }
 
@@ -79,9 +83,11 @@ public class Campus implements Serializable {
     }
 
     public Department getDepartment(String departmentName) {
-        Log.Msg(departmentName);
-        Log.Msg(departments.Size());
         return departments.Get(departmentName);
+    }
+
+    public boolean equals(Campus other){
+        return id == other.id;
     }
 
     public String toString(){

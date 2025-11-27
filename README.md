@@ -30,13 +30,13 @@ College Enrollment System
 
  - [ ] 3.1.3. Student Functions
 
- - [ ] 3.1.3.1 Student can search classes available at specific term at university/campus
+ - [x] 3.1.3.1 Student can search classes available at specific term at university/campus
 
- - [ ] 3.1.3.2 Student can enroll in classes
+ - [] 3.1.3.2 Student can enroll in classes
 
- - [ ] 3.1.3.3 Student can drop enrolled classes
+ - [] 3.1.3.3 Student can drop enrolled classes
 
- - [ ] 3.1.3.4 Student can view enrolled class schedule
+ - [] 3.1.3.4 Student can view enrolled class schedule
 
  - [ ] 3.1.3.5 Students can automatically generate viable schedules using interval-overlap detection between class meeting times.
 
@@ -80,15 +80,15 @@ College Enrollment System
 
  - [ ] 3.1.5.7 Total credits ?
 
- - [ ] 3.1.6. Enrollment Validation
+ - [x] 3.1.6. Enrollment Validation
 
- - [ ] 3.1.6.1 Students may only enroll in courses that have fulfilled prerequisites.
+ - [x] 3.1.6.1 Students may only enroll in courses that have fulfilled prerequisites.
 
- - [ ] 3.1.6.2 Students are notified when they are not allowed to register a class yet.
+ - [x] 3.1.6.2 Students are notified when they are not allowed to register a class yet.
 
- - [ ] 3.1.6.3 Students may not enroll in two classes with conflicting meet times.
+ - [x] 3.1.6.3 Students may not enroll in two classes with conflicting meet times.
 
- - [ ] 3.1.6.4 Student may only enroll in (max) credits per term
+ - [x] 3.1.6.4 Student may only enroll in (max) credits per term
 
  - [ ] 3.1.7. Waitlisting
 

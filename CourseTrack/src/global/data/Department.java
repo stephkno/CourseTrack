@@ -5,6 +5,8 @@ import java.io.Serializable;
 
 public class Department implements Serializable {
     
+    int id;
+    static int nextId = 0;
     String name;
     Campus campus;
     LinkedList<Course> courses = new LinkedList<>();
@@ -38,6 +40,7 @@ public class Department implements Serializable {
     public Department(String name, Campus campus) {
         this.name = name;
         this.campus = campus;
+        this.id = Department.nextId++;
     }
 
     public Campus getCampus() { 
