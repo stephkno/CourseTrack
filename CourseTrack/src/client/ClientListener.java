@@ -2,7 +2,6 @@ package client;
 
 import client.services.IClientListenerService;
 import global.*;
-import global.requests.MessageTypeRegistry;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -19,19 +18,13 @@ public class ClientListener implements Runnable {
     @Override
     public void run() {
         while (running.get() && client.isConnected()) {
-            Message<?> request = client.receiveResponse();
+            Message<?> msg = client.internalReceive();
 
-            if (request == null) 
+            if (msg == null) 
                 continue;
-            
-            Class<? extends Serializable> tClass = MessageTypeRegistry.getClassFor(request.getType());
 
-            if (tClass == null) {
-                System.err.println("Unknown message type received: " + request.getType());
-                continue;
-            }
-
-            controller.handleServerMessage(request, tClass);
+            if (!client.routeIncoming(msg))
+                controller.handleServerMessage(msg, Serializable.class);
         }
     }
 

@@ -36,8 +36,13 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
 
     @Override
     public boolean sendLoginRequest(String username, String password) {
-        client.sendRequest(new Message<>(MessageType.USER_LOGIN, MessageStatus.REQUEST, new LoginRequest[]{new LoginRequest(username, password)}));
-        Message<LoginResponse> resp = client.receiveResponse();
+        Message<LoginResponse> resp = client.sendAndWait(
+            new Message<>(
+                MessageType.USER_LOGIN, 
+                MessageStatus.REQUEST, 
+                new LoginRequest(username, password)
+            )
+        );
 
         if (resp == null)
             return false;
@@ -88,7 +93,6 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
             case PING_REQUEST -> receivePingRequest((Message<PingRequest>) request);
             default -> System.err.println("Unhandled message type: " + request.getType());
         }
-        
     }
 
     public User getCurrentUser() { return currentUser; }
