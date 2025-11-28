@@ -1,14 +1,12 @@
 package clientGUI.PageComponents;
 
+import clientGUI.UIFramework.*;
+import clientGUI.UIInformations.*;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.RenderingHints;
-
 import javax.swing.JFrame;
-
-import clientGUI.UIFramework.*;
-import clientGUI.UIInformations.*;
 
 public class Panels {
     public static class CourseItemPanel extends nPanel {
@@ -24,7 +22,7 @@ public class Panels {
 
             
             switch (role) {
-                case UserRole.admin -> {
+                case admin -> {
                     nButton editButton = new nButton("Edit");
                     nButton deleteButton = new nButton("Delete");
                     editButton.setBackgroundColor(UITheme.SUCCESS);

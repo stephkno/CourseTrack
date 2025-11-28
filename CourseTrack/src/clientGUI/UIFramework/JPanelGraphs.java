@@ -1,13 +1,10 @@
 package clientGUI.UIFramework;
-import javax.swing.JPanel;
-
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.geom.*;
 
 @SuppressWarnings("unused")
@@ -135,10 +132,10 @@ public class JPanelGraphs extends nPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         switch (graphType) {
-            case GraphTypes.BAR:
+            case BAR:
                 createBarGraph(g);
                 break;
-            case GraphTypes.LINE:
+            case LINE:
                 createLineGraph(g);
                 break;
             default:

@@ -5,7 +5,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -110,9 +109,9 @@ public class JPanelPlainText extends nPanel {
         double cx = size.getWidth() / 2;// 2.0;
         double cy = size.getHeight() / 2.0; //mainStringAlignment.CENTER
         switch(mainAlignment) {
-                case MainStringAlignments.LEFT -> cx = 0;
-                case MainStringAlignments.RIGHT -> cx = size.getWidth();
-                case MainStringAlignments.CENTER -> {}
+                case LEFT -> cx = 0;
+                case RIGHT -> cx = size.getWidth();
+                case CENTER -> {}
             }
             
         // draw the scaled, centered string
