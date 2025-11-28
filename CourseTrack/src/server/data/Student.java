@@ -2,8 +2,8 @@ package server.data;
 
 import client.UserType;
 import global.LinkedList;
-import global.data.Section;
 import global.data.Course;
+import global.data.Section;
 import java.io.Serializable;
 
 public class Student extends User implements Serializable {
@@ -21,6 +21,14 @@ public class Student extends User implements Serializable {
         super(name, password, UserType.STUDENT);
         this.id = nextId++;
         this.enrolledSections = new LinkedList<>();
+    }
+
+    public void addSection(Section section){
+        enrolledSections.Push(section);
+    }
+
+    public void removeSection(Section section){
+        enrolledSections.Remove(section);
     }
 
     public int getStudentId() { 

@@ -14,13 +14,14 @@ public class Term implements Serializable {
     int year;
 
     static LinkedList<Term> terms = new LinkedList<>();
-    static LinkedList<Section> sections = new LinkedList<>();
+    transient LinkedList<Section> sections = new LinkedList<>();
     
     public static LinkedList<Term> get() {
         return terms;
     }
 
     public static Term get(Term term) {
+
         // search for term
         for(Term t : terms){
             if(t.equals(term)){
@@ -70,8 +71,13 @@ public class Term implements Serializable {
         this.year = other.year;
     }
 
+    // add section must verify that no two sections with same instructor meet at same time
     public boolean addSection(Section section){
-        if(sections.Contains(section)) return false;
+        for(Section s : sections){
+            if(s.conflicts(section)){
+                return false;
+            }
+        }
         sections.Push(section);
         return true;
     }
@@ -102,12 +108,14 @@ public class Term implements Serializable {
         return season + " " + year;
     }
 
-    public boolean Equals(Term other) {
+    public boolean equals(Term other) {
         return season == other.season && year == other.year;
     }
 
     public String toString(){
         String outstring = season + " " + year + "\n";
+        if(sections == null) return outstring;
+
         for(Section section : sections){
             outstring += section.toString();
         }

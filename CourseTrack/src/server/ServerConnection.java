@@ -4,6 +4,7 @@ import global.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Timer;
 import server.data.*;
 
 // ServerConnection is a single client socket connection
@@ -33,6 +34,7 @@ public class ServerConnection implements Runnable {
     // starts null and becomes defined when login occurs
     private User user;
 
+    Timer timeout = new Timer();
   
     // Constructor
     public ServerConnection(Socket socket, Server server, Callback_T_U<Message,ServerConnection> messageCallback, Callback_T<ServerConnection> disconnectCallback)

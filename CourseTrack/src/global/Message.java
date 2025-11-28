@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class Message<TObjMessage extends Serializable> implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     private static final AtomicLong counter = new AtomicLong(0);
 
@@ -79,7 +80,9 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
     }
 
     public long getId() { return id; }
+    
     public MessageType getType() { return msgType; }
+
     public MessageStatus getStatus() { return msgStatus; }
 
     public TObjMessage get() { 
@@ -100,7 +103,7 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
 
         out += "\n - Type: " + getTypeString();
         out += "\n - Status: " + getStatusString();
-        out += "\n - Content: [" + messageObject.toString() + "]:";
+        out += "\n - Content: " + messageObject.toString();
 
         return out;
     }

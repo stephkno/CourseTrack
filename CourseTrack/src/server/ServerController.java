@@ -16,9 +16,6 @@ import server.data.*;
 todo
 
 admin can delete everything
-student search
-student enroll (check schedule)
-student drop
 student waitlist
 student class schedule
 student generate schedules
@@ -85,7 +82,6 @@ public class ServerController {
             }
             
             // admin requests
-
             case ADMIN_ADD_CAMPUS:{
                 handleAdminAddCampus((Message<AddCampusRequest>) msg, client);
                 break;
@@ -140,7 +136,6 @@ public class ServerController {
             return;
         }
 
-        // for each request
         PasswordChangeRequest request = msg.get();
 
         // get data
@@ -159,7 +154,7 @@ public class ServerController {
 
 
     }
-    
+
     private void handleRegister(Message<RegisterRequest> msg, ServerConnection client) {
 
         // user should not be logged in
@@ -169,7 +164,6 @@ public class ServerController {
             return;
         }
 
-        // for each request
         RegisterRequest request = msg.get();
         
         // get data
@@ -243,14 +237,14 @@ public class ServerController {
     private void handleAdminAddCampus(Message<AddCampusRequest> msg, ServerConnection client) {
         
         if(!client.validateAdmin()){
-            client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.FAILURE, new AddCampusResponse());
+            client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.FAILURE, new AddCampusResponse(null));
             return;
         }
         AddCampusRequest request = msg.get();
         String campusName = request.campus();
 
         if(Campus.exists(campusName)) {
-            client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.FAILURE, new AddCampusResponse() );
+            client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.FAILURE, new AddCampusResponse(null) );
             return;
         }
 
@@ -258,7 +252,7 @@ public class ServerController {
         Campus campus = Campus.add(campusName);
 
         // return success
-        client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse() );
+        client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse(campus) );
 
     }
 
@@ -336,7 +330,6 @@ public class ServerController {
         // send success response
         client.sendMessage(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.SUCCESS, new AddDepartmentResponse("") );
 
-
     }
 
     private void handleAdminAddSection(Message<AddSectionRequest> msg, ServerConnection client) {
@@ -376,6 +369,7 @@ public class ServerController {
             // return error response
             Log.Err("Section already exists");
             client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.FAILURE, new AddSectionResponse(null)  );
+            return;
         }
 
         // send success response
@@ -385,7 +379,6 @@ public class ServerController {
     
     private void handleStudentBrowseSection(Message<BrowseSectionRequest> msg, ServerConnection client) {
 
-        // Note: only for students?
         if(!client.validateStudent()){
             client.sendMessage(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.FAILURE, new BrowseSectionResponse( new Section[]{} ));
             return;
@@ -419,9 +412,7 @@ public class ServerController {
                 break;
             } 
             if(!section.getDepartment().equals(department) || !section.getDepartment().getCampus().equals(campus)){
-            
                 continue;
-
             }
 
             if(section.Search(query)){
@@ -441,7 +432,7 @@ public class ServerController {
 
         // Note: only for students?
         if(!client.validateStudent()){
-            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,-1));
+            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,0));
             return;
         }
 
@@ -455,16 +446,22 @@ public class ServerController {
         
         // validate enrollment requirements
         if(!section.getCourse().verifyPrereqs(student)){
-            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,-1));
+            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,0));
             return;
         }
         
+        // validate that student not already registered for this section!
+        // wait is this necessary? schedule conflict should catch this.
+        //if(student.isEnrolled(section)){
+        //    client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null, 0));
+        //}
+
         // validate schedule conflicts
         for(Section other : student.getEnrolledSections()){
 
             // iterate all meet times of currently enrolled classes
             if(section.conflicts(other.getMeetTimes())){
-                client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,-1));
+                client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,0));
                 return;
             }
     
@@ -475,15 +472,16 @@ public class ServerController {
             
             // send waitlist response
             int waitlist_position = section.addWaitlist(student);
-            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.SUCCESS, new EnrollSectionResponse(null, waitlist_position));
+            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null, waitlist_position));
             return;
 
         }
 
         // add student to section
         section.addStudent(student);
+        student.addSection(section);
 
-        EnrollSectionResponse res = new EnrollSectionResponse(section, -1);
+        EnrollSectionResponse res = new EnrollSectionResponse(section, 0);
         client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.SUCCESS, res);
 
     }
@@ -492,7 +490,7 @@ public class ServerController {
 
         // Note: only for students?
         if(!client.validateStudent()){
-            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new DropSectionResponse());
+            client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.FAILURE, new DropSectionResponse());
             return;
         }
         
@@ -504,22 +502,27 @@ public class ServerController {
         Section section = term.getSection(sectionId);
         
         section.removeStudent(student);
-        
+        student.removeSection(section);
+
         // waitlist logic
         if(section.waitlistLength() > 0){
 
             Student studentOnWaitlist = section.popWaitlist();
-            section.addStudent(studentOnWaitlist);
             
-            // notify the lucky duck
+            section.addStudent(studentOnWaitlist);
+            studentOnWaitlist.addSection(section);
+
             studentOnWaitlist.Notify("You have been enrolled!");
 
             // iterate students in wait list and notify them of waitlist promotion?
+            for(Student s : section.getWaitlist()){
+                s.Notify("Your waitlist position has changed.");
+            }
        
         }
 
         DropSectionResponse res = new DropSectionResponse();
-        client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, res);
+        client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.SUCCESS, res);
 
     }
 
@@ -527,14 +530,27 @@ public class ServerController {
 
         // Note: only for students?
         if(!client.validateStudent()){
-            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new GetScheduleResponse( new Section[] { } ));
+            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( new Section[] { } ));
             return;
         }
 
-        // get currently enrolled sections 
+        // get currently enrolled sections s
+        Student student = (Student)client.getUser();
+        int n = student.getEnrolledSections().Length();
 
-        GetScheduleResponse res = new GetScheduleResponse(new Section[] { });
-        client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, res);
+        Section[] sections = new Section[n];
+
+        if(student != null){
+            int i = 0;
+            for(Section s : student.getEnrolledSections()){
+                sections[i++] = s;
+            }
+        }
+
+        Log.Msg("Sending schedule response");
+
+        GetScheduleResponse res = new GetScheduleResponse(sections);
+        client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.SUCCESS, res);
 
     }
 

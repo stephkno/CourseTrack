@@ -35,8 +35,7 @@ public class MeetTime implements Serializable {
     // returns true if this meet time overlaps with other
     public boolean overlaps(MeetTime other){
         
-        if(other == null || 
-            this.day != other.day) return false;
+        if(other == null || this.day != other.day) return false;
 
         return this.startTime.isBefore(other.endTime) &&
             other.startTime.isBefore(this.endTime);

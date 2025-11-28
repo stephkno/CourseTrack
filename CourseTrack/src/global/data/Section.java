@@ -1,9 +1,7 @@
 package global.data;
 
 import global.LinkedList;
-import global.Log;
 import java.io.Serializable;
-import server.data.Admin;
 import server.data.Student;
 
 public class Section implements Serializable {
@@ -16,10 +14,12 @@ public class Section implements Serializable {
     Term term;
     Department department;
     MeetTime[] meetTimes;
-    LinkedList<Student> students;
-    LinkedList<Student> waitlist;
+    transient LinkedList<Student> students;
+    transient LinkedList<Student> waitlist;
     String instructor;
     int capacity;
+    int num_enrolled;
+    int num_waitlisted;
 
     public Section(int capacity, Course course, Term term, Department department, String instructor, MeetTime[] meetTimes) {
         
@@ -28,14 +28,18 @@ public class Section implements Serializable {
         this.term = term;
         this.department = department;
         this.students = new LinkedList<>();
+        
         this.waitlist = new LinkedList<>();
         this.id = Section.nextId++;
         this.instructor = instructor;
-      
         this.meetTimes = meetTimes;
+
         // add section to this term
         this.number = course.addSection(term, this);
     
+        this.num_enrolled = 0;
+        this.num_waitlisted = 0;
+
     }
 
     public int getId(){
@@ -47,7 +51,6 @@ public class Section implements Serializable {
         q = q.toLowerCase();
         if (course.getName().toLowerCase().contains(q)) return true;
         if (instructor.toLowerCase().contains(q)) return true;
-
         return false;
     
     }
@@ -77,18 +80,36 @@ public class Section implements Serializable {
     }
 
     public void addStudent(Student student) { 
-        this.students.Push(student); 
+        this.students.Push(student);
+        num_enrolled++;
     }
 
     public void removeStudent(Student student) { 
         this.students.Remove(student); 
+        num_enrolled--;
     }
 
     public int addWaitlist(Student student){
         this.waitlist.Push(student);
-        return this.waitlist.Length()-1;
+        num_waitlisted++;
+        return this.waitlist.Length();
     }
 
+    public LinkedList<Student> getWaitlist(){
+        return waitlist;
+    }
+    
+    public int waitlistLength(){
+        return waitlist.Length();
+    }
+
+    public Student popWaitlist(){
+        Student student = waitlist.Get(0);
+        waitlist.Remove(0);
+        num_waitlisted--;
+        return student;
+    }
+    
     public String getInstructor() { 
         return instructor; 
     }
@@ -97,37 +118,41 @@ public class Section implements Serializable {
         return capacity;
     }
 
-    public int waitlistLength(){
-        return waitlist.Length();
-    }
-
-    public Student popWaitlist(){
-        Student student = waitlist.Get(0);
-        waitlist.Remove(0);
-        return student;
-    }
-    
     public boolean full(){
         return students.Length() >= capacity;
     }
 
     public boolean conflicts(MeetTime[] meetTimes){
 
-        for(MeetTime meetTimeA : getMeetTimes()){
-            for(MeetTime meetTimeB : meetTimes){
-                if(meetTimeA.overlaps(meetTimeB)){
+        for(MeetTime meetTimeA : this.meetTimes)
+            for(MeetTime meetTimeB : meetTimes)
+                if(meetTimeA.overlaps(meetTimeB))
                     return true;
-                }
-            }
-        }
         
+        return false;
+    }
+    
+    // check that these two sections do not have overlapping meet times with same instructor
+    public boolean conflicts(Section other){
+        if(other == this) return true;
+        if(instructor.equals(other.instructor) && conflicts(other.getMeetTimes())) return true;
         return false;
     }
     
     public String toString(){
         String outstring = "";
-        long percentage = ( (long)students.Length() / (long)capacity ) * 100;
-        outstring += "Course: " + course.getName() + " \nSection no: " + number + "\nInstructor: " + instructor + "\nCampus: " + department.getCampus().getName() + "\nTotal Capacity: " + capacity + "\nTotal Enrolled:" + students.Length() + "\n" + percentage + "% full\n";
+        
+        long percentage = ( (long)num_enrolled / (long)capacity ) * 100;
+
+        outstring += "Course: " + course.getName() + 
+        "\nSection no: " + number + 
+        "\nInstructor: " + instructor + 
+        "\nCampus: " + department.getCampus().getName() + 
+        "\nTotal Capacity: " + capacity + 
+        "\nTotal Enrolled: " + num_enrolled + 
+        "\nTotal Waitlisted: " + num_waitlisted + 
+        "\n" + percentage + "% full\n";
+
         return outstring;
     }
 }

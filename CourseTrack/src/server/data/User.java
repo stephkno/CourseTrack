@@ -5,9 +5,8 @@ import global.HashMap;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import server.ServerConnection;
 import java.time.LocalDateTime;
-import global.Message;
+import server.ServerConnection;
 
 public class User implements Serializable {
 
@@ -19,7 +18,7 @@ public class User implements Serializable {
     LocalDateTime lastLogin;
     LocalDateTime lastActivity;
     
-    public ServerConnection socket;
+    transient public ServerConnection socket;
 
     public void Notify(String message){
         // push notification to notifications list

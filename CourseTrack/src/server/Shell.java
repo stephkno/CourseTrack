@@ -108,7 +108,7 @@ public class Shell implements Runnable {
 
         while(Server.Running()) {
 
-            System.out.print("\n CourseTrack $ ");
+            System.out.print(" CourseTrack $ ");
             String line = scanner.nextLine();
 
             String[] args = line.split(" ");

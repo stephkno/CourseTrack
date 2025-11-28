@@ -17,8 +17,8 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 	private Node<T> first;
 	private int numItems = 0;
 
-	public Boolean Contains(T value) {
-		for (T item : this) if(item == value) return true;
+	public Boolean Contains(T other) {
+		for (T item : this) if(item.equals(other)) return true;
 		return false;
 	}
 	

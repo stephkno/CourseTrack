@@ -20,7 +20,8 @@ public class Course implements Serializable {
     // list of required courses
     LinkedList<Course> requirements = new LinkedList<>();
 
-    public Course(String name, int number, int units, Department department){
+    public Course(String name, int number, int units, Department department) {
+
         this.name = name;
         this.number = number;
         this.units = units;
@@ -32,10 +33,11 @@ public class Course implements Serializable {
         }
 
         this.id = Course.nextId++;
+        
     }
 
     // add section to this course in this term and return id
-    public int addSection(Term term, Section section){
+    public int addSection(Term term, Section section) {
         
         LinkedList<Section> ll;
         
@@ -65,7 +67,7 @@ public class Course implements Serializable {
         return true;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
@@ -89,10 +91,16 @@ public class Course implements Serializable {
         return campus;
     }
 
-    public String toString(){
+    public String toString() {
         String outstring = "";
         outstring += name + " " + number;
         return outstring;
     }
-    
+
+    public boolean equals(Course other) {
+        if(name.equals(other) && number == other.number) return true;
+        return false;
+    }
+
 }
+

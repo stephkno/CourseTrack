@@ -1,7 +1,5 @@
 package server;
 
-import java.time.LocalTime;
-
 import client.*;
 import global.Log;
 import global.Message;
@@ -10,6 +8,7 @@ import global.MessageType;
 import global.data.*;
 import global.requests.*;
 import global.responses.*;
+import java.time.LocalTime;
 
 // test client for the server 
 public class testclient {
@@ -63,7 +62,8 @@ public class testclient {
 		client.sendRequest(new Message<>(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.REQUEST, new AddCampusRequest(campusName) ));
 		Message<AddCampusResponse> response = client.receiveResponse();
 		assert(response.getStatus() == MessageStatus.SUCCESS);
-		Log.Msg("Received admin add campus response");
+
+		Log.Msg("Received admin add campus response: " + response.getStatusString());
 
 	}
 
@@ -74,7 +74,7 @@ public class testclient {
 		client.sendRequest(new Message<>(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.REQUEST, new AddDepartmentRequest(campusName, departmentName) ));
 		Message<AddDepartmentResponse> response = client.receiveResponse();
 		assert(response.getStatus() == MessageStatus.SUCCESS);
-		Log.Msg("Received admin add department response");
+		Log.Msg("Received admin add department response: " + response.getStatusString());
 	}
 	
 	private static int AddCourse(String courseName, int number, int units, String campus, String department, Client client)
@@ -106,7 +106,8 @@ public class testclient {
 
 		int courseId = responseCourse.getId();
 
-		Log.Msg("Received admin add course response");
+		Log.Msg("Received admin add course response: " + response.getStatusString());
+		
 		return courseId;
 
 	}
@@ -137,7 +138,7 @@ public class testclient {
 		Section responseSection = response.get().section();
 		Log.Msg(responseSection.getNumber());
 
-		Log.Msg("Received admin add section response");
+		Log.Msg("Received admin add section response: " + response.getStatusString());
 
 	}
 
@@ -175,6 +176,41 @@ public class testclient {
 
 	}
 	
+	private static void Drop(int sectionId, Term term, Client client){
+
+		client.sendRequest(new Message<DropSectionRequest>(MessageType.STUDENT_DROP, MessageStatus.REQUEST, new DropSectionRequest(
+			sectionId, 
+			term
+		)));
+
+		Message<DropSectionResponse> response = client.receiveResponse();
+		DropSectionResponse data = response.get();
+
+		assert(response.getStatus() == MessageStatus.SUCCESS);
+
+		Log.Msg(response);
+
+	}
+	
+	private static void GetSchedule(Term term, Client client){
+
+		client.sendRequest(new Message<GetScheduleRequest>(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new GetScheduleRequest(
+			term
+		)));
+
+		Message<GetScheduleResponse> response = client.receiveResponse();
+		GetScheduleResponse data = response.get();
+
+		assert(response.getStatus() == MessageStatus.SUCCESS);
+
+		Log.Msg("Received schedule response");
+
+		for(Section s : data.enrolledClasses()){
+			Log.Msg(s);
+		}
+
+	}
+
 	private static void Logout(Client client)
 	{
 
@@ -194,11 +230,10 @@ public class testclient {
 		String password = "password123";
 		RegisterUser(username, password, UserType.ADMIN, client);
 		Login(username, password, client);
-		AddCampus("CSU East Bay", client);
-		AddDepartment("CSU East Bay", "Computer Science", client);
-		AddDepartment("CSU East Bay", "Art", client);
 
-		int id0 = AddCourse("Underwater Basket Weaving", 101, 3, "CSU East Bay", "Art", client);
+		AddCampus("CSU East Bay", client);
+		
+		AddDepartment("CSU East Bay", "Computer Science", client);
 
 		int id = AddCourse("Computer Science 1", 101, 3, "CSU East Bay", "Computer Science", client);
 		int id1 = AddCourse("Computing Science 2", 201, 3, "CSU East Bay", "Computer Science", client);
@@ -213,6 +248,8 @@ public class testclient {
 		int id10 = AddCourse("Operating Systems", 421, 3, "CSU East Bay", "Computer Science", client);
 		int id11 = AddCourse("Computer Networks", 441, 3, "CSU East Bay", "Computer Science", client);
 		int id12 = AddCourse("Analysis of Algorithms", 413, 3, "CSU East Bay", "Computer Science", client);
+		
+		int id13 = AddCourse("TestCourse", 555, 3, "CSU East Bay", "Computer Science", client);
 
 		MeetTime[] meetTimes = new MeetTime[]{
 			new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(14, 30), LocalTime.of(14, 30)),
@@ -234,6 +271,7 @@ public class testclient {
 		AddSection(id10, "CSU East Bay", "Computer Science", term, "Karen Taylor", 26,  meetTimes, client);
 		AddSection(id11, "CSU East Bay", "Computer Science", term, "Liam Anderson", 34,  meetTimes, client);
 		AddSection(id12, "CSU East Bay", "Computer Science", term, "Mia Thomas", 31,  meetTimes, client);
+		AddSection(id13, "CSU East Bay", "Computer Science", term, "TestInstructor", 2,  meetTimes, client);
 
 		Logout(client);
 
@@ -252,18 +290,10 @@ public class testclient {
 		}
 
 		Enroll(sections[0].getId(), sections[0].getTerm(), client);
+		Drop(sections[0].getId(), sections[0].getTerm(), client);
 		
-		// tonight: finish enroll
-		// view schedule
-		// drop 
-
-		// waitlist logic
-		// notifications
-		// waitlist notify
-		// admin delete functions?
-
 		while(true) {}
-		
+
     }
 
 }

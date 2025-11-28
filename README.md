@@ -32,11 +32,11 @@ College Enrollment System
 
  - [x] 3.1.3.1 Student can search classes available at specific term at university/campus
 
- - [] 3.1.3.2 Student can enroll in classes
+ - [x] 3.1.3.2 Student can enroll in classes
 
- - [] 3.1.3.3 Student can drop enrolled classes
+ - [x] 3.1.3.3 Student can drop enrolled classes
 
- - [] 3.1.3.4 Student can view enrolled class schedule
+ - [x] 3.1.3.4 Student can view enrolled class schedule
 
  - [ ] 3.1.3.5 Students can automatically generate viable schedules using interval-overlap detection between class meeting times.
 
@@ -72,7 +72,7 @@ College Enrollment System
 
  - [x] 3.1.5.3 Password
 
- - [ ] 3.1.5.4 Major
+ - [ ] 3.1.5.4 Major ?
 
  - [x] 3.1.5.5 Classes taken
 
@@ -92,11 +92,11 @@ College Enrollment System
 
  - [ ] 3.1.7. Waitlisting
 
- - [ ] 3.1.7.1 Students registering for a full class will be placed on waitlist
+ - [x] 3.1.7.1 Students registering for a full class will be placed on waitlist
 
  - [ ] 3.1.7.2 Student can view their place in waitlist queue
 
- - [ ] 3.1.7.3 Student is automatically enrolled if students drop the class
+ - [x] 3.1.7.3 Student is automatically enrolled if students drop the class
 
  - [ ] 3.1.8. Reporting: Basic Statistics
 
