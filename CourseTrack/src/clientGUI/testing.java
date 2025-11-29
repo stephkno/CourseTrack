@@ -6,14 +6,12 @@ import clientGUI.UIInformations.LoginInformation;
 import clientGUI.UIFramework.*;
 @SuppressWarnings("unused")
 public class testing {
-
-
     static ClientUIManager clientUI = new ClientUIManager();
     static LoginInformation lInfo = new LoginInformation();
     static ButtonInterface logoutButton = new ButtonInterface() {
         @Override
         public void run() {
-            clientUI.GoLoginPage(lInfo, loginButton, registerButton);
+            // clientUI.GoLoginPage(lInfo, loginButton, registerButton);
     }};
 
 
@@ -54,9 +52,10 @@ public class testing {
             } else {
                 //send a generic message if authentication failed
                 clientUI.setLoginValidationMessage("Either the username or password provided are invalid!", UITheme.FAIL);
-            }
-            
-    }};
+            } 
+        }      
+    };
+
     static ButtonInterface registerButton = new ButtonInterface() {
         @Override
         public void run() {
@@ -80,7 +79,7 @@ public class testing {
                 //System.out.println(lInfo.confirmationPassword);
                 String[] user = {lInfo.username.strip(),lInfo.password.strip(),"STUDENT"};
                 exampleDatabaseLoginInfo.Push(user);
-                clientUI.GoLoginPage(lInfo, loginButton, registerButton);
+                // clientUI.GoLoginPage(lInfo, loginButton, registerButton);
                 clientUI.setLoginValidationMessage("User created! Please login.", UITheme.SUCCESS);
             } else {
                 clientUI.setLoginValidationMessage("The passwords do not match!", UITheme.FAIL);
@@ -90,7 +89,7 @@ public class testing {
 
     public static void main(String[] args) {
         
-        clientUI.GoLoginPage(lInfo, loginButton, registerButton);
+        // clientUI.GoLoginPage(lInfo, loginButton, registerButton);
 
     }
 }

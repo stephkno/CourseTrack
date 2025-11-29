@@ -1,21 +1,19 @@
 package clientGUI.Pages;
 
+import client.services.IAppGUIService;
+import clientGUI.UIFramework.*;
+import clientGUI.UIInformations.LoginInformation;
 import java.awt.Component;
 import java.awt.Dimension;
 
-import clientGUI.UIFramework.*;
-import clientGUI.UIInformations.LoginInformation;
-
 public class LoginPage {
     LoginInformation loginInformation;
-    private ButtonInterface bLogin;
-    private ButtonInterface bRegister;
+    private IAppGUIService guiService;
     LoginType type;
     private nFrame.ListLayout list;
     public JPanelPlainText message;
-    public LoginPage(nFrame frame, LoginInformation _loginInformation, LoginType logintype, ButtonInterface loginButtonAction, ButtonInterface registerButtonAction) {
-        bLogin = loginButtonAction;
-        bRegister = registerButtonAction;
+    public LoginPage(nFrame frame, LoginInformation _loginInformation, LoginType logintype, IAppGUIService guiService) {
+        this.guiService = guiService;
         type = logintype;
         loginInformation = _loginInformation;
         loginPage(frame);
@@ -69,8 +67,8 @@ public class LoginPage {
             loginInformation.username = usernameInput.getText();
             loginInformation.password = passwordInput.getText();
             loginInformation.confirmationPassword = passwordInputConfirm.getText();
-            if(type == LoginType.LOGIN) { bLogin.run(); }
-            else { bRegister.run(); }
+            if(type == LoginType.LOGIN) { guiService.sendLoginRequest(loginInformation.username, loginInformation.password); }
+            else { guiService.sendRegisterRequest(loginInformation.username, loginInformation.password); }
             
             loginInformation.password = "";
             loginInformation.confirmationPassword = "";

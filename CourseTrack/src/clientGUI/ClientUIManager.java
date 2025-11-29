@@ -1,12 +1,10 @@
 package clientGUI;
 
+import client.services.IAppGUIService;
 import clientGUI.Pages.*;
 import clientGUI.UIFramework.*;
 import clientGUI.UIInformations.*;
-
 import java.awt.Color;
-import java.awt.Component;
-
 import javax.swing.JFrame;
 
 public class ClientUIManager {
@@ -36,10 +34,9 @@ public class ClientUIManager {
         frame.setVisible(true);
     }
     LoginPage loginPage;
-    public void GoLoginPage(LoginInformation loginInformation, ButtonInterface loginButtonAction, ButtonInterface registerButtonAction) {
+    public void GoLoginPage(LoginInformation loginInformation, IAppGUIService guiService) {
         cleanUp();
-        loginPage = new LoginPage(frame, loginInformation, LoginPage.LoginType.LOGIN, loginButtonAction, registerButtonAction);
-        
+        loginPage = new LoginPage(frame, loginInformation, LoginPage.LoginType.LOGIN, guiService);
     }
 
     public void setLoginValidationMessage(String errString) {

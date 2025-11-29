@@ -2,7 +2,8 @@ package client;
 
 import client.services.IAppGUIService;
 import client.services.IClientListenerService;
-import client.services.ILoginGUIService;
+import clientGUI.ClientUIManager;
+import clientGUI.UIInformations.LoginInformation;
 import global.*;
 import global.requests.LoginRequest;
 import global.requests.PingRequest;
@@ -11,27 +12,27 @@ import global.responses.LoginResponse;
 import global.responses.UpdateResponse;
 import java.io.Serializable;
 
-public class ClientController implements ILoginGUIService, IClientListenerService, IAppGUIService {
+public class ClientController implements  IClientListenerService, IAppGUIService {
     private ClientListener clientListener;
     private final Client client;
-    private AppGUI appGUI;
     private User currentUser;
+
+    static ClientUIManager clientUI = new ClientUIManager();
+    static LoginInformation lInfo = new LoginInformation();
 
     public ClientController(Client client) {
         this.client = client;
     }
 
     public void start() {
-        new LoginGUI(this)
-            .start();
+        clientUI.GoLoginPage(lInfo, this);
 
         if (clientListener == null) {
             clientListener = new ClientListener(client, this);
             new Thread(clientListener).start();
         }
 
-        appGUI = new AppGUI(this);
-        appGUI.start();
+        
     }
 
     @Override
@@ -69,11 +70,17 @@ public class ClientController implements ILoginGUIService, IClientListenerServic
         }
     }
 
+    @Override
+    public boolean sendRegisterRequest(String username, String password) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'sendRegisterRequest'");
+    }
+
     public void receiveUpdateRequest(Message<UpdateRequest> request) {
         if (request.get() == null)
             return;
 
-        appGUI.updateData(request.get());
+        // appGUI.updateData(request.get());
         client.sendResponse(new Message<UpdateResponse>(MessageType.CLIENT_UPDATE, MessageStatus.RESPONSE, null));
     }
     
