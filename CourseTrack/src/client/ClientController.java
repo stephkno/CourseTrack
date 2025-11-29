@@ -25,14 +25,12 @@ public class ClientController implements  IClientListenerService, IAppGUIService
     }
 
     public void start() {
-        clientUI.GoLoginPage(lInfo, this);
-
         if (clientListener == null) {
             clientListener = new ClientListener(client, this);
             new Thread(clientListener).start();
         }
-
         
+        clientUI.GoLoginPage(lInfo, this);
     }
 
     @Override
@@ -45,30 +43,45 @@ public class ClientController implements  IClientListenerService, IAppGUIService
             )
         );
 
-        if (resp == null)
+        if (resp == null) {
+            clientUI.setLoginValidationMessage("No response from server.");
             return false;
-    
+        }
+
         switch (resp.getStatus()) {
             case SUCCESS -> {
-                if (resp.get() == null) {
-                    System.err.println("Malformed login response.");
+                if (resp.get() == null || resp.get().user() == null) {
+                    clientUI.setLoginValidationMessage("Malformed login response.");
                     return false;
                 }
-                    
+
                 currentUser = resp.get().user();
+
+                if (currentUser.userType == UserType.ADMIN) {
+                    clientUI.GoAdminPage(() -> {
+                        //logout();
+                    });
+                } else {
+                    clientUI.GoStudentPage(() -> {
+                        //logout();
+                    });
+                }
 
                 return true;
             }
+
             case FAILURE -> {
-                System.err.println("Login failed.");
+                clientUI.setLoginValidationMessage("Invalid username or password.");
                 return false;
             }
+
             default -> {
-                System.err.println("Unexpected response status: " + resp.getStatus());
+                clientUI.setLoginValidationMessage("Unexpected server response.");
                 return false;
             }
         }
     }
+
 
     @Override
     public boolean sendRegisterRequest(String username, String password) {
