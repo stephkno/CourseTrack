@@ -1,6 +1,7 @@
 package client;
 
 public class ClientApp {
+	
 	public static void main(String[] args) {
 		var client = new Client("localhost", 7777);
 
@@ -11,7 +12,6 @@ public class ClientApp {
 
 		var controller = new ClientController(client);
 		controller.start();
-
 		
 	}
 }

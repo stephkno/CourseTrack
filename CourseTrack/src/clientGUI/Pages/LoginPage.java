@@ -5,6 +5,7 @@ import clientGUI.UIFramework.*;
 import clientGUI.UIInformations.LoginInformation;
 import java.awt.Component;
 import java.awt.Dimension;
+import client.UserType;
 
 public class LoginPage {
     LoginInformation loginInformation;
@@ -67,8 +68,12 @@ public class LoginPage {
             loginInformation.username = usernameInput.getText();
             loginInformation.password = passwordInput.getText();
             loginInformation.confirmationPassword = passwordInputConfirm.getText();
+
+            // checkbox
+            UserType userType = UserType.STUDENT;
+
             if(type == LoginType.LOGIN) { guiService.sendLoginRequest(loginInformation.username, loginInformation.password); }
-            else { guiService.sendRegisterRequest(loginInformation.username, loginInformation.password); }
+            else { guiService.sendRegisterRequest(loginInformation.username, loginInformation.password, userType); }
             
             loginInformation.password = "";
             loginInformation.confirmationPassword = "";

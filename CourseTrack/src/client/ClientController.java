@@ -5,11 +5,8 @@ import client.services.IClientListenerService;
 import clientGUI.ClientUIManager;
 import clientGUI.UIInformations.LoginInformation;
 import global.*;
-import global.requests.LoginRequest;
-import global.requests.PingRequest;
-import global.requests.UpdateRequest;
-import global.responses.LoginResponse;
-import global.responses.UpdateResponse;
+import global.requests.*;
+import global.responses.*;
 import java.io.Serializable;
 
 public class ClientController implements  IClientListenerService, IAppGUIService {
@@ -82,11 +79,43 @@ public class ClientController implements  IClientListenerService, IAppGUIService
         }
     }
 
-
     @Override
-    public boolean sendRegisterRequest(String username, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sendRegisterRequest'");
+    public boolean sendRegisterRequest(String username, String password, UserType type) {
+        Message<RegisterResponse> resp = client.sendAndWait(new Message(
+            MessageType.USER_REGISTER, 
+            MessageStatus.REQUEST, 
+            new RegisterRequest(username, password, type)
+        ));
+
+        if (resp == null) {
+            clientUI.setLoginValidationMessage("No response from server.");
+            return false;
+        }
+
+        switch (resp.getStatus()) {
+            case SUCCESS -> {
+                if (resp.get() == null) {
+                    clientUI.setLoginValidationMessage("Malformed registration response.");
+                    return false;
+                }
+
+                //clientUI.GoLoginPage(lInfo, this);
+
+                Log.Msg("User registered successfully: " + resp.get());
+                return true;
+
+            }
+
+            case FAILURE -> {
+                clientUI.setLoginValidationMessage("Invalid username or password.");
+                return false;
+            }
+
+            default -> {
+                clientUI.setLoginValidationMessage("Unexpected server response.");
+                return false;
+            }
+        }
     }
 
     public void receiveUpdateRequest(Message<UpdateRequest> request) {
