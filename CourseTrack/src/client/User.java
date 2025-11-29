@@ -7,4 +7,8 @@ public class User implements Serializable {
     public User(UserType userType) {
         this.userType = userType;
     }
+
+    public UserType getUserType() {
+        return userType;
+    }
 }
