@@ -66,7 +66,8 @@ public class ServerConnection implements Runnable {
     public void Send(Message msg) {
         Log.Msg("Sending msg " + msg.getTypeString());
         try {
-
+            
+            objectOutputStream.reset();
             objectOutputStream.writeObject(msg);
             objectOutputStream.flush();
             

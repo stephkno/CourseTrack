@@ -446,6 +446,7 @@ public class ServerController {
         
         // validate enrollment requirements
         if(!section.getCourse().verifyPrereqs(student)){
+            Log.Err("Student not eligible for course");
             client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,0));
             return;
         }
@@ -461,6 +462,7 @@ public class ServerController {
 
             // iterate all meet times of currently enrolled classes
             if(section.conflicts(other.getMeetTimes())){
+            Log.Err("Student schedule conflict");
                 client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,0));
                 return;
             }
@@ -469,6 +471,7 @@ public class ServerController {
 
         // validate waitlist
         if(section.full()){
+            Log.Err("Section waitlist full");
             
             // send waitlist response
             int waitlist_position = section.addWaitlist(student);
@@ -477,9 +480,14 @@ public class ServerController {
 
         }
 
+        Log.Err("Adding student to section!");
+
         // add student to section
         section.addStudent(student);
         student.addSection(section);
+        
+        assert(section.numStudents() > 0);
+        Log.Err("Num students: " + section.numStudents());
 
         EnrollSectionResponse res = new EnrollSectionResponse(section, 0);
         client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.SUCCESS, res);
@@ -490,7 +498,7 @@ public class ServerController {
 
         // Note: only for students?
         if(!client.validateStudent()){
-            client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.FAILURE, new DropSectionResponse());
+            client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.FAILURE, new DropSectionResponse(null));
             return;
         }
         
@@ -521,7 +529,7 @@ public class ServerController {
        
         }
 
-        DropSectionResponse res = new DropSectionResponse();
+        DropSectionResponse res = new DropSectionResponse(section);
         client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.SUCCESS, res);
 
     }

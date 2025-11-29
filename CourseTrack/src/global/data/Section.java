@@ -36,7 +36,7 @@ public class Section implements Serializable {
 
         // add section to this term
         this.number = course.addSection(term, this);
-    
+
         this.num_enrolled = 0;
         this.num_waitlisted = 0;
 
@@ -79,9 +79,15 @@ public class Section implements Serializable {
         return students; 
     }
 
-    public void addStudent(Student student) { 
+    public void addStudent(Student student) {
+
         this.students.Push(student);
         num_enrolled++;
+        
+    }
+
+    public int numStudents() { 
+        return num_enrolled;
     }
 
     public void removeStudent(Student student) { 

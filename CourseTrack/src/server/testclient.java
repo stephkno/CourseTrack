@@ -15,12 +15,7 @@ public class testclient {
 		
 	static void RegisterUser(String username, String password, UserType type, Client client)
 	{
-		if (!client.isConnected()) {
-			if (!client.connect()) {
-				System.err.println("Could not connect to server.");
-				return;
-			}
-		}
+
 
 		Log.Msg("Sending register request");
 		
@@ -161,7 +156,7 @@ public class testclient {
 
 	}
 
-	private static void Enroll(int sectionId, Term term, Client client){
+	private static Section Enroll(int sectionId, Term term, Client client){
 
 		Message<EnrollSectionResponse> response = client.sendAndWait(new Message<EnrollSectionRequest>(MessageType.STUDENT_ENROLL, MessageStatus.REQUEST, new EnrollSectionRequest(
 			sectionId, 
@@ -174,9 +169,10 @@ public class testclient {
 
 		Log.Msg(response);
 
+		return response.get().section();
 	}
 	
-	private static void Drop(int sectionId, Term term, Client client){
+	private static Section Drop(int sectionId, Term term, Client client){
 
 		Message<DropSectionResponse> response = client.sendAndWait(new Message<DropSectionRequest>(MessageType.STUDENT_DROP, MessageStatus.REQUEST, new DropSectionRequest(
 			sectionId, 
@@ -188,6 +184,8 @@ public class testclient {
 		assert(response.getStatus() == MessageStatus.SUCCESS);
 
 		Log.Msg(response);
+
+		return response.get().section();
 
 	}
 	
@@ -222,11 +220,26 @@ public class testclient {
 
 	static Client client = new Client("localhost", 7777);
 
+	static void StartClient(){
+		if (!client.isConnected()) {
+			if (!client.connect()) {
+				System.err.println("Could not connect to server.");
+				return;
+			}
+		}
+		
+		ClientController controller = new ClientController(client);
+		controller.start();
+	
+	}
+
     public static void main(String [] args) {
 
+		StartClient();
+		
 		String username = "testuser";
 		String password = "password123";
-		RegisterUser(username, password, UserType.ADMIN, client);
+		RegisterUser(username, password, UserType.ADMIN, testclient.client);
 		Login(username, password, client);
 
 		AddCampus("CSU East Bay", client);
@@ -287,8 +300,12 @@ public class testclient {
 			Log.Msg(section);
 		}
 
-		Enroll(sections[0].getId(), sections[0].getTerm(), client);
-		Drop(sections[0].getId(), sections[0].getTerm(), client);
+		Section enrolledSection = Enroll(sections[0].getId(), sections[0].getTerm(), client);
+		Log.Msg("Received enroll response! Num students: " + enrolledSection.numStudents());
+		assert(enrolledSection.numStudents() == 1);
+
+		Section droppedSection = Drop(sections[0].getId(), sections[0].getTerm(), client);
+		assert(droppedSection.numStudents() == 1);
 		
 		while(true) {}
 
