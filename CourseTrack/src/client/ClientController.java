@@ -57,7 +57,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
 
                 currentUser = resp.get().user();
 
-                if (currentUser.userType == UserType.ADMIN) {
+                if (currentUser.getUserType() == UserType.ADMIN) {
                     clientUI.GoAdminPage(() -> {
                         //logout();
                     });
