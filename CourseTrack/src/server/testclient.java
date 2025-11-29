@@ -23,8 +23,15 @@ public class testclient {
 		}
 
 		Log.Msg("Sending register request");
-		client.sendRequest(new Message<RegisterRequest>(MessageType.USER_REGISTER, MessageStatus.REQUEST, new RegisterRequest(username, password, type) ));
-		Message<RegisterResponse> response = client.receiveResponse();
+		
+		Message<RegisterResponse> response = client.sendAndWait(
+            new Message<RegisterRequest>(
+				MessageType.USER_REGISTER, 
+				MessageStatus.REQUEST, 
+				new RegisterRequest(username, password, type)
+			)
+        );
+
 		Log.Msg(response);	
 		assert(response.getStatus() == MessageStatus.SUCCESS);
 		Log.Msg("Received register response " + response.getStatus());
@@ -41,8 +48,7 @@ public class testclient {
 		}
 
 		Log.Msg("Sending login request"); 
-		client.sendRequest(new Message<>(MessageType.USER_LOGIN, MessageStatus.REQUEST, new LoginRequest(username, password) )); 
-		Message<LoginResponse> response = client.receiveResponse(); 
+		Message<LoginResponse> response = client.sendAndWait(new Message<>(MessageType.USER_LOGIN, MessageStatus.REQUEST, new LoginRequest(username, password) )); 
 		
 		assert(response.getStatus() == MessageStatus.SUCCESS); 
 		
@@ -59,8 +65,8 @@ public class testclient {
 	{
 
 		Log.Msg("Sending admin add campus request");
-		client.sendRequest(new Message<>(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.REQUEST, new AddCampusRequest(campusName) ));
-		Message<AddCampusResponse> response = client.receiveResponse();
+		Message<AddCampusResponse> response = client.sendAndWait(new Message<>(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.REQUEST, new AddCampusRequest(campusName) ));
+		
 		assert(response.getStatus() == MessageStatus.SUCCESS);
 
 		Log.Msg("Received admin add campus response: " + response.getStatusString());
@@ -71,8 +77,8 @@ public class testclient {
 	{
 
 		Log.Msg("Sending admin add department request");
-		client.sendRequest(new Message<>(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.REQUEST, new AddDepartmentRequest(campusName, departmentName) ));
-		Message<AddDepartmentResponse> response = client.receiveResponse();
+		Message<AddDepartmentResponse> response = client.sendAndWait(new Message<>(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.REQUEST, new AddDepartmentRequest(campusName, departmentName) ));
+		
 		assert(response.getStatus() == MessageStatus.SUCCESS);
 		Log.Msg("Received admin add department response: " + response.getStatusString());
 	}
@@ -89,9 +95,7 @@ public class testclient {
 			department
 		);
 
-		client.sendRequest(new Message<>(MessageType.ADMIN_ADD_COURSE, MessageStatus.REQUEST, newCourse ));
-		
-		Message<AddCourseResponse> response = client.receiveResponse();
+		Message<AddCourseResponse> response = client.sendAndWait(new Message<>(MessageType.ADMIN_ADD_COURSE, MessageStatus.REQUEST, newCourse ));
 		
 		Log.Msg(response.toString());
 
@@ -127,9 +131,7 @@ public class testclient {
 			meetTimes
 		);
 
-		client.sendRequest(new Message<>(MessageType.ADMIN_ADD_SECTION, MessageStatus.REQUEST, newSection ));
-		
-		Message<AddSectionResponse> response = client.receiveResponse();
+		Message<AddSectionResponse> response = client.sendAndWait(new Message<>(MessageType.ADMIN_ADD_SECTION, MessageStatus.REQUEST, newSection ));
 		
 		Log.Msg(response.toString());
 
@@ -144,14 +146,13 @@ public class testclient {
 
 	private static Section[] SearchCourses(String searchQuery, String campusName, String departmentName, Term term, Client client){
 
-		client.sendRequest(new Message<BrowseSectionRequest>(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.REQUEST, new BrowseSectionRequest(
+		Message<BrowseSectionResponse> response = client.sendAndWait(new Message<BrowseSectionRequest>(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.REQUEST, new BrowseSectionRequest(
 			searchQuery,
 			campusName,
 			departmentName,
 			term
 		)));
-
-		Message<BrowseSectionResponse> response = client.receiveResponse();
+		
 		BrowseSectionResponse data = response.get();
 
 		assert(response.getStatus() == MessageStatus.SUCCESS);
@@ -162,12 +163,11 @@ public class testclient {
 
 	private static void Enroll(int sectionId, Term term, Client client){
 
-		client.sendRequest(new Message<EnrollSectionRequest>(MessageType.STUDENT_ENROLL, MessageStatus.REQUEST, new EnrollSectionRequest(
+		Message<EnrollSectionResponse> response = client.sendAndWait(new Message<EnrollSectionRequest>(MessageType.STUDENT_ENROLL, MessageStatus.REQUEST, new EnrollSectionRequest(
 			sectionId, 
 			term
 		)));
-
-		Message<EnrollSectionResponse> response = client.receiveResponse();
+		
 		EnrollSectionResponse data = response.get();
 
 		assert(response.getStatus() == MessageStatus.SUCCESS);
@@ -178,12 +178,11 @@ public class testclient {
 	
 	private static void Drop(int sectionId, Term term, Client client){
 
-		client.sendRequest(new Message<DropSectionRequest>(MessageType.STUDENT_DROP, MessageStatus.REQUEST, new DropSectionRequest(
+		Message<DropSectionResponse> response = client.sendAndWait(new Message<DropSectionRequest>(MessageType.STUDENT_DROP, MessageStatus.REQUEST, new DropSectionRequest(
 			sectionId, 
 			term
 		)));
 
-		Message<DropSectionResponse> response = client.receiveResponse();
 		DropSectionResponse data = response.get();
 
 		assert(response.getStatus() == MessageStatus.SUCCESS);
@@ -194,11 +193,10 @@ public class testclient {
 	
 	private static void GetSchedule(Term term, Client client){
 
-		client.sendRequest(new Message<GetScheduleRequest>(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new GetScheduleRequest(
+		Message<GetScheduleResponse> response = client.sendAndWait(new Message<GetScheduleRequest>(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new GetScheduleRequest(
 			term
 		)));
 
-		Message<GetScheduleResponse> response = client.receiveResponse();
 		GetScheduleResponse data = response.get();
 
 		assert(response.getStatus() == MessageStatus.SUCCESS);
@@ -215,8 +213,8 @@ public class testclient {
 	{
 
 		Log.Msg("Sending logout request");
-		client.sendRequest(new Message<LogoutRequest>(MessageType.USER_LOGOUT, MessageStatus.REQUEST, new LogoutRequest() ));
-		Message<BrowseSectionResponse> response = client.receiveResponse();
+		Message<BrowseSectionResponse> response = client.sendAndWait(new Message<LogoutRequest>(MessageType.USER_LOGOUT, MessageStatus.REQUEST, new LogoutRequest() ));
+		
 		assert(response.getStatus() == MessageStatus.SUCCESS);
 		Log.Msg("Received logout response");
 		
