@@ -3,14 +3,14 @@ package global;
 import java.util.Iterator;
 import java.io.Serializable;
 
-public class HashMap<K,V> implements Iterable<V>, Serializable{
+public class HashMap<K,V> implements Iterable<V>, Serializable {
 	
 	private int numBuckets = 8;
 	private int numElems = 0;
 	private float maxLoad = 1.0f;
 	
 	// hash table item stores both a key and data for search purposes
-	private class HashMapItem<K,V> implements Serializable{
+	private class HashMapItem<K,V> implements Serializable {
 		
 		public HashMapItem(K key, V value) {
 			this.key = key;

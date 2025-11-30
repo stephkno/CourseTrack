@@ -4,6 +4,7 @@ import client.UserType;
 import global.LinkedList;
 import global.data.Course;
 import global.data.Section;
+import global.data.Department;
 import java.io.Serializable;
 
 public class Student extends User implements Serializable {
@@ -11,8 +12,11 @@ public class Student extends User implements Serializable {
     int id;
     static int nextId = 0;
 
+    Department department;
+
     // list of currently enrolled sections
     LinkedList<Section> enrolledSections;
+    LinkedList<Section> waitlisted;
     
     // list of all sections previously taken by student
     LinkedList<Course> pastSections;
@@ -21,6 +25,14 @@ public class Student extends User implements Serializable {
         super(name, password, UserType.STUDENT);
         this.id = nextId++;
         this.enrolledSections = new LinkedList<>();
+    }
+
+    public void addWaitlist(Section section){
+        waitlisted.Push(section);
+    }
+
+    public void removeWaitlist(Section section){
+        waitlisted.Remove(section);
     }
 
     public void addSection(Section section){

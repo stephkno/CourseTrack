@@ -8,6 +8,8 @@ import global.MessageType;
 import global.data.*;
 import global.requests.*;
 import global.responses.*;
+import global.LinkedList;
+
 import java.time.LocalTime;
 
 // test client for the server 
@@ -139,13 +141,14 @@ public class testclient {
 
 	}
 
-	private static Section[] SearchCourses(String searchQuery, String campusName, String departmentName, Term term, Client client){
+	private static LinkedList<Section> SearchCourses(String searchQuery, String campusName, String departmentName, Term term, Client client){
 
 		Message<BrowseSectionResponse> response = client.sendAndWait(new Message<BrowseSectionRequest>(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.REQUEST, new BrowseSectionRequest(
 			searchQuery,
 			campusName,
 			departmentName,
-			term
+			term,
+			32
 		)));
 		
 		BrowseSectionResponse data = response.get();
@@ -201,7 +204,7 @@ public class testclient {
 
 		Log.Msg("Received schedule response");
 
-		for(Section s : data.enrolledClasses()){
+		for(Section s : data.enrolledSections()){
 			Log.Msg(s);
 		}
 
@@ -290,24 +293,24 @@ public class testclient {
 		
 		Login("teststudent", "password", client);
 
-		Section[] sections = SearchCourses("softwa", "CSU East Bay", "Computer Science", term, client);
+		LinkedList<Section> sections = SearchCourses("softwa", "CSU East Bay", "Computer Science", term, client);
 		
 		Log.Msg("Search results:");
 		
-		for(int i = 0; i < sections.length; i++){
-			Section section = sections[i];
+		for(int i = 0; i < sections.Length(); i++){
+			Section section = sections.Get(i);
 			if(section == null) continue;
 			Log.Msg(section);
 		}
 
-		Section enrolledSection = Enroll(sections[0].getId(), sections[0].getTerm(), client);
+		Section enrolledSection = Enroll(sections.Get(0).getId(), sections.Get(0).getTerm(), client);
 		Log.Msg("Received enroll response! Num students: " + enrolledSection.numStudents());
 		assert(enrolledSection.numStudents() == 1);
 
-		Section droppedSection = Drop(sections[0].getId(), sections[0].getTerm(), client);
+		Section droppedSection = Drop(sections.Get(0).getId(), sections.Get(0).getTerm(), client);
 		assert(droppedSection.numStudents() == 1);
 		
-		while(true) {}
+		Logout(client);
 
     }
 

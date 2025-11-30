@@ -21,8 +21,6 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
         "USER_LOGIN",
         "USER_LOGOUT",
         "USER_CHANGE_PASSWORD",
-        "USER_ENROLL",
-        "USER_DROP",
         "USER_UPDATE",
         "STUDENT_SEARCH_COURSE",
         "STUDENT_ENROLL",
@@ -64,6 +62,7 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
         "USER_DISCONNECTED",
         "MESSAGE_RECEIVED",
         "CLIENT_UPDATE",
+        "NOTIFICATION",
         "ERROR"
     };
 

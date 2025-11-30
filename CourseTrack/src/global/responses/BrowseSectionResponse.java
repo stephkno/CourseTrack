@@ -1,10 +1,10 @@
 package global.responses;
 
 import global.data.Section;
+import global.LinkedList;
 import java.io.Serializable;
-
 public record BrowseSectionResponse(
     
-    Section[] sections
+    LinkedList<Section> sections
 
 ) implements Serializable { }

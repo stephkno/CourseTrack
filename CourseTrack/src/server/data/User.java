@@ -7,6 +7,14 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import server.ServerConnection;
+import global.LinkedList;
+import global.requests.*;
+import global.responses.*;
+import global.Message;
+import global.MessageType;
+import global.MessageStatus;
+import global.Notification;
+import global.data.Campus;
 
 public class User implements Serializable {
 
@@ -17,17 +25,36 @@ public class User implements Serializable {
 
     LocalDateTime lastLogin;
     LocalDateTime lastActivity;
-    
+
     transient public ServerConnection socket;
 
+    transient LinkedList<Notification> notifications;
+    
+    public LinkedList<Notification> getNotifications(){
+        return notifications;
+    }
+
     public void Notify(String message){
-        // push notification to notifications list
-        // socket.Send(new Message(MessageType.STUDENT_WAS_ENROLLED, MessageStatus.REQUEST, new (message)));
+        
+        LinkedList<Notification> notifications = new LinkedList<>();
+        Notification n = new Notification(message);
+        notifications.Push(n);
+
+        if(socket.isLoggedIn()){
+            socket.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( notifications )));
+            n.send();
+        }else{
+
+            // save notifications for later
+            notifications.Push(n);
+
+        }
+
     }
 
     public static HashMap<String, User> users = new HashMap<>();
     
-    public static HashMap<String, User> get(){
+    public static HashMap<String, User> getUsers(){
         return users;
     }
 

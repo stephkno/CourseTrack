@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class LinkedList<T> implements Iterable<T>, Serializable {
 
-	public static class Node<T> implements Serializable{
+	public static class Node<T> implements Serializable {
 		
 		public Node(T value) {
 			data = value;

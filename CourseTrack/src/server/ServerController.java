@@ -15,15 +15,11 @@ import server.data.*;
 /*
 todo
 
-admin can delete everything
-student waitlist
-student class schedule
+admin delete resources
 student generate schedules
 
 term semester vs quarter type?
-
 notifications
-
 reports
 
 */
@@ -152,7 +148,6 @@ public class ServerController {
         client.getUser().updatePassword(password);
         client.sendMessage( MessageType.USER_CHANGE_PASSWORD, MessageStatus.SUCCESS,new PasswordChangeResponse("") );
 
-
     }
 
     private void handleRegister(Message<RegisterRequest> msg, ServerConnection client) {
@@ -228,6 +223,8 @@ public class ServerController {
             return;
         
         }
+
+        client.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( user.getNotifications() )));
 
         Log.Msg("Login successful for user: " + username);
         client.sendMessage(MessageType.USER_LOGIN, MessageStatus.SUCCESS, new LoginResponse(clientUser) );
@@ -380,7 +377,7 @@ public class ServerController {
     private void handleStudentBrowseSection(Message<BrowseSectionRequest> msg, ServerConnection client) {
 
         if(!client.validateStudent()){
-            client.sendMessage(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.FAILURE, new BrowseSectionResponse( new Section[]{} ));
+            client.sendMessage(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.FAILURE, new BrowseSectionResponse( null ));
             return;
         }
 
@@ -390,40 +387,42 @@ public class ServerController {
         Campus campus = Campus.get(request.campus());
         Department department = campus.getDepartment(request.department());
         Term term = Term.get(request.term());
+        int max_results = request.max_results();
 
         // must use array because no way to return a generic array from linked list
-        Section[] searchResults = new Section[32];
-
         if(term == null || campus == null || department == null || query.equals("")){
-            client.sendMessage(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.SUCCESS, new BrowseSectionResponse( new Section[]{} ) );
+            client.sendMessage(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.SUCCESS, new BrowseSectionResponse( null ) );
             return;
         }
-
-        int i = 0;
 
         // linear search for relevant sections
         // search by class name 
         LinkedList<Section> sections = term.getSections();
+        LinkedList<Section> results = new LinkedList<>();
+
         Log.Msg(sections.Length());
+
+        int i = 0;
 
         for(Section section : sections){
 
-            if(i > 32){
+            if(i++ > max_results){
                 break;
-            } 
+            }
+
             if(!section.getDepartment().equals(department) || !section.getDepartment().getCampus().equals(campus)){
                 continue;
             }
 
             if(section.Search(query)){
                 Log.Msg("Adding section to search results!" + section);
-                searchResults[i++] = section;
+                results.Push(section);
                 continue;
             } 
 
         }
 
-        BrowseSectionResponse res = new BrowseSectionResponse(searchResults);
+        BrowseSectionResponse res = new BrowseSectionResponse(results);
         client.sendMessage(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.SUCCESS, res);
 
     }
@@ -443,6 +442,11 @@ public class ServerController {
         Student student = (Student)client.getUser();
         
         Section section = term.getSection(sectionId);
+        if(section == null){
+            Log.Err("Section does not exist");
+            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,0));
+            return;
+        }
         
         // validate enrollment requirements
         if(!section.getCourse().verifyPrereqs(student)){
@@ -475,6 +479,8 @@ public class ServerController {
             
             // send waitlist response
             int waitlist_position = section.addWaitlist(student);
+            student.addWaitlist(section);
+            
             client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null, waitlist_position));
             return;
 
@@ -508,6 +514,22 @@ public class ServerController {
         Term term = Term.get(request.term());
         Student student = (Student)client.getUser();
         Section section = term.getSection(sectionId);
+
+        // check if student is on waitlist instead of enrolled
+        if(section.waitlisted(student)){
+          
+            section.removeWaitlist(student);
+            student.removeWaitlist(section);
+
+            // notify every student below this one that they moved up in waitlist?
+            for(Student s : section.getWaitlist()){
+                s.Notify("Waitlist promotion!");
+            }
+
+            client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.SUCCESS, new DropSectionResponse(section));
+            return;
+
+        }
         
         section.removeStudent(student);
         student.removeSection(section);
@@ -538,22 +560,24 @@ public class ServerController {
 
         // Note: only for students?
         if(!client.validateStudent()){
-            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( new Section[] { } ));
+            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null ));
             return;
         }
 
         // get currently enrolled sections s
         Student student = (Student)client.getUser();
+        if(student != null){
+            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null ));
+            return;
+        }
+
         int n = student.getEnrolledSections().Length();
 
-        Section[] sections = new Section[n];
+        LinkedList<Section> sections = new LinkedList<>();
 
-        if(student != null){
-            int i = 0;
-            for(Section s : student.getEnrolledSections()){
-                sections[i++] = s;
-            }
-        }
+        
+        for(Section s : student.getEnrolledSections())
+            sections.Push(s);
 
         Log.Msg("Sending schedule response");
 
@@ -593,7 +617,6 @@ public class ServerController {
         } catch (IOException e) {
         
             e.printStackTrace();
-        
         
         }
     }

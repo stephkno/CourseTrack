@@ -8,6 +8,7 @@ public record BrowseSectionRequest(
     String searchQuery,
     String campus,
     String department,
-    Term term
+    Term term,
+    int max_results
 
 ) implements Serializable { }

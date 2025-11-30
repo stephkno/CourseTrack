@@ -20,8 +20,8 @@ public class Shell implements Runnable {
 
     private void PrintData(String[] args) {
 
-        ServerController server = ServerController.Get();
-        HashMap<String, User> users = User.get();
+        //ServerController server = ServerController.Get();
+        HashMap<String, User> users = User.getUsers();
         HashMap<String, Campus> campuses = Campus.get();
         LinkedList<Term> terms = Term.get();
         
@@ -30,7 +30,7 @@ public class Shell implements Runnable {
             Log.Println(user.toString());
         }
 
-        Log.Println("Campuses:");
+        Log.Println("Campuses:"); 
         int c = 0;
         
         for(Object campus : campuses) {

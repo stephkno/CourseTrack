@@ -1,9 +1,10 @@
 package global.responses;
 import java.io.Serializable;
 import global.data.Section;
+import global.LinkedList;
 
 public record GetScheduleResponse(
 
-    Section[] enrolledClasses
+    LinkedList<Section> enrolledSections
 
 ) implements Serializable { }

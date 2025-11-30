@@ -27,9 +27,10 @@ public class Section implements Serializable {
         this.course = course;
         this.term = term;
         this.department = department;
+
         this.students = new LinkedList<>();
-        
         this.waitlist = new LinkedList<>();
+
         this.id = Section.nextId++;
         this.instructor = instructor;
         this.meetTimes = meetTimes;
@@ -99,6 +100,14 @@ public class Section implements Serializable {
         this.waitlist.Push(student);
         num_waitlisted++;
         return this.waitlist.Length();
+    }
+
+    public boolean waitlisted(Student student){
+        return this.waitlist.Contains(student);
+    }
+          
+    public void removeWaitlist(Student student){
+        this.waitlist.Remove(student);
     }
 
     public LinkedList<Student> getWaitlist(){
