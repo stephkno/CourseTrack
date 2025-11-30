@@ -11,7 +11,7 @@ public class testing {
     static ButtonInterface logoutButton = new ButtonInterface() {
         @Override
         public void run() {
-            // clientUI.GoLoginPage(lInfo, loginButton, registerButton);
+            clientUI.GoLoginPage(lInfo, loginButton, registerButton);
     }};
 
 
@@ -32,19 +32,26 @@ public class testing {
             //this is where the client/server auth would go but I just made a quick and dirty version for testing and example
             
             boolean didAuth = false;
+
+
+            //#region just so I can do some testing
+
+            if("admin".equals(lInfo.username)) {clientUI.GoAdminPage(logoutButton);}
+            if("student".equals(lInfo.username)) {clientUI.GoStudentPage(logoutButton);}
+            //#endregion
+
             for(String loginInfo[] : exampleDatabaseLoginInfo) {
                 if(lInfo.username.equals(loginInfo[0])) {//check user
                     if(lInfo.password.equals(loginInfo[1])) {//check password
                         //send to respective page based on user type
                         if(loginInfo[2] == "STUDENT") { clientUI.GoStudentPage(logoutButton);}
                         else if(loginInfo[2] == "ADMIN") {clientUI.GoAdminPage(logoutButton);}
-
                         didAuth = true;
                         break;
                     }
                 }
             }
-
+            
             
             if(didAuth) {
                 //clear the login message below the loginbutton if authentication worked
@@ -89,7 +96,7 @@ public class testing {
 
     public static void main(String[] args) {
         
-        // clientUI.GoLoginPage(lInfo, loginButton, registerButton);
+        clientUI.GoLoginPage(lInfo, loginButton, registerButton);
 
     }
 }

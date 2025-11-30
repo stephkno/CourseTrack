@@ -39,6 +39,11 @@ public class ClientUIManager {
         loginPage = new LoginPage(frame, loginInformation, LoginPage.LoginType.LOGIN, guiService);
     }
 
+    public void GoLoginPage(LoginInformation loginInformation, ButtonInterface loginButton, ButtonInterface registerButton) {
+        cleanUp();
+        loginPage = new LoginPage(frame, loginInformation, LoginPage.LoginType.LOGIN, loginButton, registerButton);
+    }
+
     public void setLoginValidationMessage(String errString) {
         setLoginValidationMessage(errString, UITheme.FAIL);
     }

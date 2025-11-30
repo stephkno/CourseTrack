@@ -5,6 +5,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -34,11 +36,19 @@ public class JPanelTextBox extends nPanel {
         setOpaque(false);
         setFocusable(true);
 
+        addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                repaint();
+            }
+        });
+
         // move carat to mouse
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 requestFocusInWindow();
+                
                 int index = pointToIndex(e.getX(), e.getY());
                 document.setCursorIndex(index);
                 repaint();
@@ -108,10 +118,13 @@ public class JPanelTextBox extends nPanel {
         g2d.drawString(text, xStart, baselineY);
 
         // caret
-        int caretX = indexToX(g2d, document.getCursorIndex(), xStart, text);
-        int caretTop = baselineY - fm.getAscent();
-        int caretBottom = baselineY + fm.getDescent();
-        g2d.drawLine(caretX, caretTop, caretX, caretBottom);
+        if(isFocusOwner()) {
+            int caretX = indexToX(g2d, document.getCursorIndex(), xStart, text);
+            int caretTop = baselineY - fm.getAscent();
+            int caretBottom = baselineY + fm.getDescent();
+            g2d.drawLine(caretX, caretTop, caretX, caretBottom);
+        }
+        
 
         if (drawUnderline) {
             int underlineY = baselineY + fm.getDescent() / 2;
