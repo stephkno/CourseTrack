@@ -95,6 +95,11 @@ public class ServerController {
                 break;
             }
 
+            case ADMIN_GET_REPORT:{
+                handleAdminGetReport((Message<ReportRequest>) msg, client);
+                break;
+            }
+
             // student requests
             case STUDENT_BROWSE_SECTION:{
                 handleStudentBrowseSection((Message<BrowseSectionRequest>) msg, client);
@@ -593,6 +598,47 @@ public class ServerController {
         
         // clear session
         client.setUser(null);
+
+    }
+
+    private void handleAdminGetReport(Message<ReportRequest> msg, ServerConnection client) {
+
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_GET_REPORT, MessageStatus.FAILURE, new DisplayReport( null ));
+            return;
+        }
+
+        ReportRequest request = msg.get();
+        Term term = request.term();
+
+        if(term == null){
+            client.sendMessage(MessageType.ADMIN_GET_REPORT, MessageStatus.FAILURE, new DisplayReport( null ) );
+            return;
+        }
+
+        LinkedList<String> reportEntries = new LinkedList<>();
+
+        for(Section section : term.getSections()){
+            Course course = section.getCourse();
+            Department department = section.getDepartment();
+            String campusName = department.getCampus().getName();
+            String departmentName = department.getName();
+
+            String reportLine = String.format(
+                "%s %d - Section %d (%s / %s): Enrollment %d/%d",
+                course.getName(),
+                course.getNumber(),
+                section.getNumber(),
+                campusName,
+                departmentName,
+                section.numStudents(),
+                section.getCapacity()
+            );
+
+            reportEntries.Push(reportLine);
+        }
+
+        client.sendMessage(MessageType.ADMIN_GET_REPORT, MessageStatus.SUCCESS, new DisplayReport(reportEntries));
 
     }
 
