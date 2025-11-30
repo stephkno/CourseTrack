@@ -60,6 +60,10 @@ public class Section implements Serializable {
         return number; 
     }
 
+    public String getName(){
+        return course.getName();
+    }
+    
     public Course getCourse() { 
         return course; 
     }

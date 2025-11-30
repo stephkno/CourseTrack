@@ -140,7 +140,7 @@ public class User implements Serializable {
     public String toString(){
         String outstring = "";
         outstring += id + ": " + name + " " + type + " ";
-        if(socket.isLoggedIn()){
+        if(socket != null && socket.isLoggedIn()){
             outstring += " [Logged in]";
         }else{
             outstring += " [Not logged in]";

@@ -6,14 +6,21 @@ import global.Message;
 public class ServerApp {
 
 	public static void main(String[] args) throws ClassNotFoundException {
-		
+	
 		ServerController controller = ServerController.Get();
 		int port = 7777;
-
 		Server server = Server.Get();
 
-		// set server callback callback functions
+		if(args.length > 0){
+			if(controller.Serialize(args[0], false)){
+				Log.Msg("Loaded server data from " + args[0]);
+			}else{
+				Log.Err("Unable to read file " + args[0]);
+			}
+		}
 
+		// set server callback callback functions
+		
 		// set callback for when Server receives a message
 		server.OnRequest(
 			(Message msg, ServerConnection client) -> {

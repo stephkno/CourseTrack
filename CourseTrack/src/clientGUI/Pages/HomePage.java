@@ -15,9 +15,16 @@ public class HomePage {
     public int mainY;
     public int mainW;
     public int mainH;
+    nPanelPlainText roleLabel;
+
     public HomePage(nFrame frame, ButtonInterface logoutButtonAction, String headerRoleText) {
         homePage(frame, logoutButtonAction, headerRoleText);
     }
+
+    public void setLabel(String text){
+        roleLabel.setText(text);
+    }
+
     private void homePage(nFrame frame, ButtonInterface logoutButtonAction, String headerRoleText) {
         
         int frameW = frame.getWidth();
@@ -36,7 +43,7 @@ public class HomePage {
         title.textColor = UITheme.TEXT_PRIMARY;
 
         String roleText = headerRoleText;
-        nPanelPlainText roleLabel = new nPanelPlainText(roleText);
+        roleLabel = new nPanelPlainText(roleText);
         roleLabel.setAlignment(nPanel.CrossStringAlignments.TOP, nPanel.MainStringAlignments.LEFT);
         roleLabel.textColor = UITheme.TEXT_MUTED;
 

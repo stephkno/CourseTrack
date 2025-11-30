@@ -14,7 +14,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
     private final Client client;
     private User currentUser;
 
-    ClientUIManager clientUI = new ClientUIManager(this);
+    ClientUIManager clientUI = new ClientUIManager();
     LoginInformation lInfo = new LoginInformation();
 
     public ClientController(Client client) {

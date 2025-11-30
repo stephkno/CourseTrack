@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-
 // serverSocket handler manages the serverSocket and owns all client ServerSession connections
 public class Server {
 

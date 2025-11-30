@@ -16,8 +16,6 @@ public class ClientUIManager {
     private final int startingHeight = 500;
     nFrame frame;
 
-    ClientController controller;
-    
     private static final UIArrayList<UICourseInfo> COURSES = new UIArrayList<>();
     static {
         COURSES.append(new UICourseInfo("CS101", "Introduction to Computer Science", "Dr. Lin", "MWF 10:00-10:50", "ENGR 201"));
@@ -31,8 +29,7 @@ public class ClientUIManager {
         COURSES.append(new UICourseInfo("CS399", "Special Topics: Game Development", "Dr. Miller", "MW 15:30-16:45", "LAB 12"));
     }
 
-    public ClientUIManager(ClientController controller){
-        this.controller = controller;
+    public ClientUIManager(){
         frame = new nFrame(title, startingWidth, startingHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setBackground(UITheme.BG_APP);
@@ -67,9 +64,10 @@ public class ClientUIManager {
     public void GoAdminPage(ButtonInterface logoutButtonAction) {
         cleanUp();
 
-        String title = "Welcome, " + controller.getCurrentUser().getUserName();
+        String title = "Welcome, ";
         
         HomePage hp = new HomePage(frame, logoutButtonAction, title);
+
         frame.getContentPane().setBackground(UITheme.BG_APP);
         UICourseInfo[] courseInfo = COURSES.toArray(new UICourseInfo[COURSES.getLength()]);
         
@@ -80,7 +78,7 @@ public class ClientUIManager {
     public void GoStudentPage(ButtonInterface logoutButtonAction){
         cleanUp();
 
-        String title = "Welcome, " + controller.getCurrentUser().getUserName();
+        String title = "Welcome, ";
 
         HomePage hp = new HomePage(frame, logoutButtonAction, title);
         frame.getContentPane().setBackground(UITheme.BG_APP);

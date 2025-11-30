@@ -6,7 +6,7 @@ import clientGUI.UIInformations.LoginInformation;
 import clientGUI.UIFramework.*;
 @SuppressWarnings("unused")
 public class testing {
-    static ClientUIManager clientUI = new ClientUIManager(null);
+    static ClientUIManager clientUI = new ClientUIManager();
     static LoginInformation lInfo = new LoginInformation();
     static ButtonInterface logoutButton = new ButtonInterface() {
         @Override

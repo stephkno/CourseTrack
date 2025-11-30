@@ -527,9 +527,9 @@ public class ServerController {
             student.removeWaitlist(section);
 
             // notify every student below this one that they moved up in waitlist?
-            for(Student s : section.getWaitlist()){
-                s.Notify("Waitlist promotion!");
-            }
+            //for(Student s : section.getWaitlist()){
+            //    s.Notify("Waitlist promotion!");
+            //}
 
             client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.SUCCESS, new DropSectionResponse(section));
             return;
@@ -550,9 +550,9 @@ public class ServerController {
             studentOnWaitlist.Notify("You have been enrolled!");
 
             // iterate students in wait list and notify them of waitlist promotion?
-            for(Student s : section.getWaitlist()){
-                s.Notify("Your waitlist position has changed.");
-            }
+            //for(Student s : section.getWaitlist()){
+            //    s.Notify("Your waitlist position has changed.");
+            //}
        
         }
 
@@ -576,11 +576,8 @@ public class ServerController {
             return;
         }
 
-        int n = student.getEnrolledSections().Length();
-
         LinkedList<Section> sections = new LinkedList<>();
 
-        
         for(Section s : student.getEnrolledSections())
             sections.Push(s);
 
@@ -642,7 +639,9 @@ public class ServerController {
 
     }
 
-    public static void Serialize(String filepath, boolean save) {
+    public static boolean Serialize(String filepath, boolean save) {
+
+        filepath = "server_data/" + filepath + ".ct";
 
         try {
             
@@ -659,10 +658,12 @@ public class ServerController {
                 Term.load(objectStream);
                 Campus.load(objectStream);
             }
+            return true;
 
         } catch (IOException e) {
-        
+                        
             e.printStackTrace();
+            return false;
         
         }
     }

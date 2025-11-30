@@ -13,11 +13,10 @@ import global.LinkedList;
 import java.time.LocalTime;
 
 // test client for the server 
-public class testclient {
+public class TestHelpers {
 		
 	static void RegisterUser(String username, String password, UserType type, Client client)
 	{
-
 
 		Log.Msg("Sending register request");
 		
@@ -224,11 +223,14 @@ public class testclient {
 	static Client client = new Client("localhost", 7777);
 
 	static void StartClient(){
+
 		if (!client.isConnected()) {
+			
 			if (!client.connect()) {
-				System.err.println("Could not connect to server.");
+				Log.Err("Could not connect to server.");
 				return;
 			}
+
 		}
 		
 		ClientController controller = new ClientController(client);
@@ -236,34 +238,36 @@ public class testclient {
 	
 	}
 
-    public static void main(String [] args) {
+    public static void AddTestData() {
 
+		Log.Msg("Adding server test data");
+		
 		StartClient();
 		
 		String username = "testuser";
 		String password = "password123";
-		RegisterUser(username, password, UserType.ADMIN, testclient.client);
+		RegisterUser(username, password, UserType.ADMIN, client);
 		Login(username, password, client);
 
 		AddCampus("CSU East Bay", client);
 		
-		AddDepartment("CSU East Bay", "Computer Science", client);
+		AddDepartment("CSU East Bay", "CS", client);
 
-		int id = AddCourse("Computer Science 1", 101, 3, "CSU East Bay", "Computer Science", client);
-		int id1 = AddCourse("Computing Science 2", 201, 3, "CSU East Bay", "Computer Science", client);
-		int id2 = AddCourse("Computing and Social Responsibility", 230, 3, "CSU East Bay", "Computer Science", client);
-		int id3 = AddCourse("Computing Organization and Assembly Language", 221, 3, "CSU East Bay", "Computer Science", client);
-		int id4 = AddCourse("Discrete Structures", 211, 3, "CSU East Bay", "Computer Science", client);
-		int id5 = AddCourse("Programming Language Concepts", 311, 3, "CSU East Bay", "Computer Science", client);
-		int id6 = AddCourse("Computer Architecture", 321, 3, "CSU East Bay", "Computer Science", client);
-		int id7 = AddCourse("Data Structures and Algorithms", 301, 3, "CSU East Bay", "Computer Science", client);
-		int id8 = AddCourse("Automata and Computation", 411, 3, "CSU East Bay", "Computer Science", client);
-		int id9 = AddCourse("Software Engineering", 401, 3, "CSU East Bay", "Computer Science", client);
-		int id10 = AddCourse("Operating Systems", 421, 3, "CSU East Bay", "Computer Science", client);
-		int id11 = AddCourse("Computer Networks", 441, 3, "CSU East Bay", "Computer Science", client);
-		int id12 = AddCourse("Analysis of Algorithms", 413, 3, "CSU East Bay", "Computer Science", client);
+		int id = AddCourse("CS 1", 101, 3, "CSU East Bay", "CS", client);
+		int id1 = AddCourse("Computing Science 2", 201, 3, "CSU East Bay", "CS", client);
+		int id2 = AddCourse("Computing and Social Responsibility", 230, 3, "CSU East Bay", "CS", client);
+		int id3 = AddCourse("Computing Organization and Assembly Language", 221, 3, "CSU East Bay", "CS", client);
+		int id4 = AddCourse("Discrete Structures", 211, 3, "CSU East Bay", "CS", client);
+		int id5 = AddCourse("Programming Language Concepts", 311, 3, "CSU East Bay", "CS", client);
+		int id6 = AddCourse("Computer Architecture", 321, 3, "CSU East Bay", "CS", client);
+		int id7 = AddCourse("Data Structures and Algorithms", 301, 3, "CSU East Bay", "CS", client);
+		int id8 = AddCourse("Automata and Computation", 411, 3, "CSU East Bay", "CS", client);
+		int id9 = AddCourse("Software Engineering", 401, 3, "CSU East Bay", "CS", client);
+		int id10 = AddCourse("Operating Systems", 421, 3, "CSU East Bay", "CS", client);
+		int id11 = AddCourse("Computer Networks", 441, 3, "CSU East Bay", "CS", client);
+		int id12 = AddCourse("Analysis of Algorithms", 413, 3, "CSU East Bay", "CS", client);
 		
-		int id13 = AddCourse("TestCourse", 555, 3, "CSU East Bay", "Computer Science", client);
+		int id13 = AddCourse("TestCourse", 555, 3, "CSU East Bay", "CS", client);
 
 		MeetTime[] meetTimes = new MeetTime[]{
 			new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(14, 30), LocalTime.of(14, 30)),
@@ -272,20 +276,20 @@ public class testclient {
 		
 		Term term = new Term(Term.Season.FALL, 2025);
 
-		AddSection(id, "CSU East Bay", "Computer Science", term, "Alice Johnson", 30, meetTimes, client);
-		AddSection(id1, "CSU East Bay", "Computer Science", term, "Bob Martinez", 25, meetTimes, client);
-		AddSection(id2, "CSU East Bay", "Computer Science",  term,"Carol Lee", 35, meetTimes, client);
-		AddSection(id3, "CSU East Bay", "Computer Science", term,"David Kim", 28,  meetTimes, client);
-		AddSection(id4, "CSU East Bay", "Computer Science", term,"Emily Chen", 32,  meetTimes, client);
-		AddSection(id5, "CSU East Bay", "Computer Science", term,"Frank Brown", 30,  meetTimes, client);
-		AddSection(id6, "CSU East Bay", "Computer Science", term,"Grace Wilson", 27,  meetTimes, client);
-		AddSection(id7, "CSU East Bay", "Computer Science", term,"Henry Clark", 33,  meetTimes, client);
-		AddSection(id8, "CSU East Bay", "Computer Science", term,"Isabella Davis", 29,  meetTimes, client);
-		AddSection(id9, "CSU East Bay", "Computer Science", term,"Jack Miller", 30,  meetTimes, client);
-		AddSection(id10, "CSU East Bay", "Computer Science", term, "Karen Taylor", 26,  meetTimes, client);
-		AddSection(id11, "CSU East Bay", "Computer Science", term, "Liam Anderson", 34,  meetTimes, client);
-		AddSection(id12, "CSU East Bay", "Computer Science", term, "Mia Thomas", 31,  meetTimes, client);
-		AddSection(id13, "CSU East Bay", "Computer Science", term, "TestInstructor", 2,  meetTimes, client);
+		AddSection(id, "CSU East Bay", "CS", term, "Alice Johnson", 30, meetTimes, client);
+		AddSection(id1, "CSU East Bay", "CS", term, "Bob Martinez", 25, meetTimes, client);
+		AddSection(id2, "CSU East Bay", "CS",  term,"Carol Lee", 35, meetTimes, client);
+		AddSection(id3, "CSU East Bay", "CS", term,"David Kim", 28,  meetTimes, client);
+		AddSection(id4, "CSU East Bay", "CS", term,"Emily Chen", 32,  meetTimes, client);
+		AddSection(id5, "CSU East Bay", "CS", term,"Frank Brown", 30,  meetTimes, client);
+		AddSection(id6, "CSU East Bay", "CS", term,"Grace Wilson", 27,  meetTimes, client);
+		AddSection(id7, "CSU East Bay", "CS", term,"Henry Clark", 33,  meetTimes, client);
+		AddSection(id8, "CSU East Bay", "CS", term,"Isabella Davis", 29,  meetTimes, client);
+		AddSection(id9, "CSU East Bay", "CS", term,"Jack Miller", 30,  meetTimes, client);
+		AddSection(id10, "CSU East Bay", "CS", term, "Karen Taylor", 26,  meetTimes, client);
+		AddSection(id11, "CSU East Bay", "CS", term, "Liam Anderson", 34,  meetTimes, client);
+		AddSection(id12, "CSU East Bay", "CS", term, "Mia Thomas", 31,  meetTimes, client);
+		AddSection(id13, "CSU East Bay", "CS", term, "TestInstructor", 2,  meetTimes, client);
 
 		Logout(client);
 
@@ -293,7 +297,7 @@ public class testclient {
 		
 		Login("teststudent", "password", client);
 
-		LinkedList<Section> sections = SearchCourses("softwa", "CSU East Bay", "Computer Science", term, client);
+		LinkedList<Section> sections = SearchCourses("softwa", "CSU East Bay", "CS", term, client);
 		
 		Log.Msg("Search results:");
 
@@ -313,4 +317,7 @@ public class testclient {
 
     }
 
+	public static void main(String[] args){
+		AddTestData();
+	}
 }

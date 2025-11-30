@@ -7,15 +7,10 @@ import global.data.Campus;
 import global.data.Term;
 import java.util.Scanner;
 import server.data.*;
+import server.TestHelpers;
 
 public class Shell implements Runnable {
     
-    class Command{
-        
-        String name;
-
-    }
-
     private Scanner scanner = new Scanner(System.in);
 
     private void PrintData(String[] args) {
@@ -105,10 +100,10 @@ public class Shell implements Runnable {
 
     @Override
     public void run() {
-
+        
         while(Server.Running()) {
 
-            System.out.print(" CourseTrack $ ");
+            System.out.print("\n CourseTrack $ ");
             String line = scanner.nextLine();
 
             String[] args = line.split(" ");
@@ -134,8 +129,23 @@ public class Shell implements Runnable {
                     break;
                 }
                 case "save":{
-                    ServerController.Serialize(filename, true);
-                    // serialize server data
+                    if(args.length < 2) break;
+                    String filename = args[1];
+                    if(ServerController.Serialize(filename, true)){
+                        Log.Msg("Saved server data as " + filename + "!");
+                    }else{
+                        Log.Err("Unable to save file " + filename);
+                    }
+                    break;
+                }
+                case "load":{
+                    if(args.length < 2) break;
+                    String filename = args[1];
+                    if(ServerController.Serialize(filename, false)){
+                        Log.Msg("Loaded server data from " + filename + "!");
+                    }else{
+                        Log.Err("Unable to read file " + filename);
+                    }
                     break;
                 }
                 case "status":{
