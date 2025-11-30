@@ -13,12 +13,12 @@ import javax.swing.JFrame;
 
 import java.awt.event.MouseEvent;
 
-public class nModal extends nPanel {
+public class nPanelModal extends nPanel {
     JFrame frame = null;
     Component component = null;
-    nModal self = this;
+    nPanelModal self = this;
     //Component will just be drawn ontop of the nModal
-    public nModal(JFrame _frame, Component _component, int x, int y, int width, int height){
+    public nPanelModal(JFrame _frame, Component _component, int x, int y, int width, int height){
         frame = _frame;
         component = _component;
 

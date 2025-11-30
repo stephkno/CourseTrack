@@ -2,12 +2,12 @@ package clientGUI.UIFramework;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
-public class RoundedPanel extends nPanel {
+public class nRoundedPanel extends nPanel {
     private Color backgroundColor = new Color(23, 26, 45);
     private Color borderColor = new Color(255, 255, 255, 40);
     private int radius = 20;
 
-    public RoundedPanel() {
+    public nRoundedPanel() {
         setOpaque(false);
     }
 

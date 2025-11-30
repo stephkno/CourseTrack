@@ -13,7 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 
-public class JPanelTextBox extends nPanel {
+public class nPanelTextBox extends nPanel {
 
     private final nDocument document = new nDocument();
 
@@ -23,23 +23,17 @@ public class JPanelTextBox extends nPanel {
     public Color textColor = Color.BLACK;
     public Color backgroundColor = new Color(0, 0, 0, 0);
 
-    public JPanelTextBox() {
-        init();
-    }
+    
 
-    public JPanelTextBox(String initialText) {
+    public nPanelTextBox(String initialText) {
         document.setText(initialText);
-        init();
-    }
-
-    private void init() {
         setOpaque(false);
         setFocusable(true);
 
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                repaint();
+                repaint(); //remove carat if focus lost
             }
         });
 
@@ -84,6 +78,10 @@ public class JPanelTextBox extends nPanel {
                 }
             }
         });
+    }
+
+    public nPanelTextBox() {
+        this("");
     }
 
     public void setText(String _text) {

@@ -12,7 +12,7 @@ public class LoginPage {
     private IAppGUIService guiService;
     LoginType type;
     private nFrame.ListLayout list;
-    public JPanelPlainText message;
+    public nPanelPlainText message;
     public LoginPage(nFrame frame, LoginInformation _loginInformation, LoginType logintype, IAppGUIService guiService) {
         this.guiService = guiService;
         type = logintype;
@@ -20,49 +20,56 @@ public class LoginPage {
         loginPage(frame);
     }
 
-    
 
+    //This section is so I can do local testing
+
+    private ButtonInterface loginButtonFunction;
+    private ButtonInterface registerButtonFunction;
+    public LoginPage(nFrame frame, LoginInformation _loginInformation, LoginType logintype, ButtonInterface loginButtonFunction, ButtonInterface registerButtonFunction) {
+        this.loginButtonFunction = loginButtonFunction;
+        this.registerButtonFunction = registerButtonFunction;
+        type = logintype;
+        loginInformation = _loginInformation;
+        testLoginPage(frame);
+    }
     private void loginPage(nFrame frame) {
         
 
         nButton registerButton = new nButton(type == LoginType.LOGIN ? "Create An Account" : "I Already Have An Account");
         registerButton.setBackgroundColor(UITheme.ACCENT);
 
-        registerButton.addActionListener(e -> {
-            if(list != null) {
-                type = type == LoginType.LOGIN ? LoginType.REGISTER : LoginType.LOGIN;
-                loginInformation.username = "";
-                loginInformation.password = "";
-                loginInformation.confirmationPassword = "";
-                frame.remove(list);
-                loginPage(frame);
-            } 
-        });
+        
 
-        JPanelPlainText userNamePrompt = new JPanelPlainText("Username");
+        nPanelPlainText userNamePrompt = new nPanelPlainText("Username");
         userNamePrompt.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelTextBox usernameInput = new JPanelTextBox();
+        nPanelTextBox usernameInput = new nPanelTextBox();
         usernameInput.textColor = UITheme.TEXT_PRIMARY;
         usernameInput.backgroundColor = UITheme.BG_APP;
         usernameInput.drawBorder = true;
 
-        JPanelPlainText passwordPrompt = new JPanelPlainText("Password");
+        nPanelPlainText passwordPrompt = new nPanelPlainText("Password");
         passwordPrompt.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelTextBox passwordInput = new JPanelTextBox();
+        nPanelTextBox passwordInput = new nPanelTextBox();
         passwordInput.textColor = UITheme.TEXT_PRIMARY;
         passwordInput.backgroundColor = UITheme.BG_APP;
         passwordInput.drawBorder = true;
 
 
-        JPanelPlainText passwordPromptConfirm = new JPanelPlainText("Password");
+        nPanelPlainText passwordPromptConfirm = new nPanelPlainText("Password");
         passwordPromptConfirm.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelTextBox passwordInputConfirm = new JPanelTextBox();
+        nPanelTextBox passwordInputConfirm = new nPanelTextBox();
         passwordInputConfirm.textColor = UITheme.TEXT_PRIMARY;
         passwordInputConfirm.backgroundColor = UITheme.BG_APP;
         passwordInputConfirm.drawBorder = true;
+
+        nPanelPlainText adminCheckBoxPrompt = new nPanelPlainText("Admin Registration?");
+        adminCheckBoxPrompt.textColor = UITheme.TEXT_PRIMARY;
+
+        nPanelCheckBox checkBox = new nPanelCheckBox();
+        checkBox.setColor(UITheme.TEXT_PRIMARY);
 
         nButton loginButton = new nButton(type == LoginType.LOGIN ? "Login" : "Register");
         loginButton.setBackgroundColor(UITheme.ACCENT);
@@ -73,7 +80,7 @@ public class LoginPage {
             loginInformation.confirmationPassword = passwordInputConfirm.getText();
 
             // checkbox
-            UserType userType = UserType.STUDENT;
+            UserType userType = checkBox.getState() ? UserType.ADMIN : UserType.STUDENT;
 
             if(type == LoginType.LOGIN) { guiService.sendLoginRequest(loginInformation.username, loginInformation.password); }
             else { guiService.sendRegisterRequest(loginInformation.username, loginInformation.password, userType); }
@@ -83,13 +90,13 @@ public class LoginPage {
             passwordInput.setText("");
             passwordInputConfirm.setText("");
         });
-
-        JPanelPlainText errorText = new JPanelPlainText("");
+        System.out.println("BUILDING TEST");
+        nPanelPlainText errorText = new nPanelPlainText("");
         errorText.textColor = UITheme.FAIL;
 
         message = errorText;
 
-        Component[] components = type == LoginType.LOGIN ? new Component[]{
+        Component[] loginComponents = new Component[]{
                 registerButton,
                 userNamePrompt,
                 usernameInput,
@@ -97,8 +104,9 @@ public class LoginPage {
                 passwordInput,
                 loginButton,
                 errorText
-        } :
-        new Component[]{
+        };
+
+        Component[] registerComponents = new Component[]{
                 registerButton,
                 userNamePrompt,
                 usernameInput,
@@ -106,9 +114,29 @@ public class LoginPage {
                 passwordInput,
                 passwordPromptConfirm,
                 passwordInputConfirm,
+                adminCheckBoxPrompt,
+                checkBox,
                 loginButton,
                 errorText
         };
+
+        System.out.println(checkBox.getX() + " " + checkBox.getY() + " " + checkBox.getWidth() + " " + checkBox.getHeight());
+
+        Component[] components = type == LoginType.LOGIN ? loginComponents : registerComponents;
+
+
+        registerButton.addActionListener(e -> {
+            if(list == null) { return; }
+            type = type == LoginType.LOGIN ? LoginType.REGISTER : LoginType.LOGIN;
+            loginInformation.username = "";
+            loginInformation.password = "";
+            loginInformation.confirmationPassword = "";
+
+            Component[] newComponents = type == LoginType.LOGIN ? loginComponents : registerComponents;
+
+            list.setChildren(newComponents);
+        });
+
 
         int width = 300;
         int height = 260;
@@ -124,61 +152,44 @@ public class LoginPage {
         frame.revalidate();
         frame.repaint();
     }
-
-
-    //This section is so I can do local testing
-
-    private ButtonInterface loginButtonFunction;
-    private ButtonInterface registerButtonFunction;
-    public LoginPage(nFrame frame, LoginInformation _loginInformation, LoginType logintype, ButtonInterface loginButtonFunction, ButtonInterface registerButtonFunction) {
-        this.loginButtonFunction = loginButtonFunction;
-        this.registerButtonFunction = registerButtonFunction;
-        type = logintype;
-        loginInformation = _loginInformation;
-        testLoginPage(frame);
-    }
-
     private void testLoginPage(nFrame frame) {
         
 
         nButton registerButton = new nButton(type == LoginType.LOGIN ? "Create An Account" : "I Already Have An Account");
         registerButton.setBackgroundColor(UITheme.ACCENT);
 
-        registerButton.addActionListener(e -> {
-            if(list != null) {
-                type = type == LoginType.LOGIN ? LoginType.REGISTER : LoginType.LOGIN;
-                loginInformation.username = "";
-                loginInformation.password = "";
-                loginInformation.confirmationPassword = "";
-                frame.remove(list);
-                loginPage(frame);
-            } 
-        });
+        
 
-        JPanelPlainText userNamePrompt = new JPanelPlainText("Username");
+        nPanelPlainText userNamePrompt = new nPanelPlainText("Username");
         userNamePrompt.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelTextBox usernameInput = new JPanelTextBox();
+        nPanelTextBox usernameInput = new nPanelTextBox();
         usernameInput.textColor = UITheme.TEXT_PRIMARY;
         usernameInput.backgroundColor = UITheme.BG_APP;
         usernameInput.drawBorder = true;
 
-        JPanelPlainText passwordPrompt = new JPanelPlainText("Password");
+        nPanelPlainText passwordPrompt = new nPanelPlainText("Password");
         passwordPrompt.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelTextBox passwordInput = new JPanelTextBox();
+        nPanelTextBox passwordInput = new nPanelTextBox();
         passwordInput.textColor = UITheme.TEXT_PRIMARY;
         passwordInput.backgroundColor = UITheme.BG_APP;
         passwordInput.drawBorder = true;
 
 
-        JPanelPlainText passwordPromptConfirm = new JPanelPlainText("Password");
+        nPanelPlainText passwordPromptConfirm = new nPanelPlainText("Password");
         passwordPromptConfirm.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelTextBox passwordInputConfirm = new JPanelTextBox();
+        nPanelTextBox passwordInputConfirm = new nPanelTextBox();
         passwordInputConfirm.textColor = UITheme.TEXT_PRIMARY;
         passwordInputConfirm.backgroundColor = UITheme.BG_APP;
         passwordInputConfirm.drawBorder = true;
+
+        nPanelPlainText adminCheckBoxPrompt = new nPanelPlainText("Admin Registration?");
+        adminCheckBoxPrompt.textColor = UITheme.TEXT_PRIMARY;
+
+        nPanelCheckBox checkBox = new nPanelCheckBox();
+        checkBox.setColor(UITheme.TEXT_PRIMARY);
 
         nButton loginButton = new nButton(type == LoginType.LOGIN ? "Login" : "Register");
         loginButton.setBackgroundColor(UITheme.ACCENT);
@@ -189,7 +200,7 @@ public class LoginPage {
             loginInformation.confirmationPassword = passwordInputConfirm.getText();
 
             // checkbox
-            UserType userType = UserType.STUDENT;
+            UserType userType = checkBox.getState() ? UserType.ADMIN : UserType.STUDENT;
 
             if(type == LoginType.LOGIN) { loginButtonFunction.run(); }
             else { registerButtonFunction.run(); }
@@ -199,13 +210,13 @@ public class LoginPage {
             passwordInput.setText("");
             passwordInputConfirm.setText("");
         });
-
-        JPanelPlainText errorText = new JPanelPlainText("");
+        System.out.println("BUILDING TEST");
+        nPanelPlainText errorText = new nPanelPlainText("");
         errorText.textColor = UITheme.FAIL;
 
         message = errorText;
 
-        Component[] components = type == LoginType.LOGIN ? new Component[]{
+        Component[] loginComponents = new Component[]{
                 registerButton,
                 userNamePrompt,
                 usernameInput,
@@ -213,8 +224,9 @@ public class LoginPage {
                 passwordInput,
                 loginButton,
                 errorText
-        } :
-        new Component[]{
+        };
+
+        Component[] registerComponents = new Component[]{
                 registerButton,
                 userNamePrompt,
                 usernameInput,
@@ -222,9 +234,29 @@ public class LoginPage {
                 passwordInput,
                 passwordPromptConfirm,
                 passwordInputConfirm,
+                adminCheckBoxPrompt,
+                checkBox,
                 loginButton,
                 errorText
         };
+
+        System.out.println(checkBox.getX() + " " + checkBox.getY() + " " + checkBox.getWidth() + " " + checkBox.getHeight());
+
+        Component[] components = type == LoginType.LOGIN ? loginComponents : registerComponents;
+
+
+        registerButton.addActionListener(e -> {
+            if(list == null) { return; }
+            type = type == LoginType.LOGIN ? LoginType.REGISTER : LoginType.LOGIN;
+            loginInformation.username = "";
+            loginInformation.password = "";
+            loginInformation.confirmationPassword = "";
+
+            Component[] newComponents = type == LoginType.LOGIN ? loginComponents : registerComponents;
+
+            list.setChildren(newComponents);
+        });
+
 
         int width = 300;
         int height = 260;

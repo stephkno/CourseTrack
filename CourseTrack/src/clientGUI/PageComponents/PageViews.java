@@ -13,11 +13,11 @@ public class PageViews {
     //#region createBrowseView
     public static nFrame.ListLayout createBrowseView(nFrame frame,int x, int y, int w, int h, UICourseInfo[] courses, UserRole userRole) {
         // heading
-        JPanelPlainText heading = new JPanelPlainText("Browse Courses");
+        nPanelPlainText heading = new nPanelPlainText("Browse Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
         // search controls
-        JPanelTextBox searchBox = new JPanelTextBox();
+        nPanelTextBox searchBox = new nPanelTextBox();
         searchBox.textColor = UITheme.TEXT_PRIMARY;
         searchBox.backgroundColor = UITheme.BG_APP;
         searchBox.drawBorder = true;
@@ -103,10 +103,10 @@ public class PageViews {
 
     //#region createDropView
     public static nFrame.ListLayout createDropView(nFrame frame,int x, int y, int w, int h) {
-        JPanelPlainText heading = new JPanelPlainText("Drop Course");
+        nPanelPlainText heading = new nPanelPlainText("Drop Course");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelPlainText desc = new JPanelPlainText("WIP");
+        nPanelPlainText desc = new nPanelPlainText("WIP");
         desc.textColor = UITheme.TEXT_MUTED;
 
         nPanel spacer = new nPanel();
@@ -123,10 +123,10 @@ public class PageViews {
     //#endregion
     //#region createWaitlistView
     public static nFrame.ListLayout createWaitlistView(nFrame frame,int x, int y, int w, int h) {
-        JPanelPlainText heading = new JPanelPlainText("Drop Course");
+        nPanelPlainText heading = new nPanelPlainText("Drop Course");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelPlainText desc = new JPanelPlainText("WIP");
+        nPanelPlainText desc = new nPanelPlainText("WIP");
         desc.textColor = UITheme.TEXT_MUTED;
 
         nPanel spacer = new nPanel();
@@ -143,10 +143,10 @@ public class PageViews {
     //#endregion
     //#region createScheduleView
     public static nFrame.ListLayout createScheduleView(nFrame frame,int x, int y, int w, int h) {
-        JPanelPlainText heading = new JPanelPlainText("View Schedule");
+        nPanelPlainText heading = new nPanelPlainText("View Schedule");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelPlainText desc = new JPanelPlainText("WIP");
+        nPanelPlainText desc = new nPanelPlainText("WIP");
         desc.textColor = UITheme.TEXT_MUTED;
 
         nPanel spacer = new nPanel();
@@ -242,10 +242,10 @@ public class PageViews {
     */
     //#region createManageView
     public static nFrame.ListLayout createManageView(nFrame frame, int x, int y, int w, int h, UICourseInfo[] courses, UserRole userRole) {
-        JPanelPlainText heading = new JPanelPlainText("Manage Courses");
+        nPanelPlainText heading = new nPanelPlainText("Manage Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelTextBox searchBox = new JPanelTextBox();
+        nPanelTextBox searchBox = new nPanelTextBox();
         searchBox.textColor = UITheme.TEXT_PRIMARY;
         searchBox.backgroundColor = UITheme.BG_APP;
         searchBox.drawBorder = true;
@@ -344,17 +344,17 @@ public class PageViews {
     //#endregion
     //#region createReportsView
     public static nFrame.ListLayout createReportsView(nFrame frame, int x, int y, int w, int h) {
-        JPanelPlainText heading = new JPanelPlainText("Generate Reports");
+        nPanelPlainText heading = new nPanelPlainText("Generate Reports");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
-        JPanelPlainText desc = new JPanelPlainText( "Just a graph to show off the graphs while WIP");
+        nPanelPlainText desc = new nPanelPlainText( "Just a graph to show off the graphs while WIP");
         desc.textColor = UITheme.TEXT_MUTED;
 
         double[] xAxis = { 1, 2, 3, 4, 5 };
         double[] yAxis = { 1, 6, 3, 7, 3 };
-        JPanelGraphs.GraphData gd = new JPanelGraphs.GraphData(xAxis, yAxis);
-        JPanelGraphs graph1 = new JPanelGraphs(JPanelGraphs.GraphTypes.BAR, gd, 10, 10);
-        JPanelGraphs graph2 = new JPanelGraphs(JPanelGraphs.GraphTypes.LINE, gd, 10, 10);
+        nPanelGraphs.GraphData gd = new nPanelGraphs.GraphData(xAxis, yAxis);
+        nPanelGraphs graph1 = new nPanelGraphs(nPanelGraphs.GraphTypes.BAR, gd, 10, 10);
+        nPanelGraphs graph2 = new nPanelGraphs(nPanelGraphs.GraphTypes.LINE, gd, 10, 10);
         Component[] c = { graph1, graph2 };
         nFrame.GridLayout subLayout = new nFrame.GridLayout(frame, c, new Dimension(1, 1), 1, 1);
 

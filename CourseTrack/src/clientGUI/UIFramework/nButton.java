@@ -5,7 +5,7 @@ import java.awt.event.*;
 import clientGUI.UIInformations.UIArrayList;
 
 
-public class nButton extends RoundedPanel {
+public class nButton extends nRoundedPanel {
 
     private String text;
     private boolean hovered = false;

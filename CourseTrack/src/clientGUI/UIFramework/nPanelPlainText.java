@@ -11,7 +11,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.geom.Rectangle2D;
 
 @SuppressWarnings("unused")
-public class JPanelPlainText extends nPanel {
+public class nPanelPlainText extends nPanel {
 
     private String text = "";
     public boolean drawBorder = false;
@@ -27,33 +27,33 @@ public class JPanelPlainText extends nPanel {
     private CrossStringAlignments crossAlignment = CrossStringAlignments.CENTER;
     private MainStringAlignments mainAlignment = MainStringAlignments.CENTER;
 
-    public JPanelPlainText() {
+    public nPanelPlainText() {
         init();
     }
 
-    public JPanelPlainText(String _text) {
+    public nPanelPlainText(String _text) {
         text = _text;
         init();
     }
-    public JPanelPlainText(String _text, Color col) {
+    public nPanelPlainText(String _text, Color col) {
         text = _text;
         textColor = col;
         init();
     }
 
-    public JPanelPlainText(String _text, Point _location) {
+    public nPanelPlainText(String _text, Point _location) {
         text = _text;
         setLocation(_location);
         init();
     }
 
-    public JPanelPlainText(String _text, Dimension _size) {
+    public nPanelPlainText(String _text, Dimension _size) {
         text = _text;
         setSize(_size);
         init();
     }
 
-    public JPanelPlainText(String _text, Dimension _size, Point _location) {
+    public nPanelPlainText(String _text, Dimension _size, Point _location) {
         text = _text;
         setSize(_size);
         setLocation(_location);
@@ -61,7 +61,6 @@ public class JPanelPlainText extends nPanel {
     }
 
     private void init() {
-        setOpaque(false);
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {

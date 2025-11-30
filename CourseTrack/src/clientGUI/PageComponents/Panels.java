@@ -66,15 +66,15 @@ public class Panels {
                 lowerOptions.setGridSize(2, 1);
                 
                 Component[] enrollPanel = {
-                    new JPanelPlainText(course.code, UITheme.TEXT_PRIMARY),
-                    new JPanelPlainText(course.title, UITheme.TEXT_PRIMARY),
-                    new JPanelPlainText(course.instructor, UITheme.TEXT_PRIMARY),
-                    new JPanelPlainText(course.time, UITheme.TEXT_PRIMARY),
-                    new JPanelPlainText(course.location, UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText(course.code, UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText(course.title, UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText(course.instructor, UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText(course.time, UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText(course.location, UITheme.TEXT_PRIMARY),
                     lowerOptions
                 };
                 nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10);
-                nModal modal = new nModal(frame, panel, x, y, w, h);
+                nPanelModal modal = new nPanelModal(frame, panel, x, y, w, h);
                 enrollButton.addActionListener(ee -> {
                     modal.close();
                 });

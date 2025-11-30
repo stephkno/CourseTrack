@@ -31,12 +31,12 @@ public class HomePage {
         mainY = sidebarY;
         mainW = frameW - mainX - 20;
         mainH = sidebarHeight;
-        JPanelPlainText title = new JPanelPlainText("courseTrack Home");
+        nPanelPlainText title = new nPanelPlainText("courseTrack Home");
         title.setAlignment(nPanel.CrossStringAlignments.BOTTOM, nPanel.MainStringAlignments.LEFT);
         title.textColor = UITheme.TEXT_PRIMARY;
 
         String roleText = headerRoleText;
-        JPanelPlainText roleLabel = new JPanelPlainText(roleText);
+        nPanelPlainText roleLabel = new nPanelPlainText(roleText);
         roleLabel.setAlignment(nPanel.CrossStringAlignments.TOP, nPanel.MainStringAlignments.LEFT);
         roleLabel.textColor = UITheme.TEXT_MUTED;
 

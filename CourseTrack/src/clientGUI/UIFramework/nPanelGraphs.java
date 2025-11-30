@@ -8,7 +8,7 @@ import java.awt.event.*;
 import java.awt.geom.*;
 
 @SuppressWarnings("unused")
-public class JPanelGraphs extends nPanel {
+public class nPanelGraphs extends nPanel {
 
     public enum GraphTypes {
         BAR,
@@ -106,7 +106,7 @@ public class JPanelGraphs extends nPanel {
     private int graphWidth;
     private int plotPoints;
 
-    public JPanelGraphs(GraphTypes GRAPHTYPE, GraphData GRAPHDATA, int GRAPHWIDTH, int GRAPHHEIGHT) {
+    public nPanelGraphs(GraphTypes GRAPHTYPE, GraphData GRAPHDATA, int GRAPHWIDTH, int GRAPHHEIGHT) {
 
         graphType = GRAPHTYPE;
         graphData = GRAPHDATA;

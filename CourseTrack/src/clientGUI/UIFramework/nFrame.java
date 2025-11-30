@@ -169,11 +169,23 @@ public class nFrame extends JFrame {
             layoutChildren();
         }
 
+        public void setChildren(Component[] newChildren) {
+            if (newChildren == null) {
+                return;
+            }
+            removeAll();
+            for (Component c : newChildren) {
+                if (c != null) {
+                    add(c);
+                }
+            }
+            layoutChildren();
+        }
+
         private void layoutChildren() {
             Component[] children = getComponents();
             if (children.length == 0)
                 return;
-
             int w = getWidth();
             int h = getHeight();
             int n = children.length;

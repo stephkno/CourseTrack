@@ -14,6 +14,7 @@ public class nPanel extends JPanel {
         setName("nPanel");
         setFont(UITheme.FONT_BODY);
         setOpaque(false);
+        setLayout(null);
     }
 
 
@@ -91,7 +92,7 @@ public class nPanel extends JPanel {
         return textWidth;
     }
 
-    public static class nDocument {
+    protected static class nDocument {
         private final StringBuilder text;
         private int cursorIndex;
 
