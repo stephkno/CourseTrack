@@ -41,7 +41,7 @@ public class Log {
         for(Object s : str) {
             System.out.print(s);
         }
-        System.out.println("\n");
+        Log.Msg("\n");
     }
 
     private static void log(String type, Object...args) {

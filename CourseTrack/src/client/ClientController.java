@@ -14,11 +14,12 @@ public class ClientController implements  IClientListenerService, IAppGUIService
     private final Client client;
     private User currentUser;
 
-    static ClientUIManager clientUI = new ClientUIManager();
-    static LoginInformation lInfo = new LoginInformation();
+    ClientUIManager clientUI = new ClientUIManager(this);
+    LoginInformation lInfo = new LoginInformation();
 
     public ClientController(Client client) {
         this.client = client;
+        clientUI.GoLoginPage(lInfo, this);
     }
 
     public void start() {
@@ -88,7 +89,8 @@ public class ClientController implements  IClientListenerService, IAppGUIService
         ));
 
         if (resp == null) {
-            clientUI.setLoginValidationMessage("No response from server.");
+            Log.Err("Null response from server.");
+            clientUI.setLoginValidationMessage("Null response from server.");
             return false;
         }
 
@@ -99,7 +101,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
                     return false;
                 }
 
-                //clientUI.GoLoginPage(lInfo, this);
+                clientUI.GoLoginPage(lInfo, this);
 
                 Log.Msg("User registered successfully: " + resp.get());
                 return true;
@@ -107,15 +109,18 @@ public class ClientController implements  IClientListenerService, IAppGUIService
             }
 
             case FAILURE -> {
+                Log.Err("Invalid username or password");
                 clientUI.setLoginValidationMessage("Invalid username or password.");
                 return false;
             }
 
             default -> {
+                Log.Err("Unexpected server response");
                 clientUI.setLoginValidationMessage("Unexpected server response.");
                 return false;
             }
         }
+
     }
 
     public void receiveUpdateRequest(Message<UpdateRequest> request) {
@@ -130,7 +135,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
          if (request.get() == null)
             return;
 
-        System.out.println("Received PingRequest request: " + ((PingRequest)request.get()).message());
+        Log.Msg("Received PingRequest request: " + ((PingRequest)request.get()).message());
         client.sendResponse(new Message<>(MessageType.PING_REQUEST, MessageStatus.RESPONSE, null));
     }
 

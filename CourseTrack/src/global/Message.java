@@ -56,6 +56,8 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
         "ADMIN_GET_DEPARTMENTS",
         "ADMIN_GET_TERMS",
         "ADMIN_GET_COURSES",
+        "ADMIN_GET_SECTIONS",
+        "ADMIN_GET_REPORT",
         "REGISTER_SUCCESS",
         "REGISTER_FAILURE",
         "USER_CONNECTED",

@@ -166,18 +166,18 @@ All student operations require student privileges. If validation fails, a FAILUR
 - `campus` (String): Campus name
 - `department` (String): Department name
 - `term` (String): Term identifier
+- `max_results` (int): Maximum number of search results to return
 
 **Response:** `BrowseSectionResponse`
-- Returns array of matching `Section` objects (max 32 results)
+- Returns list of matching `Section` objects
 
 **Status Codes:**
-- `SUCCESS`: Search completed (may return empty array)
+- `SUCCESS`: Search completed (may return empty list)
 - `FAILURE`: Insufficient permissions
 
 **Search Behavior:**
 - Search by term
-- Returns up to 32 sections
-- Returns empty array if parameters are invalid
+- Returns null list if parameters are invalid
 
 ---
 
@@ -232,7 +232,7 @@ All student operations require student privileges. If validation fails, a FAILUR
 **Request:** `GetScheduleRequest`
 
 **Response:** `GetScheduleResponse`
-- Returns array of currently enrolled `Section` objects
+- Returns list of currently enrolled `Section` objects
 
 **Status Codes:**
 - `SUCCESS`: Schedule retrieved
@@ -246,12 +246,16 @@ All student operations require student privileges. If validation fails, a FAILUR
 
 ```java
 Client client = new Client("localhost", 7777);
+ClientController controller = new ClientController(client);
 
 if (!client.isConnected()) {
     if (!client.connect()) {
         // Client failed to connect
     }
 }
+
+// Start client listener
+controller.start();
 ```
 
 ### Send a request

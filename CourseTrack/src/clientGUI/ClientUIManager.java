@@ -6,6 +6,8 @@ import clientGUI.UIFramework.*;
 import clientGUI.UIInformations.*;
 import java.awt.Color;
 import javax.swing.JFrame;
+import global.Log;
+import client.ClientController;
 
 public class ClientUIManager {
     
@@ -13,6 +15,8 @@ public class ClientUIManager {
     private final int startingWidth = 500;
     private final int startingHeight = 500;
     nFrame frame;
+
+    ClientController controller;
     
     private static final UIArrayList<UICourseInfo> COURSES = new UIArrayList<>();
     static {
@@ -27,12 +31,14 @@ public class ClientUIManager {
         COURSES.append(new UICourseInfo("CS399", "Special Topics: Game Development", "Dr. Miller", "MW 15:30-16:45", "LAB 12"));
     }
 
-    public ClientUIManager(){
+    public ClientUIManager(ClientController controller){
+        this.controller = controller;
         frame = new nFrame(title, startingWidth, startingHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setBackground(UITheme.BG_APP);
         frame.setVisible(true);
     }
+
     LoginPage loginPage;
     public void GoLoginPage(LoginInformation loginInformation, IAppGUIService guiService) {
         cleanUp();
@@ -47,26 +53,36 @@ public class ClientUIManager {
     public void setLoginValidationMessage(String errString) {
         setLoginValidationMessage(errString, UITheme.FAIL);
     }
+
     public void setLoginValidationMessage(String errString, Color col) {
-        System.out.println(errString);
+
+        Log.Msg(errString);
         if(loginPage != null && loginPage.message != null) {
             loginPage.message.setText(errString);
             loginPage.message.textColor = col;
         }
         
     }
+
     public void GoAdminPage(ButtonInterface logoutButtonAction) {
         cleanUp();
-        HomePage hp = new HomePage(frame, logoutButtonAction, "AdminTitle");
+
+        String title = "Welcome, " + controller.getCurrentUser().getUserName();
+        
+        HomePage hp = new HomePage(frame, logoutButtonAction, title);
         frame.getContentPane().setBackground(UITheme.BG_APP);
         UICourseInfo[] courseInfo = COURSES.toArray(new UICourseInfo[COURSES.getLength()]);
         
         new AdminPage(frame, courseInfo, hp);
         //public AdminPage(nFrame frame, UICourseInfo[] courses, int sidebarX, int sidebarY, int sidebarWidth, int sidebarHeight, int mainX, int mainY, int mainW, int mainH) {
     }
+
     public void GoStudentPage(ButtonInterface logoutButtonAction){
         cleanUp();
-        HomePage hp = new HomePage(frame, logoutButtonAction, "StudentTitle");
+
+        String title = "Welcome, " + controller.getCurrentUser().getUserName();
+
+        HomePage hp = new HomePage(frame, logoutButtonAction, title);
         frame.getContentPane().setBackground(UITheme.BG_APP);
         UICourseInfo[] courseInfo = COURSES.toArray(new UICourseInfo[COURSES.getLength()]);
         
@@ -78,4 +94,5 @@ public class ClientUIManager {
         frame.setLayout(null);
         frame.getContentPane().setBackground(UITheme.BG_APP);
     }
+
 }

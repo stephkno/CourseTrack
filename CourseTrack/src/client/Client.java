@@ -29,7 +29,7 @@ public class Client {
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
             connected = true;
-            System.out.println("Connected to server " + host + ":" + port);
+            Log.Msg("Connected to server " + host + ":" + port);
             return true;
         } catch (IOException e) {
             System.err.println("Connection failed: " + e.getMessage());
@@ -44,9 +44,9 @@ public class Client {
                 socket.close();
                 socket = null;
             }
-            System.out.println("Disconnected.");
+            Log.Msg("Disconnected.");
         } catch (IOException e) {
-            System.out.println("Error during disconnection: " + e.getMessage());
+            Log.Msg("Error during disconnection: " + e.getMessage());
         }
     }
 

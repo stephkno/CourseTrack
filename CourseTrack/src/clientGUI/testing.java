@@ -6,7 +6,7 @@ import clientGUI.UIInformations.LoginInformation;
 import clientGUI.UIFramework.*;
 @SuppressWarnings("unused")
 public class testing {
-    static ClientUIManager clientUI = new ClientUIManager();
+    static ClientUIManager clientUI = new ClientUIManager(null);
     static LoginInformation lInfo = new LoginInformation();
     static ButtonInterface logoutButton = new ButtonInterface() {
         @Override
@@ -25,8 +25,8 @@ public class testing {
             
             
 
-            //System.out.println(lInfo.password);
-            //System.out.println(lInfo.username);
+            //Log.Msg(lInfo.password);
+            //Log.Msg(lInfo.username);
             //// EXAMPLE LOGIC
 
             //this is where the client/server auth would go but I just made a quick and dirty version for testing and example
@@ -82,8 +82,8 @@ public class testing {
             if(userExists) {
                 clientUI.setLoginValidationMessage("A user with the same username already exists!", UITheme.FAIL);
             } else if(lInfo.password.equals(lInfo.confirmationPassword)) {
-                //System.out.println(lInfo.password);
-                //System.out.println(lInfo.confirmationPassword);
+                //Log.Msg(lInfo.password);
+                //Log.Msg(lInfo.confirmationPassword);
                 String[] user = {lInfo.username.strip(),lInfo.password.strip(),"STUDENT"};
                 exampleDatabaseLoginInfo.Push(user);
                 // clientUI.GoLoginPage(lInfo, loginButton, registerButton);

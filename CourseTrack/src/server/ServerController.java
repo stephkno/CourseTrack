@@ -219,7 +219,7 @@ public class ServerController {
         user.login();
         client.setUser(user);
 
-        client.User clientUser = new client.User(user.getType());
+        client.User clientUser = new client.User(user.getName(), user.getType());
 
         if(!user.authenticate(password)) {
 

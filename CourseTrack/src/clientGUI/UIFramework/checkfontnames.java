@@ -1,5 +1,6 @@
 package clientGUI.UIFramework;
 import java.awt.GraphicsEnvironment;
+import global.Log;
 
 public class checkfontnames {
     public static void main(String[] args) {
@@ -8,9 +9,9 @@ public class checkfontnames {
 
         String[] fontNames = ge.getAvailableFontFamilyNames();
 
-        System.out.println("avvailable font:");
+        Log.Msg("Available font:");
         for (String name : fontNames) {
-            System.out.println(name);
+            Log.Msg(name);
         }
     }
 }

@@ -56,6 +56,10 @@ public class Course implements Serializable {
 
     }
 
+    public LinkedList<Section> getSections(Term term) {
+        return sections.Get(term);
+    }
+
     public boolean verifyPrereqs(Student student) {
 
         for(Course course : requirements){

@@ -296,13 +296,12 @@ public class testclient {
 		LinkedList<Section> sections = SearchCourses("softwa", "CSU East Bay", "Computer Science", term, client);
 		
 		Log.Msg("Search results:");
-		
-		for(int i = 0; i < sections.Length(); i++){
-			Section section = sections.Get(i);
+
+		for(Section section : sections){
 			if(section == null) continue;
 			Log.Msg(section);
 		}
-
+		
 		Section enrolledSection = Enroll(sections.Get(0).getId(), sections.Get(0).getTerm(), client);
 		Log.Msg("Received enroll response! Num students: " + enrolledSection.numStudents());
 		assert(enrolledSection.numStudents() == 1);

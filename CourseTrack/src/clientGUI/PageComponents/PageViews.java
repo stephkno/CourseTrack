@@ -7,6 +7,9 @@ import java.awt.Dimension;
 import clientGUI.UIFramework.*;
 import clientGUI.UIInformations.UICourseInfo;
 import clientGUI.UIInformations.UserRole;
+
+import global.Log;
+
 @SuppressWarnings("unused")
 public class PageViews {
 
@@ -407,7 +410,7 @@ public class PageViews {
     private static void printTree(Container c, String currText){
         Component[] children = c.getComponents();
         for(Component child : children) {
-            System.out.println(currText + "." + child.getName());
+            Log.Msg(currText + "." + child.getName());
             if(child instanceof Container) {
                 printTree((Container) child, currText + "." + child.getName());
                 child.repaint();

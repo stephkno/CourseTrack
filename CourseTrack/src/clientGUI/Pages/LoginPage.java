@@ -7,6 +7,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import client.UserType;
 
+import global.Log;
+
 public class LoginPage {
     LoginInformation loginInformation;
     private IAppGUIService guiService;
@@ -89,8 +91,13 @@ public class LoginPage {
             loginInformation.confirmationPassword = "";
             passwordInput.setText("");
             passwordInputConfirm.setText("");
+
+            Log.Msg("Login request");
+
         });
-        System.out.println("BUILDING TEST");
+
+        Log.Msg("BUILDING TEST");
+
         nPanelPlainText errorText = new nPanelPlainText("");
         errorText.textColor = UITheme.FAIL;
 
@@ -120,7 +127,7 @@ public class LoginPage {
                 errorText
         };
 
-        System.out.println(checkBox.getX() + " " + checkBox.getY() + " " + checkBox.getWidth() + " " + checkBox.getHeight());
+        Log.Msg(checkBox.getX() + " " + checkBox.getY() + " " + checkBox.getWidth() + " " + checkBox.getHeight());
 
         Component[] components = type == LoginType.LOGIN ? loginComponents : registerComponents;
 
@@ -137,6 +144,9 @@ public class LoginPage {
             Component[] newComponents = type == LoginType.LOGIN ? loginComponents : registerComponents;
 
             list.setChildren(newComponents);
+
+            Log.Msg("Register request");
+
         });
 
 
@@ -212,7 +222,7 @@ public class LoginPage {
             passwordInput.setText("");
             passwordInputConfirm.setText("");
         });
-        System.out.println("BUILDING TEST");
+        Log.Msg("BUILDING TEST");
         nPanelPlainText errorText = new nPanelPlainText("");
         errorText.textColor = UITheme.FAIL;
 
@@ -242,7 +252,7 @@ public class LoginPage {
                 errorText
         };
 
-        System.out.println(checkBox.getX() + " " + checkBox.getY() + " " + checkBox.getWidth() + " " + checkBox.getHeight());
+        Log.Msg(checkBox.getX() + " " + checkBox.getY() + " " + checkBox.getWidth() + " " + checkBox.getHeight());
 
         Component[] components = type == LoginType.LOGIN ? loginComponents : registerComponents;
 

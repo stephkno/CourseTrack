@@ -12,13 +12,17 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import java.awt.event.MouseEvent;
+import global.Log;
 
 public class nPanelModal extends nPanel {
+    
     JFrame frame = null;
     Component component = null;
     nPanelModal self = this;
+    
     //Component will just be drawn ontop of the nModal
     public nPanelModal(JFrame _frame, Component _component, int x, int y, int width, int height){
+
         frame = _frame;
         component = _component;
 
@@ -27,16 +31,15 @@ public class nPanelModal extends nPanel {
 
         setBackground(new Color(0, 0, 0, 180));
 
-        
-        
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 component.setBounds(x, y, width, height);
                 repaint();
-                System.out.println(component);
+                Log.Msg(component);
             }
         });
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -44,20 +47,17 @@ public class nPanelModal extends nPanel {
                 double mx = mp.getX();
                 double my = mp.getY();
                 Rectangle bounds = component.getBounds();
-                System.out.println(bounds.toString());
-                System.out.println(mp.toString());
+                Log.Msg(bounds.toString());
+                Log.Msg(mp.toString());
                 if((mx < bounds.getX() || mx > bounds.getX() + bounds.getWidth()) || (my < bounds.getY() || my > bounds.getY()+bounds.getHeight())) {
                     close();
                 }
             }
         });
 
-        
-
         JComponent pane = (JComponent) frame.getGlassPane();
         pane.setVisible(true);
         pane.setLayout(null);
-        
 
         setBounds(0, 0, pane.getWidth(), pane.getHeight());
 
@@ -70,12 +70,16 @@ public class nPanelModal extends nPanel {
     }
 
     public void close() {
+
         JComponent pane = (JComponent) frame.getGlassPane();
-        System.out.println("Closing modal");
+
+        Log.Msg("Closing modal");
         component = null;
+
         pane.remove(self);
         pane.revalidate();
         pane.repaint();
         frame = null;
+
     }
 }
