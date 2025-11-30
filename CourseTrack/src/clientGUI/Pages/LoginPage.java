@@ -131,7 +131,9 @@ public class LoginPage {
             loginInformation.username = "";
             loginInformation.password = "";
             loginInformation.confirmationPassword = "";
-
+            
+            registerButton.setText(type == LoginType.LOGIN ? "Create An Account" : "I Already Have An Account");
+            loginButton.setText(type == LoginType.LOGIN ? "Login" : "Register");
             Component[] newComponents = type == LoginType.LOGIN ? loginComponents : registerComponents;
 
             list.setChildren(newComponents);
@@ -252,6 +254,8 @@ public class LoginPage {
             loginInformation.password = "";
             loginInformation.confirmationPassword = "";
 
+            registerButton.setText(type == LoginType.LOGIN ? "Create An Account" : "I Already Have An Account");
+            loginButton.setText(type == LoginType.LOGIN ? "Login" : "Register");
             Component[] newComponents = type == LoginType.LOGIN ? loginComponents : registerComponents;
 
             list.setChildren(newComponents);
