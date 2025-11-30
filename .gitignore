@@ -80,3 +80,6 @@ coverage/
 # ------------------------------
 *.drawio.bkp
 *.drawio~
+
+# Server data
+./server_data

@@ -14,18 +14,16 @@ public class ClientGuiApp {
     static LoginInformation lInfo = new LoginInformation();
 
     static Client client = new Client("localhost", 7777);
-    static ClientController controller;
+    static ClientController controller = new ClientController(client);
 
     public static void main(String[] args) {
         
-        ClientController.start(client);
-        controller = ClientController.get();
+        controller.start();
 
         if(!client.connect()){
             Log.Err("Could not connect to server!");
             System.exit(1);
         }
-		controller.start();
 
     }
 }
