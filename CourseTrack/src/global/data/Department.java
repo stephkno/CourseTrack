@@ -55,8 +55,8 @@ public class Department implements Serializable {
         return name;
     }
 
-    public boolean equals(Course other){
-        return this.name.equals(other.name) && this.campus.equals(other.campus);
+    public boolean equals(Campus other){
+        return id == other.id;
     }
 
     public String toString(){

@@ -33,7 +33,6 @@ public class Section implements Serializable {
         this.students = new LinkedList<Student>();
         this.waitlist = new LinkedList<Student>();
 
-        this.id = Section.nextId++;
         this.instructor = instructor;
         this.meetTimes = meetTimes;
 
@@ -42,6 +41,8 @@ public class Section implements Serializable {
 
         this.num_enrolled = 0;
         this.num_waitlisted = 0;
+        
+        this.id = Section.nextId++;
 
     }
 
@@ -176,6 +177,10 @@ public class Section implements Serializable {
         if(other == this) return true;
         if(instructor.equals(other.instructor) && conflicts(other.getMeetTimes())) return true;
         return false;
+    }
+
+    public boolean equals(Campus other){
+        return id == other.id;
     }
     
     public String toString(){

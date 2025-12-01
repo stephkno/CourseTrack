@@ -101,9 +101,8 @@ public class Course implements Serializable {
         return outstring;
     }
 
-    public boolean equals(Course other) {
-        if(name.equals(other.name) && number == other.number) return true;
-        return false;
+    public boolean equals(Campus other){
+        return id == other.id;
     }
 
 }
