@@ -496,7 +496,10 @@ public class ServerController {
             return;
         }
 
-        LinkedList<Term> list = Term.get();
+        LinkedList<Term> list = new LinkedList<>();
+        for(Term term : Term.get()){
+            list.Push(term.shallowCopy());
+        }
 
         client.sendMessage(MessageType.ADMIN_GET_TERMS, MessageStatus.SUCCESS, new GetTermsResponse(list));
     
