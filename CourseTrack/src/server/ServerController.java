@@ -303,10 +303,10 @@ public class ServerController {
         
         }
 
-        client.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( user.getNotifications() )));
-
         Log.Msg("Login successful for user: " + username);
         client.sendMessage(MessageType.USER_LOGIN, MessageStatus.SUCCESS, new LoginResponse(clientUser) );
+        
+        client.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( user.getNotifications() )));
         
     }
 

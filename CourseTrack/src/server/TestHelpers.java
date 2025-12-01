@@ -282,7 +282,7 @@ public class TestHelpers {
         AddSection(csEB102, "CSU East Bay", "CS", fall2025, "Dr. Ada Lovelace", 25, defaultTimes, client);
         AddSection(csEB201, "CSU East Bay", "CS", fall2025, "Dr. Grace Hopper", 28, defaultTimes, client);
         AddSection(csEB301, "CSU East Bay", "CS", fall2025, "Dr. Donald Knuth", 32, defaultTimes, client);
-        AddSection(csEB555, "CSU East Bay", "CS", fall2025, "Dr. ", 1, defaultTimes, client);
+        AddSection(csEB555, "CSU East Bay", "CS", fall2025, "Dr. B", 1, defaultTimes, client);
 
         // SFSU Sections
         AddSection(sfsuCS101, "SFSU", "CS", fall2025, "Dr. Linus Torvalds", 35, defaultTimes, client);
@@ -302,7 +302,7 @@ public class TestHelpers {
         // CSU San Marcos Sections
         AddSection(csusmCS101, "CSU San Marcos", "CS", fall2025, "Dr. Richard Stallman", 32, defaultTimes, client);
         AddSection(csusmCS102, "CSU San Marcos", "CS", fall2025, "Dr. Ken Thompson", 28, defaultTimes, client);
-        AddSection(csusmCS201, "CSU San Marcos", "CS", fall2025, "Dr. ", 25, defaultTimes, client);
+        AddSection(csusmCS201, "CSU San Marcos", "CS", fall2025, "Dr. A", 25, defaultTimes, client);
 
         AdminGetCourses(client);
         

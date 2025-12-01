@@ -226,7 +226,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
 
         if (request.get() == null)
             return;
-
+        
         for(Notification notification : request.get().notifications()){
             Log.Msg("Received Notification request: " + notification.getMessage());
         }

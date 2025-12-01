@@ -30,7 +30,7 @@ public class User implements Serializable {
 
     transient public ServerConnection socket;
     // transient
-    LinkedList<Notification> notifications;
+    LinkedList<Notification> notifications = new LinkedList<>();
     
     public LinkedList<Notification> getNotifications(){
         LinkedList<Notification> out = this.notifications;
@@ -44,7 +44,6 @@ public class User implements Serializable {
     
     public void Notify(String message){
         
-        LinkedList<Notification> notifications = new LinkedList<>();
         Notification n = new Notification(message);
         notifications.Push(n);
 
