@@ -222,6 +222,17 @@ public class ClientController implements  IClientListenerService, IAppGUIService
         client.sendResponse(new Message<>(MessageType.PING_REQUEST, MessageStatus.RESPONSE, null));
     }
 
+    public void receiveNotificationRequest(Message<NotificationRequest> request) {
+
+        if (request.get() == null)
+            return;
+
+        for(Notification notification : request.get().notifications()){
+            Log.Msg("Received Notification request: " + notification.getMessage());
+        }
+
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void handleServerMessage(Message<?> request, Class<? extends Serializable> tClass) {
@@ -232,6 +243,10 @@ public class ClientController implements  IClientListenerService, IAppGUIService
             }
             case PING_REQUEST -> {
                 receivePingRequest((Message<PingRequest>) request);
+                break;
+            }
+            case NOTIFICATION -> {
+                receiveNotificationRequest((Message<Notification>) request);
                 break;
             }
             default -> {

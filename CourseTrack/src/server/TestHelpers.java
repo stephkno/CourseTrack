@@ -239,6 +239,8 @@ public class TestHelpers {
         csuEastBayRequirements.Push(csEB201);
         Course csEB301 = AddCourse("Operating Systems", 401, 3, "CSU East Bay", "CS", csuEastBayRequirements, client);
 
+        Course csEB555 = AddCourse("Test", 555, 1, "CSU East Bay", "CS", csuEastBayRequirements, client);
+
         LinkedList<Course> sfsuRequirements = new LinkedList<>();
         Course sfsuCS101 = AddCourse("Programming 1", 101, 3, "SFSU", "CS", sfsuRequirements, client);
         sfsuRequirements.Push(sfsuCS101);
@@ -280,6 +282,7 @@ public class TestHelpers {
         AddSection(csEB102, "CSU East Bay", "CS", fall2025, "Dr. Ada Lovelace", 25, defaultTimes, client);
         AddSection(csEB201, "CSU East Bay", "CS", fall2025, "Dr. Grace Hopper", 28, defaultTimes, client);
         AddSection(csEB301, "CSU East Bay", "CS", fall2025, "Dr. Donald Knuth", 32, defaultTimes, client);
+        AddSection(csEB555, "CSU East Bay", "CS", fall2025, "Dr. ", 1, defaultTimes, client);
 
         // SFSU Sections
         AddSection(sfsuCS101, "SFSU", "CS", fall2025, "Dr. Linus Torvalds", 35, defaultTimes, client);
