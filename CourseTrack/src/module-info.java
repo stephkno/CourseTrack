@@ -1,4 +1,4 @@
-module CourseTrack{
+module CourseTrack {
     exports client;
     exports global.requests;
     exports global.responses;
@@ -6,5 +6,7 @@ module CourseTrack{
     exports server;
     exports global.data;
     exports global;
+
     requires java.desktop;
+
 }

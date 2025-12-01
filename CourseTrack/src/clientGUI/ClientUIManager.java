@@ -25,7 +25,12 @@ public class ClientUIManager {
     nFrame frame;
     
     public static Campus campus = null;
+    HomePage hp;
 
+    public void setLabel(String text){
+        if(hp == null) return;
+        hp.setLabel(text);
+    }
     
     public ClientUIManager(){
         frame = new nFrame(title, startingWidth, startingHeight);
@@ -112,7 +117,7 @@ public class ClientUIManager {
 
         String title = "Welcome, ";
         
-        HomePage hp = new HomePage(frame, guiService, title);
+        hp = new HomePage(frame, guiService, title);
 
         frame.getContentPane().setBackground(UITheme.BG_APP);
         
@@ -125,7 +130,7 @@ public class ClientUIManager {
 
         String title = "Welcome, ";
 
-        HomePage hp = new HomePage(frame, guiService, title);
+        hp = new HomePage(frame, guiService, title);
         frame.getContentPane().setBackground(UITheme.BG_APP);
 
 

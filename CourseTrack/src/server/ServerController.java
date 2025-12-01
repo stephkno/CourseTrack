@@ -107,10 +107,6 @@ public class ServerController {
                 handleAdminGetReport((Message<ReportRequest>) msg, client);
                 break;
             }
-            case ADMIN_GET_USERS:{
-                handleAdminGetUsers((Message<AdminGetUsersRequest>) msg, client);
-                break;
-            }
             case ADMIN_GET_CAMPUSES:{
                 handleAdminGetCampuses((Message<AdminGetCampusesRequest>) msg, client);
                 break;
@@ -129,10 +125,6 @@ public class ServerController {
             }
             case ADMIN_GET_SECTIONS:{
                 handleAdminGetSections((Message<AdminGetSectionsRequest>) msg, client);
-                break;
-            }
-            case ADMIN_REMOVE_USER:{
-                handleAdminRemoveUser((Message<AdminRemoveUserRequest>) msg, client);
                 break;
             }
             case ADMIN_REMOVE_CAMPUS:{
@@ -467,15 +459,6 @@ public class ServerController {
         client.sendMessage(MessageType.ADMIN_ADD_SECTION, MessageStatus.SUCCESS, new AddSectionResponse(newSection)  );
 
     }
-    
-    private void handleAdminGetUsers(Message<AdminGetUsersRequest> msg, ServerConnection client) {
-        if(!client.validateAdmin()){
-            client.sendMessage(MessageType.ADMIN_GET_USERS, MessageStatus.FAILURE, new AdminGetCampusesResponse(null));
-            return;
-        }
-        
-        client.sendMessage(MessageType.ADMIN_GET_USERS, MessageStatus.FAILURE, new AdminGetUsersResponse(null) );
-    }
 
     private void handleAdminGetCampuses(Message<AdminGetCampusesRequest> msg, ServerConnection client) {
         if(!client.validateAdmin()){
@@ -538,15 +521,6 @@ public class ServerController {
         LinkedList<Section> list = ((Admin)client.getUser()).getSections();
         client.sendMessage(MessageType.ADMIN_GET_SECTIONS, MessageStatus.SUCCESS, new AdminGetSectionsResponse(list));
     
-    }
-
-    private void handleAdminRemoveUser(Message<AdminRemoveUserRequest> msg, ServerConnection client) {
-        if(!client.validateAdmin()){
-            client.sendMessage(MessageType.ADMIN_REMOVE_USER, MessageStatus.FAILURE, new AdminRemoveUserResponse());
-            return;
-        }
-
-        client.sendMessage(MessageType.ADMIN_REMOVE_USER, MessageStatus.FAILURE, new AdminRemoveUserResponse());
     }
 
     private void handleAdminRemoveCampus(Message<AdminRemoveCampusRequest> msg, ServerConnection client) {

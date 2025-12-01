@@ -77,6 +77,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
                         //logout();
                     }, this);
                 }
+                clientUI.setLabel("Welcome, " + currentUser.getUserName());
 
                 return true;
             }
