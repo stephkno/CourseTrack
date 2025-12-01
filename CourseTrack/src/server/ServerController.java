@@ -66,7 +66,17 @@ public class ServerController {
                 handleGetCampuses((Message<GetCampusesRequest>) msg, client);
                 return;
             }
+
             // user requests
+            case USER_LOGIN:{
+                handleLogin((Message<LoginRequest>) msg, client);
+                return;
+            }
+            case USER_REGISTER:{
+                handleRegister((Message<RegisterRequest>) msg, client);
+                return;
+            }
+
             case USER_LOGOUT:{
                 handleLogout((Message<LogoutRequest>) msg, client);
                 break;
@@ -263,6 +273,7 @@ public class ServerController {
 
         // user should not be logged in
         if(client.isLoggedIn()) {
+            Log.Err("handleLogin error: User already logged in.");
             // send fail response
             client.sendMessage(MessageType.USER_LOGIN, MessageStatus.FAILURE, new LoginResponse(null) );
             return;

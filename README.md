@@ -3,8 +3,8 @@ College Enrollment System
 
 ## Requirements
  - Requirements Todo
- - 24 / 48 
- - Requirements 50% completed
+ - 38 / 48 
+ - Requirements ~79% completed
 
 ## Todo List
 
@@ -116,7 +116,7 @@ College Enrollment System
 
  - [ ] 3.1.10.2 User is shown notifications while logged in.
 
- - [ ] 3.1.10.3 Notifications alert users to important events such as a student being enrolled in a course.
+ - [x] 3.1.10.3 Notifications alert users to important events such as a student being enrolled in a course.
 
  - [x] 3.1.11. Client-Server Architecture
 

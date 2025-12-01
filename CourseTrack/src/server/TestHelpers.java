@@ -300,47 +300,47 @@ public class TestHelpers {
 
 		LinkedList<Course> requirements = new LinkedList<>();
 
-		Course id = AddCourse("CS 1", 101, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id);
+		Course course = AddCourse("CS 1", 101, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course);
 
-		Course id1 = AddCourse("Computing Science 2", 201, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id1);
+		Course course1 = AddCourse("Computing Science 2", 201, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course1);
 
-		Course id2 = AddCourse("Computing and Social Responsibility", 230, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id2);
+		Course course2 = AddCourse("Computing and Social Responsibility", 230, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course2);
 		
-		Course id3 = AddCourse("Computing Organization and Assembly Language", 221, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id3);
+		Course course3 = AddCourse("Computing Organization and Assembly Language", 221, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course3);
 
-		Course id4 = AddCourse("Discrete Structures", 211, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id4);
+		Course course4 = AddCourse("Discrete Structures", 211, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course4);
 
-		Course id5 = AddCourse("Programming Language Concepts", 311, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id5);
+		Course course5 = AddCourse("Programming Language Concepts", 311, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course5);
 
-		Course id6 = AddCourse("Computer Architecture", 321, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id6);
+		Course course6 = AddCourse("Computer Architecture", 321, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course6);
 
-		Course id7 = AddCourse("Data Structures and Algorithms", 301, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id7);
+		Course course7 = AddCourse("Data Structures and Algorithms", 301, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course7);
 
-		Course id8 = AddCourse("Automata and Computation", 411, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id8);
+		Course course8 = AddCourse("Automata and Computation", 411, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course8);
 
-		Course id9 = AddCourse("Software Engineering", 401, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id9);
+		Course course9 = AddCourse("Software Engineering", 401, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course9);
 
-		Course id10 = AddCourse("Operating Systems", 421, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id10);
+		Course course10 = AddCourse("Operating Systems", 421, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course10);
 
-		Course id11 = AddCourse("Computer Networks", 441, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id11);
+		Course course11 = AddCourse("Computer Networks", 441, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course11);
 
-		Course id12 = AddCourse("Analysis of Algorithms", 413, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id12);
+		Course course12 = AddCourse("Analysis of Algorithms", 413, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course12);
 		
-		Course id13 = AddCourse("TestCourse", 555, 3, "CSU East Bay", "CS", requirements, client);
-		requirements.Push(id13);
+		Course course13 = AddCourse("TestCourse", 555, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(course13);
 
 		MeetTime[] meetTimes = new MeetTime[]{
 			new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(14, 30), LocalTime.of(14, 30)),
@@ -349,20 +349,20 @@ public class TestHelpers {
 		
 		Term term = new Term(Term.Season.FALL, 2025);
 
-		AddSection(id, "CSU East Bay", "CS", term, "Alice Johnson", 30, meetTimes, client);
-		AddSection(id1, "CSU East Bay", "CS", term, "Bob Martinez", 25, meetTimes, client);
-		AddSection(id2, "CSU East Bay", "CS",  term,"Carol Lee", 35, meetTimes, client);
-		AddSection(id3, "CSU East Bay", "CS", term,"David Kim", 28,  meetTimes, client);
-		AddSection(id4, "CSU East Bay", "CS", term,"Emily Chen", 32,  meetTimes, client);
-		AddSection(id5, "CSU East Bay", "CS", term,"Frank Brown", 30,  meetTimes, client);
-		AddSection(id6, "CSU East Bay", "CS", term,"Grace Wilson", 27,  meetTimes, client);
-		AddSection(id7, "CSU East Bay", "CS", term,"Henry Clark", 33,  meetTimes, client);
-		AddSection(id8, "CSU East Bay", "CS", term,"Isabella Davis", 29,  meetTimes, client);
-		AddSection(id9, "CSU East Bay", "CS", term,"Jack Miller", 30,  meetTimes, client);
-		AddSection(id10, "CSU East Bay", "CS", term, "Karen Taylor", 26,  meetTimes, client);
-		AddSection(id11, "CSU East Bay", "CS", term, "Liam Anderson", 34,  meetTimes, client);
-		AddSection(id12, "CSU East Bay", "CS", term, "Mia Thomas", 31,  meetTimes, client);
-		AddSection(id13, "CSU East Bay", "CS", term, "TestInstructor", 2,  meetTimes, client);
+		AddSection(course, "CSU East Bay", "CS", term, "Alice Johnson", 30, meetTimes, client);
+		AddSection(course1, "CSU East Bay", "CS", term, "Bob Martinez", 25, meetTimes, client);
+		AddSection(course2, "CSU East Bay", "CS",  term,"Carol Lee", 35, meetTimes, client);
+		AddSection(course3, "CSU East Bay", "CS", term,"Davcourse Kim", 28,  meetTimes, client);
+		AddSection(course4, "CSU East Bay", "CS", term,"Emily Chen", 32,  meetTimes, client);
+		AddSection(course5, "CSU East Bay", "CS", term,"Frank Brown", 30,  meetTimes, client);
+		AddSection(course6, "CSU East Bay", "CS", term,"Grace Wilson", 27,  meetTimes, client);
+		AddSection(course7, "CSU East Bay", "CS", term,"Henry Clark", 33,  meetTimes, client);
+		AddSection(course8, "CSU East Bay", "CS", term,"Isabella Davis", 29,  meetTimes, client);
+		AddSection(course9, "CSU East Bay", "CS", term,"Jack Miller", 30,  meetTimes, client);
+		AddSection(course10, "CSU East Bay", "CS", term, "Karen Taylor", 26,  meetTimes, client);
+		AddSection(course11, "CSU East Bay", "CS", term, "Liam Anderson", 34,  meetTimes, client);
+		AddSection(course12, "CSU East Bay", "CS", term, "Mia Thomas", 31,  meetTimes, client);
+		AddSection(course13, "CSU East Bay", "CS", term, "TestInstructor", 2,  meetTimes, client);
 
 		AdminGetCourses(client);
 
@@ -395,7 +395,7 @@ public class TestHelpers {
 			Log.Msg(campus.toString());
 		}
 
-		while(true){}
+		Logout(client);
 
     }
 
