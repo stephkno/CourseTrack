@@ -8,54 +8,6 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
     private static final long serialVersionUID = 1L;
     private static final AtomicLong counter = new AtomicLong(0);
 
-    public static String[] messageStatus = {
-        "REQUEST",
-        "RESPONSE",
-        "SUCCESS",
-        "FAILURE"
-    };
-
-    public static String[] messageTypes = {
-        "PING_REQUEST",
-        "GET_CAMPUSES",
-        "USER_REGISTER",
-        "USER_LOGIN",
-        "USER_LOGOUT",
-        "USER_CHANGE_PASSWORD",
-        "USER_UPDATE",
-        "STUDENT_BROWSE_SECTION",
-        "STUDENT_ENROLL",
-        "STUDENT_DROP",
-        "STUDENT_WAITLIST_PROMOTION",
-        "STUDENT_GET_SCHEDULE",
-        "STUDENT_GENEREATE_SCHEDULE",
-        "STUDENT_GET_UNITS",
-        "STUDENT_GET_CLASSES_TAKEN",
-        "STUDENT_GET_WAITLIST_PLACE",
-        "ADMIN_GET_SCHEDULE_REPORT",
-        "ADMIN_GET_ENROLLMENT_REPORT",
-        "ADMIN_ADD_CAMPUS",
-        "ADMIN_REMOVE_CAMPUS",
-        "ADMIN_ADD_DEPARTMENT",
-        "ADMIN_REMOVE_DEPARTMENT",
-        "ADMIN_ADD_COURSE",
-        "ADMIN_REMOVE_COURSE",
-        "ADMIN_ADD_SECTION",
-        "ADMIN_REMOVE_SECTION",
-        "ADMIN_GET_USERS",
-        "ADMIN_REMOVE_USER",
-        "ADMIN_GET_CAMPUSES",
-        "ADMIN_GET_DEPARTMENTS",
-        "ADMIN_GET_TERMS",
-        "ADMIN_GET_COURSES",
-        "ADMIN_GET_SECTIONS",
-        "ADMIN_GET_REPORT",
-        "MESSAGE_RECEIVED",
-        "CLIENT_UPDATE",
-        "NOTIFICATION",
-        "ERROR"
-    };
-
     private final long id;
     private final MessageType msgType;
     private final MessageStatus msgStatus;
@@ -78,20 +30,12 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
         return messageObject; 
     }
     
-    public String getTypeString() {
-        return messageTypes[msgType.ordinal()];
-    }
-
-    public String getStatusString() {
-        return messageStatus[msgStatus.ordinal()];
-    }
-
     public String toString() {
 
         String out = "\n+ Message +";
 
-        out += "\n - Type: " + getTypeString();
-        out += "\n - Status: " + getStatusString();
+        out += "\n - Type: " + getType();
+        out += "\n - Status: " + getStatus();
         out += "\n - Content: " + messageObject.toString();
 
         return out;

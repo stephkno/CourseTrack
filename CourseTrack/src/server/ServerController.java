@@ -4,7 +4,11 @@ import client.UserType;
 import global.*;
 import global.data.*;
 import global.requests.*;
+import global.requests.AdminRequests.*;
+import global.requests.StudentRequests.*;
 import global.responses.*;
+import global.responses.AdminResponses.*;
+import global.responses.StudentResponses.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,13 +29,11 @@ public class ServerController {
     public void handleMessage(Message<?> msg, ServerConnection client) {
 
         Log.Msg("Got message: " + msg.toString());
-        Log.Msg("Got message: " + msg.getType());
 
         // lobby requests
         if(!client.isLoggedIn()){
             
             switch(msg.getType()) {
-                
                 case GET_CAMPUSES:{
                     handleGetCampuses((Message<GetCampusesRequest>) msg, client);
                     return;
@@ -55,12 +57,7 @@ public class ServerController {
         client.getUser().setActive();
 
         switch(msg.getType()) {
-                
-            case GET_CAMPUSES:{
-                handleGetCampuses((Message<GetCampusesRequest>) msg, client);
-                return;
-            }
-            
+
             case PING_REQUEST:{
                 handlePing((Message<PingRequest>) msg, client);
                 break;
@@ -93,9 +90,48 @@ public class ServerController {
                 handleAdminAddSection((Message<AddSectionRequest>) msg, client);
                 break;
             }
-
             case ADMIN_GET_REPORT:{
                 handleAdminGetReport((Message<ReportRequest>) msg, client);
+                break;
+            }
+            case ADMIN_GET_USERS:{
+                handleAdminGetUsers((Message<AdminGetUsersRequest>) msg, client);
+                break;
+            }
+            case ADMIN_GET_CAMPUSES:{
+                handleAdminGetCampuses((Message<AdminGetCampusesRequest>) msg, client);
+                break;
+            }
+            case ADMIN_GET_DEPARTMENTS:{
+                handleAdminGetDepartments((Message<AdminGetDepartmentsRequest>) msg, client);
+                break;
+            }
+            case ADMIN_GET_COURSES:{
+                handleAdminGetCourses((Message<AdminGetCoursesRequest>) msg, client);
+                break;
+            }
+            case ADMIN_GET_SECTIONS:{
+                handleAdminGetSections((Message<AdminGetSectionsRequest>) msg, client);
+                break;
+            }
+            case ADMIN_REMOVE_USER:{
+                handleAdminRemoveUser((Message<AdminRemoveUserRequest>) msg, client);
+                break;
+            }
+            case ADMIN_REMOVE_CAMPUS:{
+                handleAdminRemoveCampus((Message<AdminRemoveCampusRequest>) msg, client);
+                break;
+            }
+            case ADMIN_REMOVE_DEPARTMENT:{
+                handleAdminRemoveDepartment((Message<AdminRemoveDepartmentRequest>) msg, client);
+                break;
+            }
+            case ADMIN_REMOVE_COURSE:{
+                handleAdminRemoveCourse((Message<AdminRemoveCourseRequest>) msg, client);
+                break;
+            }
+            case ADMIN_REMOVE_SECTION:{
+                handleAdminRemoveSection((Message<AdminRemoveSectionRequest>) msg, client);
                 break;
             }
 
@@ -113,10 +149,19 @@ public class ServerController {
                 break;
             }
             case STUDENT_GET_SCHEDULE:{
-                handleStudentGetSchedule((Message<GetScheduleRequest>) msg, client);
+                handleStudentGetSchedule((Message<StudentGetScheduleRequest>) msg, client);
+                break;
+            }
+            case STUDENT_GET_UNITS:{
+                handleStudentGetUnits((Message<StudentGetUnitRequest>) msg, client);
+                break;
+            }
+            case STUDENT_GET_PROGRESS:{
+                handleStudentGetProgress((Message<StudentGetProgressRequest>) msg, client);
                 break;
             }
             default:{
+                Log.Err("Unknown request! " + msg.toString());
                 break;
             }
         }
@@ -195,8 +240,6 @@ public class ServerController {
     }
 
     private void handleGetCampuses(Message<GetCampusesRequest> msg, ServerConnection client) {
-
-        Log.Msg("handleGetCampuses");
 
         LinkedList<Campus> campuses = new LinkedList<>();
 
@@ -400,6 +443,108 @@ public class ServerController {
 
     }
     
+    private void handleAdminGetUsers(Message<AdminGetUsersRequest> msg, ServerConnection client) {
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_GET_USERS, MessageStatus.FAILURE, new AdminGetCampusesResponse(null));
+            return;
+        }
+        
+        client.sendMessage(MessageType.ADMIN_GET_USERS, MessageStatus.FAILURE, new AdminGetUsersResponse(null) );
+    }
+
+    private void handleAdminGetCampuses(Message<AdminGetCampusesRequest> msg, ServerConnection client) {
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_GET_CAMPUSES, MessageStatus.FAILURE, new AdminGetCampusesResponse(null));
+            return;
+        }
+
+        LinkedList<Campus> list = ((Admin)client.getUser()).getCampuses();
+        client.sendMessage(MessageType.ADMIN_GET_CAMPUSES, MessageStatus.FAILURE, new AdminGetCampusesResponse(list));
+    
+    }
+
+    private void handleAdminGetDepartments(Message<AdminGetDepartmentsRequest> msg, ServerConnection client) {
+
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_GET_DEPARTMENTS, MessageStatus.FAILURE, new AdminGetDepartmentsResponse(null));
+            return;
+        }
+
+        LinkedList<Department> list = ((Admin)client.getUser()).getDepartments();
+        client.sendMessage(MessageType.ADMIN_GET_DEPARTMENTS, MessageStatus.FAILURE, new AdminGetDepartmentsResponse(list));
+    
+    }
+
+    private void handleAdminGetCourses(Message<AdminGetCoursesRequest> msg, ServerConnection client) {
+    
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_GET_COURSES, MessageStatus.FAILURE, new AdminGetCoursesResponse(null));
+            return;
+        }
+
+        LinkedList<Course> list = ((Admin)client.getUser()).getCourses();
+        client.sendMessage(MessageType.ADMIN_GET_COURSES, MessageStatus.FAILURE, new AdminGetCoursesResponse(list));
+    
+    }
+
+    private void handleAdminGetSections(Message<AdminGetSectionsRequest> msg, ServerConnection client) {
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_GET_SECTIONS, MessageStatus.FAILURE, new AdminGetSectionsResponse(null));
+            return;
+        }
+
+        LinkedList<Section> list = ((Admin)client.getUser()).getSections();
+        client.sendMessage(MessageType.ADMIN_GET_SECTIONS, MessageStatus.FAILURE, new AdminGetSectionsResponse(list));
+    
+    }
+
+    private void handleAdminRemoveUser(Message<AdminRemoveUserRequest> msg, ServerConnection client) {
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_REMOVE_USER, MessageStatus.FAILURE, new AdminRemoveUserResponse());
+            return;
+        }
+
+        client.sendMessage(MessageType.ADMIN_REMOVE_USER, MessageStatus.FAILURE, new AdminRemoveUserResponse());
+    
+    }
+
+    private void handleAdminRemoveCampus(Message<AdminRemoveCampusRequest> msg, ServerConnection client) {
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_REMOVE_CAMPUS, MessageStatus.FAILURE, new AdminRemoveCampusResponse());
+            return;
+        }
+
+        client.sendMessage(MessageType.ADMIN_REMOVE_CAMPUS, MessageStatus.FAILURE, new AdminRemoveCampusResponse());
+    
+    }
+
+    private void handleAdminRemoveDepartment(Message<AdminRemoveDepartmentRequest> msg, ServerConnection client) {
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_REMOVE_DEPARTMENT, MessageStatus.FAILURE, new AdminRemoveDepartmentResponse());
+            return;
+        }
+
+        client.sendMessage(MessageType.ADMIN_REMOVE_DEPARTMENT, MessageStatus.FAILURE, new AdminRemoveDepartmentResponse());
+    }
+
+    private void handleAdminRemoveCourse(Message<AdminRemoveCourseRequest> msg, ServerConnection client) {
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_REMOVE_COURSE, MessageStatus.FAILURE, new AdminRemoveCourseResponse());
+            return;
+        }
+
+        client.sendMessage(MessageType.ADMIN_REMOVE_COURSE, MessageStatus.FAILURE, new AdminRemoveCourseResponse());
+    }
+
+    private void handleAdminRemoveSection(Message<AdminRemoveSectionRequest> msg, ServerConnection client) {
+        if(!client.validateAdmin()){
+            client.sendMessage(MessageType.ADMIN_REMOVE_SECTION, MessageStatus.FAILURE, new AdminRemoveSectionResponse());
+            return;
+        }
+
+        client.sendMessage(MessageType.ADMIN_REMOVE_SECTION, MessageStatus.FAILURE, new AdminRemoveSectionResponse());
+    }
+
     private void handleStudentBrowseSection(Message<BrowseSectionRequest> msg, ServerConnection client) {
 
         if(!client.validateStudent()){
@@ -582,7 +727,7 @@ public class ServerController {
 
     }
 
-    private void handleStudentGetSchedule(Message<GetScheduleRequest> msg, ServerConnection client) {
+    private void handleStudentGetSchedule(Message<StudentGetScheduleRequest> msg, ServerConnection client) {
 
         // Note: only for students?
         if(!client.validateStudent()){
@@ -607,6 +752,14 @@ public class ServerController {
         GetScheduleResponse res = new GetScheduleResponse(sections);
         client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.SUCCESS, res);
 
+    }
+
+    private void handleStudentGetUnits(Message<StudentGetUnitRequest> msg, ServerConnection client){
+        
+    }
+
+    private void handleStudentGetProgress(Message<StudentGetProgressRequest> msg, ServerConnection client){
+        
     }
 
     private void handleLogout(Message<LogoutRequest> msg, ServerConnection client) {

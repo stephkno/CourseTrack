@@ -29,6 +29,10 @@ public class Admin extends User implements Serializable {
         this.campuses.Remove(campus);
     }
 
+    public LinkedList<Campus> getCampuses(){
+        return campuses;
+    }
+
     public void addCourse(Course course){
         this.courses.Push(course);
     }
@@ -39,6 +43,10 @@ public class Admin extends User implements Serializable {
 
     public void removeCourse(Course course){
         this.courses.Remove(course);
+    }
+    
+    public LinkedList<Course> getCourses(){
+        return this.courses;
     }
 
     public void addDepartment(Department department){
@@ -53,6 +61,10 @@ public class Admin extends User implements Serializable {
         this.departments.Remove(department);
     }
 
+    public LinkedList<Department> getDepartments(){
+        return this.departments;
+    }
+
     public void addSection(Section section){
         this.sections.Push(section);
     }
@@ -63,6 +75,10 @@ public class Admin extends User implements Serializable {
 
     public void removeSection(Section section){
         this.sections.Remove(section);
+    }
+
+    public LinkedList<Section> getSections(){
+        return this.sections;
     }
 
     public Admin(String name, String password) {

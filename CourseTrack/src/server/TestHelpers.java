@@ -6,8 +6,12 @@ import global.Message;
 import global.MessageStatus;
 import global.MessageType;
 import global.data.*;
+
 import global.requests.*;
+import global.requests.AdminRequests.*;
 import global.responses.*;
+import global.responses.AdminResponses.*;
+
 import global.LinkedList;
 
 import java.time.LocalTime;
@@ -86,7 +90,7 @@ public class TestHelpers {
 		
 		assert(response.getStatus() == MessageStatus.SUCCESS);
 
-		Log.Msg("Received admin add campus response: " + response.getStatusString());
+		Log.Msg("Received admin add campus response: " + response.getStatus());
 
 	}
 
@@ -97,7 +101,7 @@ public class TestHelpers {
 		Message<AddDepartmentResponse> response = client.sendAndWait(new Message<>(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.REQUEST, new AddDepartmentRequest(campusName, departmentName) ));
 		
 		assert(response.getStatus() == MessageStatus.SUCCESS);
-		Log.Msg("Received admin add department response: " + response.getStatusString());
+		Log.Msg("Received admin add department response: " + response.getStatus());
 	}
 	
 	private static int AddCourse(String courseName, int number, int units, String campus, String department, Client client)
@@ -127,7 +131,7 @@ public class TestHelpers {
 
 		int courseId = responseCourse.getId();
 
-		Log.Msg("Received admin add course response: " + response.getStatusString());
+		Log.Msg("Received admin add course response: " + response.getStatus());
 		
 		return courseId;
 
@@ -157,7 +161,7 @@ public class TestHelpers {
 		Section responseSection = response.get().section();
 		Log.Msg(responseSection.getNumber());
 
-		Log.Msg("Received admin add section response: " + response.getStatusString());
+		Log.Msg("Received admin add section response: " + response.getStatus());
 
 	}
 
@@ -225,6 +229,28 @@ public class TestHelpers {
 		Log.Msg("Received schedule response");
 
 		for(Section s : data.enrolledSections()){
+			Log.Msg(s);
+		}
+
+	}
+
+	private static void AdminGetCourses(Client client){
+
+		Message<AdminGetCoursesResponse> response = client.sendAndWait(
+			new Message<AdminGetCoursesRequest>(
+				MessageType.ADMIN_GET_COURSES, 
+				MessageStatus.REQUEST, 
+				new AdminGetCoursesRequest()
+			)
+		);
+
+		AdminGetCoursesResponse data = response.get();
+
+		assert(response.getStatus() == MessageStatus.SUCCESS);
+
+		Log.Msg("Received GetCourses response");
+
+		for(Course s : data.courses()){
 			Log.Msg(s);
 		}
 
@@ -311,6 +337,8 @@ public class TestHelpers {
 		AddSection(id11, "CSU East Bay", "CS", term, "Liam Anderson", 34,  meetTimes, client);
 		AddSection(id12, "CSU East Bay", "CS", term, "Mia Thomas", 31,  meetTimes, client);
 		AddSection(id13, "CSU East Bay", "CS", term, "TestInstructor", 2,  meetTimes, client);
+
+		AdminGetCourses(client);
 
 		Logout(client);
 
