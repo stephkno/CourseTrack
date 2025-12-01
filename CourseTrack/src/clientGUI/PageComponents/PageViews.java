@@ -32,9 +32,12 @@ import global.MessageType;
 public class PageViews {
 
     // #region createBrowseView
-    public static nFrame.ListLayout createBrowseView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService,
-            UserRole userRole) {
-        // heading
+    public static nFrame.ListLayout createBrowseView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService,UserRole userRole) {
+        
+        Message<GetCampusesResponse> response = guiService.sendAndWait(MessageType.GET_CAMPUSES,
+                MessageStatus.REQUEST, new GetCampusesRequest());
+        LinkedList<Campus> campuses = response.get().campuses();
+
         nPanelPlainText heading = new nPanelPlainText("Browse Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
@@ -43,7 +46,7 @@ public class PageViews {
         searchBox.textColor = UITheme.TEXT_PRIMARY;
         searchBox.backgroundColor = UITheme.BG_APP;
         searchBox.drawBorder = true;
-
+        
         nButton searchButton = new nButton("Search");
         searchButton.setBackgroundColor(UITheme.INFO);
 

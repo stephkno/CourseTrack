@@ -8,6 +8,7 @@ import global.MessageStatus;
 import global.MessageType;
 import global.data.Campus;
 import global.data.Course;
+import global.data.Section;
 import global.data.Term;
 import global.requests.AddCourseRequest;
 import global.requests.AdminRequests.AdminGetCampusesRequest;
@@ -106,6 +107,8 @@ public class Panels {
             });
         
         }
+        
+
         private void DoEditButton(nButton EditButton, IAppGUIService guiService){
             EditButton.addActionListener(e -> {
                 JFrame frame = getFrameWindow();

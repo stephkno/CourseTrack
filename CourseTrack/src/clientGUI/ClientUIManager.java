@@ -128,7 +128,7 @@ public class ClientUIManager {
         HomePage hp = new HomePage(frame, logoutButtonAction, title);
         frame.getContentPane().setBackground(UITheme.BG_APP);
 
-        campus = Campus.get("CSU East Bay");
+
         
 
         // todo: add course requirements!

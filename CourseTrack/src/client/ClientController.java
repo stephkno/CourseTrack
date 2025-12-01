@@ -36,7 +36,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
     public <TObjResponse extends Serializable, TObjRequest extends Serializable>
     Message<TObjResponse> sendAndWait(MessageType type, MessageStatus status, TObjRequest obj) {
         return client.sendAndWait(
-            new Message<>(
+            new Message<TObjRequest>(
                 type,
                 status,
                 obj

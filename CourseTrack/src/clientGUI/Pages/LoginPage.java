@@ -16,6 +16,7 @@ import global.data.Course;
 import global.requests.GetCampusesRequest;
 import global.requests.AdminRequests.AdminGetCampusesRequest;
 import global.requests.AdminRequests.AdminGetCoursesRequest;
+import global.requests.StudentRequests.StudentGetProgressRequest;
 import global.responses.GetCampusesResponse;
 import global.responses.AdminResponses.AdminGetCampusesResponse;
 import global.responses.AdminResponses.AdminGetCoursesResponse;
@@ -103,8 +104,12 @@ public class LoginPage {
 
 
         nPanelDropDown campusChoose = new nPanelDropDown();
-        /*Message<GetCampusesResponse> getCampusesResponse = guiService.sendAndWait(MessageType.GET_CAMPUSES,
-                MessageStatus.REQUEST, new GetCampusesRequest());
+        /*Message<GetCampusesResponse> getCampusesResponse = guiService.sendAndWait(
+				MessageType.GET_CAMPUSES, 
+				MessageStatus.REQUEST, 
+				new GetCampusesRequest()
+        );
+
         LinkedList<Campus> campuses = getCampusesResponse.get().campuses();
         
         for (Campus campus : campuses) {
