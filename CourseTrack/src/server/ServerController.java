@@ -438,8 +438,6 @@ public class ServerController {
 
         Department department = campus.getDepartment(request.department());
 
-
-        // need to get course by name? id?
         Log.Msg(request.courseId());
 
         Course course = department.getCourse(request.courseId());

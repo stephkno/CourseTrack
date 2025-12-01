@@ -36,9 +36,13 @@ public class PageViews {
         
         
 
-        Message<GetCampusesResponse> response = guiService.sendAndWait(MessageType.GET_CAMPUSES,MessageStatus.REQUEST, new GetCampusesRequest());
+        Message<GetCampusesResponse> response = guiService.sendAndWait(MessageType.GET_CAMPUSES, MessageStatus.REQUEST, new GetCampusesRequest());
+        
+
+        
         LinkedList<Campus> campuses = response.get().campuses();
 
+        Log.Msg(campuses.Length());
 
 
 

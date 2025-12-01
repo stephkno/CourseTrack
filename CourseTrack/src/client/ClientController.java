@@ -53,14 +53,14 @@ public class ClientController implements  IClientListenerService, IAppGUIService
                 new LoginRequest(username, password)
             )
         );
-
+        
         if (resp == null) {
             clientUI.setLoginValidationMessage("No response from server.");
             return false;
         }
 
         switch (resp.getStatus()) {
-            case SUCCESS -> {
+            case SUCCESS:{
                 if (resp.get() == null || resp.get().user() == null) {
                     clientUI.setLoginValidationMessage("Malformed login response.");
                     return false;
@@ -82,12 +82,12 @@ public class ClientController implements  IClientListenerService, IAppGUIService
                 return true;
             }
 
-            case FAILURE -> {
+            case FAILURE:{
                 clientUI.setLoginValidationMessage("Invalid username or password.");
                 return false;
             }
 
-            default -> {
+            default:{
                 clientUI.setLoginValidationMessage("Unexpected server response.");
                 return false;
             }

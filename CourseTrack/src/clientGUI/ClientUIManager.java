@@ -115,7 +115,7 @@ public class ClientUIManager {
     public void GoAdminPage(ButtonInterface logoutButtonAction, IAppGUIService guiService) {
         cleanUp();
 
-        String title = "Welcome, ";
+        String title = "";
         
         hp = new HomePage(frame, guiService, title);
 
@@ -127,14 +127,11 @@ public class ClientUIManager {
 
     public void GoStudentPage(ButtonInterface logoutButtonAction, IAppGUIService guiService){
         cleanUp();
-
-        String title = "Welcome, ";
+        String title = "";
 
         hp = new HomePage(frame, guiService, title);
         frame.getContentPane().setBackground(UITheme.BG_APP);
 
-
-        
         new StudentPage(frame, guiService, hp);
     }
 

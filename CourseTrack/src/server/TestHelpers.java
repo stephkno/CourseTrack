@@ -196,60 +196,111 @@ public class TestHelpers {
         
         RegisterUser(username, password, UserType.ADMIN, client);
         Login(username, password, client);
-        AddCampus("CSU East Bay", client);
-        AddDepartment("CSU East Bay", "CS", client);
-
-        LinkedList<Course> requirements = new LinkedList<>();
-
-        Course course = AddCourse("Computer Science 1", 101, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course);
-        Course course1 = AddCourse("Computer Science 2", 201, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course1);
-        Course course2 = AddCourse("Computing and Social Responsibility", 230, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course2);
-        Course course3 = AddCourse("Computing Organization and Assembly Language", 221, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course3);
-        Course course4 = AddCourse("Discrete Structures", 211, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course4);
-        Course course5 = AddCourse("Programming Language Concepts", 311, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course5);
-        Course course6 = AddCourse("Computer Architecture", 321, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course6);
-        Course course7 = AddCourse("Data Structures and Algorithms", 301, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course7);
-        Course course8 = AddCourse("Automata and Computation", 411, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course8);
-        Course course9 = AddCourse("Software Engineering", 401, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course9);
-        Course course10 = AddCourse("Operating Systems", 421, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course10);
-        Course course11 = AddCourse("Computer Networks", 441, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course11);
-        Course course12 = AddCourse("Analysis of Algorithms", 413, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course12);
-        Course course13 = AddCourse("TestCourse", 555, 3, "CSU East Bay", "CS", requirements, client);
-        requirements.Push(course13);
-
+        
         MeetTime[] meetTimes = new MeetTime[]{
             new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(14, 30), LocalTime.of(14, 30)),
             new MeetTime(MeetTime.Day.WEDNESDAY, LocalTime.of(14, 30), LocalTime.of(14, 30))
         };
         Term term = new Term(Term.Season.FALL, 2025);
 
-        AddSection(course, "CSU East Bay", "CS", term, "Alice Johnson", 30, meetTimes, client);
-        AddSection(course1, "CSU East Bay", "CS", term, "Bob Martinez", 25, meetTimes, client);
-        AddSection(course2, "CSU East Bay", "CS", term, "Carol Lee", 35, meetTimes, client);
-        AddSection(course3, "CSU East Bay", "CS", term, "Davcourse Kim", 28, meetTimes, client);
-        AddSection(course4, "CSU East Bay", "CS", term, "Emily Chen", 32, meetTimes, client);
-        AddSection(course5, "CSU East Bay", "CS", term, "Frank Brown", 30, meetTimes, client);
-        AddSection(course6, "CSU East Bay", "CS", term, "Grace Wilson", 27, meetTimes, client);
-        AddSection(course7, "CSU East Bay", "CS", term, "Henry Clark", 33, meetTimes, client);
-        AddSection(course8, "CSU East Bay", "CS", term, "Isabella Davis", 29, meetTimes, client);
-        AddSection(course9, "CSU East Bay", "CS", term, "Jack Miller", 30, meetTimes, client);
-        AddSection(course10, "CSU East Bay", "CS", term, "Karen Taylor", 26, meetTimes, client);
-        AddSection(course11, "CSU East Bay", "CS", term, "Liam Anderson", 34, meetTimes, client);
-        AddSection(course12, "CSU East Bay", "CS", term, "Mia Thomas", 31, meetTimes, client);
-        AddSection(course13, "CSU East Bay", "CS", term, "TestInstructor", 2, meetTimes, client);
+        AddCampus("CSU East Bay", client);
+        AddDepartment("CSU East Bay", "CS", client);
+        AddDepartment("CSU East Bay", "ART", client);
+        AddDepartment("CSU East Bay", "SOC", client);
+        AddDepartment("CSU East Bay", "PSY", client);
+        AddDepartment("CSU East Bay", "BIO", client);
+
+        AddCampus("SFSU", client);
+        AddDepartment("SFSU", "CS", client);
+        AddDepartment("SFSU", "ART", client);
+        AddDepartment("SFSU", "PSY", client);
+
+        AddCampus("CSU Long Beach", client);
+        AddDepartment("CSU Long Beach", "CS", client);
+        AddDepartment("CSU Long Beach", "ENG", client);
+        AddDepartment("CSU Long Beach", "MATH", client);
+
+        AddCampus("CSU Fullerton", client);
+        AddDepartment("CSU Fullerton", "CS", client);
+        AddDepartment("CSU Fullerton", "BUS", client);
+        AddDepartment("CSU Fullerton", "PSY", client);
+
+        AddCampus("CSU San Marcos", client);
+        AddDepartment("CSU San Marcos", "CS", client);
+        AddDepartment("CSU San Marcos", "BIO", client);
+        AddDepartment("CSU San Marcos", "CHEM", client);
+
+        LinkedList<Course> csuEastBayRequirements = new LinkedList<>();
+        Course csEB101 = AddCourse("Intro to Programming", 101, 3, "CSU East Bay", "CS", csuEastBayRequirements, client);
+        csuEastBayRequirements.Push(csEB101);
+        Course csEB102 = AddCourse("Data Structures", 201, 3, "CSU East Bay", "CS", csuEastBayRequirements, client);
+        csuEastBayRequirements.Push(csEB102);
+        Course csEB201 = AddCourse("Algorithms", 301, 3, "CSU East Bay", "CS", csuEastBayRequirements, client);
+        csuEastBayRequirements.Push(csEB201);
+        Course csEB301 = AddCourse("Operating Systems", 401, 3, "CSU East Bay", "CS", csuEastBayRequirements, client);
+
+        LinkedList<Course> sfsuRequirements = new LinkedList<>();
+        Course sfsuCS101 = AddCourse("Programming 1", 101, 3, "SFSU", "CS", sfsuRequirements, client);
+        sfsuRequirements.Push(sfsuCS101);
+        Course sfsuCS102 = AddCourse("Programming 2", 102, 3, "SFSU", "CS", sfsuRequirements, client);
+        sfsuRequirements.Push(sfsuCS102);
+        Course sfsuCS201 = AddCourse("Algorithms", 201, 3, "SFSU", "CS", sfsuRequirements, client);
+        sfsuRequirements.Push(sfsuCS201);
+
+        LinkedList<Course> csulbRequirements = new LinkedList<>();
+        Course csulbCS101 = AddCourse("Intro to CS", 101, 3, "CSU Long Beach", "CS", csulbRequirements, client);
+        csulbRequirements.Push(csulbCS101);
+        Course csulbCS102 = AddCourse("Data Structures & Algorithms", 102, 3, "CSU Long Beach", "CS", csulbRequirements, client);
+        csulbRequirements.Push(csulbCS102);
+        Course csulbCS201 = AddCourse("Software Engineering", 201, 3, "CSU Long Beach", "CS", csulbRequirements, client);
+
+        LinkedList<Course> csufRequirements = new LinkedList<>();
+        Course csufCS101 = AddCourse("Intro to Programming", 101, 3, "CSU Fullerton", "CS", csufRequirements, client);
+        csufRequirements.Push(csufCS101);
+        Course csufCS102 = AddCourse("Object-Oriented Programming", 102, 3, "CSU Fullerton", "CS", csufRequirements, client);
+        csufRequirements.Push(csufCS102);
+        Course csufCS201 = AddCourse("Databases", 201, 3, "CSU Fullerton", "CS", csufRequirements, client);
+
+        LinkedList<Course> csusmRequirements = new LinkedList<>();
+        Course csusmCS101 = AddCourse("Intro to Programming", 101, 3, "CSU San Marcos", "CS", csusmRequirements, client);
+        csusmRequirements.Push(csusmCS101);
+        Course csusmCS102 = AddCourse("Data Structures", 102, 3, "CSU San Marcos", "CS", csusmRequirements, client);
+        csusmRequirements.Push(csusmCS102);
+        Course csusmCS201 = AddCourse("Algorithms", 201, 3, "CSU San Marcos", "CS", csusmRequirements, client);
+
+        // --- Sections ---
+        MeetTime[] defaultTimes = new MeetTime[]{
+            new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(9, 0), LocalTime.of(10, 15)),
+            new MeetTime(MeetTime.Day.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(10, 15))
+        };
+        Term fall2025 = new Term(Term.Season.FALL, 2025);
+
+        // CSU East Bay Sections
+        AddSection(csEB101, "CSU East Bay", "CS", fall2025, "Dr. Alan Turing", 30, defaultTimes, client);
+        AddSection(csEB102, "CSU East Bay", "CS", fall2025, "Dr. Ada Lovelace", 25, defaultTimes, client);
+        AddSection(csEB201, "CSU East Bay", "CS", fall2025, "Dr. Grace Hopper", 28, defaultTimes, client);
+        AddSection(csEB301, "CSU East Bay", "CS", fall2025, "Dr. Donald Knuth", 32, defaultTimes, client);
+
+        // SFSU Sections
+        AddSection(sfsuCS101, "SFSU", "CS", fall2025, "Dr. Linus Torvalds", 35, defaultTimes, client);
+        AddSection(sfsuCS102, "SFSU", "CS", fall2025, "Dr. Tim Berners-Lee", 30, defaultTimes, client);
+        AddSection(sfsuCS201, "SFSU", "CS", fall2025, "Dr. Barbara Liskov", 28, defaultTimes, client);
+
+        // CSU Long Beach Sections
+        AddSection(csulbCS101, "CSU Long Beach", "CS", fall2025, "Dr. John McCarthy", 40, defaultTimes, client);
+        AddSection(csulbCS102, "CSU Long Beach", "CS", fall2025, "Dr. Margaret Hamilton", 35, defaultTimes, client);
+        AddSection(csulbCS201, "CSU Long Beach", "CS", fall2025, "Dr. Edsger Dijkstra", 30, defaultTimes, client);
+
+        // CSU Fullerton Sections
+        AddSection(csufCS101, "CSU Fullerton", "CS", fall2025, "Dr. Brian Kernighan", 28, defaultTimes, client);
+        AddSection(csufCS102, "CSU Fullerton", "CS", fall2025, "Dr. Dennis Ritchie", 25, defaultTimes, client);
+        AddSection(csufCS201, "CSU Fullerton", "CS", fall2025, "Dr. Niklaus Wirth", 30, defaultTimes, client);
+
+        // CSU San Marcos Sections
+        AddSection(csusmCS101, "CSU San Marcos", "CS", fall2025, "Dr. Richard Stallman", 32, defaultTimes, client);
+        AddSection(csusmCS102, "CSU San Marcos", "CS", fall2025, "Dr. Ken Thompson", 28, defaultTimes, client);
+        AddSection(csusmCS201, "CSU San Marcos", "CS", fall2025, "Dr. ", 25, defaultTimes, client);
+
         AdminGetCourses(client);
         
         Logout(client);
@@ -257,23 +308,28 @@ public class TestHelpers {
         RegisterUser("student", "", UserType.STUDENT, client);
         Login("student", "", client);
 
-        LinkedList<Section> sections = SearchCourses("softwa", "CSU East Bay", "CS", term, client);
+        LinkedList<Section> sections = SearchCourses("data str", "CSU East Bay", "CS", term, client);
         for (Section section : sections) {
             if (section == null) continue;
             Log.Msg(section);
         }
+
         Section enrolledSection = Enroll(sections.Get(0).getId(), sections.Get(0).getTerm(), client);
         assert(1 == enrolledSection.numStudents());
+        
         Section droppedSection = Drop(sections.Get(0).getId(), sections.Get(0).getTerm(), client);
         assert(1 == droppedSection.numStudents());
+        
         GetSchedule(term, client);
+        
         LinkedList<Campus> campuses = GetCampuses(client);
         for (Campus campus : campuses) {
             Log.Msg(campus.toString());
         }
+        
         Logout(client);
         Login("admin", "", client);
-        RemoveCampus("CSU East Bay", client);
+       // RemoveCampus("CSU East Bay", client);
 
         Logout(client);
 
