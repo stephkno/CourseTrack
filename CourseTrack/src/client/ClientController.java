@@ -5,6 +5,7 @@ import client.services.IClientListenerService;
 import clientGUI.ClientUIManager;
 import clientGUI.UIInformations.LoginInformation;
 import global.*;
+import global.data.*;
 import global.requests.*;
 import global.responses.*;
 import java.io.Serializable;
@@ -121,6 +122,43 @@ public class ClientController implements  IClientListenerService, IAppGUIService
             }
         }
 
+    }
+
+    @Override
+    public LinkedList<Section> sendBrowseSectionRequest(String query, String campus, String department, Term term, int max_requests){
+        Message<BrowseSectionResponse> resp = client.sendAndWait(
+            new Message<>(
+                MessageType.STUDENT_BROWSE_SECTION, 
+                MessageStatus.REQUEST, 
+                new BrowseSectionRequest(query, campus, department, term, max_requests)
+            )
+        );
+
+        if (resp == null) {
+            Log.Err("No response from server.");
+            return null;
+        }
+
+        switch (resp.getStatus()) {
+            case SUCCESS -> {
+                if (resp.get() == null || resp.get().sections() == null) {
+                    Log.Err("Malformed server response.");
+                    return null;
+                }
+
+                return resp.get().sections();
+            }
+
+            case FAILURE -> {
+                Log.Err("Failed to get sections");
+                return null;
+            }
+
+            default -> {
+                Log.Err("Unexpected server response.");
+                return null;
+            }
+        }
     }
 
     public void receiveUpdateRequest(Message<UpdateRequest> request) {
