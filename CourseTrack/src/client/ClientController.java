@@ -33,6 +33,18 @@ public class ClientController implements  IClientListenerService, IAppGUIService
     }
 
     @Override
+    public <TObjMessage extends Serializable>
+    Message<TObjMessage> sendAndWait(MessageType type, MessageStatus status, TObjMessage obj) {
+        return client.sendAndWait(
+            new Message<>(
+                type,
+                status,
+                obj
+            )
+        );
+    }
+
+    @Override
     public boolean sendLoginRequest(String username, String password) {
         Message<LoginResponse> resp = client.sendAndWait(
             new Message<>(

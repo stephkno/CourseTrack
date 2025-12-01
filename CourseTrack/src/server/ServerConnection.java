@@ -18,9 +18,6 @@ public class ServerConnection implements Runnable {
     // thread loop condition
     private boolean run = true;
 
-    // todo: create account status enum?
-    private boolean banned = false;
-
     // callback for when server receives message from this connection
     private Callback_T_U<Message, ServerConnection> messageCallback;
 
@@ -37,7 +34,7 @@ public class ServerConnection implements Runnable {
     Timer timeout = new Timer();
   
     // Constructor
-    public ServerConnection(Socket socket, Server server, Callback_T_U<Message,ServerConnection> messageCallback, Callback_T<ServerConnection> disconnectCallback)
+    public ServerConnection(Socket socket, Server server, Callback_T_U<Message, ServerConnection> messageCallback, Callback_T<ServerConnection> disconnectCallback)
     {
         this.server = server;
         this.socket = socket;
@@ -98,7 +95,7 @@ public class ServerConnection implements Runnable {
     }
 
     public void Ban() {
-        this.banned = true;
+        this.user.Ban();
     }
 
     public boolean validateAdmin() {

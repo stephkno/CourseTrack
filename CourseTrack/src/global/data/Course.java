@@ -95,10 +95,6 @@ public class Course implements Serializable {
         return campus;
     }
 
-    public LinkedList<Section> getSections(Term term) {
-        return sections.Get(term);
-    }
-
     public String toString() {
         String outstring = "";
         outstring += name + " " + number;

@@ -23,6 +23,8 @@ public class User implements Serializable {
     String name;
     String password;
 
+    boolean banned = false;
+
     LocalDateTime lastLogin;
     LocalDateTime lastActivity;
 
@@ -34,6 +36,10 @@ public class User implements Serializable {
         return notifications;
     }
 
+    public void Ban(){
+        this.banned = true;
+    }
+    
     public void Notify(String message){
         
         LinkedList<Notification> notifications = new LinkedList<>();

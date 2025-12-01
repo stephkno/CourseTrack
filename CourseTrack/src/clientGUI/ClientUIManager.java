@@ -63,12 +63,14 @@ public class ClientUIManager {
         HomePage hp = new HomePage(frame, logoutButtonAction, title);
 
         frame.getContentPane().setBackground(UITheme.BG_APP);
+        
         Course[] courseInfo = {};
         String campusCurrent = "CSUEB";
         if(!Campus.exists(campusCurrent)) {
             new AdminPage(frame, courseInfo, hp);
             return;
         }
+
         campus = Campus.get(campusCurrent);
         //I need to ask some questions about the campus object before i can make this work properly
         Department department = campus.getDepartment("Computer Science");
@@ -89,12 +91,11 @@ public class ClientUIManager {
         HomePage hp = new HomePage(frame, logoutButtonAction, title);
         frame.getContentPane().setBackground(UITheme.BG_APP);
 
-        campus = Campus.get("CSUEB");
-
+        campus = Campus.get("CSU East Bay");
         
         Course[] courseInfo = new Course[20];
         for(int i = 0; i < 20; i++) {
-            courseInfo[i] = campus.getDepartment("Computer Science").getCourse(i);
+            courseInfo[i] = campus.getDepartment("CS").getCourse(i);
         }
         Course[] myCourseInfo = {new Course("title", 1, 1, campus.getDepartment("Computer Science"))};
         new StudentPage(frame, courseInfo, myCourseInfo, hp);
