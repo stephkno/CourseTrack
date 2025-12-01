@@ -103,27 +103,8 @@ public class LoginPage {
         message = errorText;
 
 
-        nPanelDropDown campusChoose = new nPanelDropDown();
-        /*Message<GetCampusesResponse> getCampusesResponse = guiService.sendAndWait(
-				MessageType.GET_CAMPUSES, 
-				MessageStatus.REQUEST, 
-				new GetCampusesRequest()
-        );
 
-        LinkedList<Campus> campuses = getCampusesResponse.get().campuses();
         
-        for (Campus campus : campuses) {
-            nButton b = new nButton();
-            b.setText(campus.getName());
-            campusChoose.addOption(b);
-            b.addActionListener(e -> {
-            });
-
-            nButton selected = campusChoose.getSelected();
-            if (selected != null && campus.getName().equals(selected.getText())) {
-                b.simulateClick();
-            }
-        }*/
         Component[] loginComponents = new Component[]{
                 registerButton,
                 userNamePrompt,
@@ -135,7 +116,6 @@ public class LoginPage {
         };
 
         Component[] registerComponents = new Component[]{
-                campusChoose,
                 registerButton,
                 userNamePrompt,
                 usernameInput,

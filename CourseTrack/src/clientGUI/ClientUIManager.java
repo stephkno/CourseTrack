@@ -140,6 +140,7 @@ public class ClientUIManager {
 
 
     private void cleanUp() {
+        
         frame.getContentPane().removeAll();
         frame.setLayout(null);
         frame.getContentPane().setBackground(UITheme.BG_APP);

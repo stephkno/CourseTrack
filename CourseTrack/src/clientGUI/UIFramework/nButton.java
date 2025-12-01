@@ -109,7 +109,7 @@ public class nButton extends nRoundedPanel {
     }
 
     public String getText() {
-        return text;
+        return text == null ? "" : text;
     }
 
     public void addActionListener(ActionListener l) {

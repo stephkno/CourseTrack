@@ -78,6 +78,7 @@ public class PageViews {
             Term cTerm = terms.Get(0);
             for(Term t : terms) {
                 cTerm = t;
+                if(termChoose.getSelected() == null) {continue;}
                 if(!t.getDisplayName().equals(termChoose.getSelected().getText())) {continue;}
                 break;                      
             }
