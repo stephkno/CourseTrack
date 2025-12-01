@@ -837,12 +837,28 @@ public class ServerController {
             if(save) {
                 FileOutputStream fileStream = new FileOutputStream(filepath);
                 ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+                
+                objectStream.writeInt(Campus.getNextId());
+                objectStream.writeInt(Course.getNextId());
+                objectStream.writeInt(Department.getNextId());
+                objectStream.writeInt(Section.getNextId());
+                objectStream.writeInt(Admin.getNextId());
+                objectStream.writeInt(Student.getNextId());
+
                 User.save(objectStream);
                 Term.save(objectStream);
                 Campus.save(objectStream);
             } else {
                 FileInputStream fileStream = new FileInputStream(filepath);
                 ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+                
+                Campus.setNextId(objectStream.readInt());
+                Course.setNextId(objectStream.readInt());
+                Department.setNextId(objectStream.readInt());
+                Section.setNextId(objectStream.readInt());
+                Admin.setNextId(objectStream.readInt());
+                Student.setNextId(objectStream.readInt());
+
                 User.load(objectStream);
                 Term.load(objectStream);
                 Campus.load(objectStream);

@@ -46,6 +46,13 @@ public class Section implements Serializable {
 
     }
 
+    public static void setNextId(int id){
+        nextId = id;
+    }
+    public static int getNextId(){
+        return nextId;
+    }
+
     public int getId(){
         return id;
     }

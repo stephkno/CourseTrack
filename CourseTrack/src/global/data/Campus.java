@@ -66,6 +66,14 @@ public class Campus implements Serializable {
         }
     }
 
+    public static void setNextId(int id){
+        nextId = id;
+    }
+
+    public static int getNextId(){
+        return nextId;
+    }
+
     private Campus(String campusName) {
         this.campusName = campusName;
         this.id = Campus.nextId++;

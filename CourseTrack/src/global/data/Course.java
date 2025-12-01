@@ -36,6 +36,13 @@ public class Course implements Serializable {
         
     }
 
+    public static void setNextId(int id){
+        nextId = id;
+    }
+    public static int getNextId(){
+        return nextId;
+    }
+
     // add section to this course in this term and return id
     public int addSection(Term term, Section section) {
         

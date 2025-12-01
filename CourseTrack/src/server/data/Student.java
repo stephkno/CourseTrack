@@ -27,6 +27,13 @@ public class Student extends User implements Serializable {
         this.enrolledSections = new LinkedList<>();
     }
 
+    public static void setNextId(int id){
+        nextId = id;
+    }
+    public static int getNextId(){
+        return nextId;
+    }
+
     public void addWaitlist(Section section){
         waitlisted.Push(section);
     }

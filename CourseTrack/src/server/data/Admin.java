@@ -17,6 +17,18 @@ public class Admin extends User implements Serializable {
     LinkedList<Department> departments = new LinkedList<>();
     LinkedList<Section> sections = new LinkedList<>();
 
+    public Admin(String name, String password) {
+        super(name, password, UserType.ADMIN);
+        this.id = nextId++;
+    }
+
+    public static void setNextId(int id){
+        nextId = id;
+    }
+    public static int getNextId(){
+        return nextId;
+    }
+
     public void addCampus(Campus campus){
         this.campuses.Push(campus);
     }
@@ -79,11 +91,6 @@ public class Admin extends User implements Serializable {
 
     public LinkedList<Section> getSections(){
         return this.sections;
-    }
-
-    public Admin(String name, String password) {
-        super(name, password, UserType.ADMIN);
-        this.id = nextId++;
     }
 
 }

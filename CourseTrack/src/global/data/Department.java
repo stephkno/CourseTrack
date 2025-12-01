@@ -37,6 +37,13 @@ public class Department implements Serializable {
         return null;
     }
 
+    public static void setNextId(int id){
+        nextId = id;
+    }
+    public static int getNextId(){
+        return nextId;
+    }
+
     public Department(String name, Campus campus) {
         this.name = name;
         this.campus = campus;
