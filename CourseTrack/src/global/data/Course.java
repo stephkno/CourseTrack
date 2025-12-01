@@ -20,7 +20,13 @@ public class Course implements Serializable {
     // list of required courses
     LinkedList<Course> requirements = new LinkedList<>();
 
-    public Course(String name, int number, int units, Department department) {
+    public Course(String name, int number, int units, Department department, LinkedList<Course> requirements) {
+
+        // verify that Course.requirements is not recursive
+        // It shouldn't be possible anyway
+        for(Course course : requirements){
+            if(course == this) Log.Err("Error: Course added as requirement of itself");
+        }
 
         this.name = name;
         this.number = number;

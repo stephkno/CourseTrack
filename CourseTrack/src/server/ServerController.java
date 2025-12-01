@@ -109,6 +109,10 @@ public class ServerController {
                 handleAdminGetDepartments((Message<AdminGetDepartmentsRequest>) msg, client);
                 break;
             }
+            case ADMIN_GET_TERMS:{
+                handleGetTerms((Message<GetTermsRequest>) msg, client);
+                break;
+            }
             case ADMIN_GET_COURSES:{
                 handleAdminGetCourses((Message<AdminGetCoursesRequest>) msg, client);
                 break;
@@ -356,7 +360,7 @@ public class ServerController {
             return;
         }
 
-        Course newCourse = new Course(courseName, number, units, department);
+        Course newCourse = new Course(courseName, number, units, department, request.requirements());
         ((Admin)client.getUser()).addCourse(newCourse);
 
         if(!department.addCourse(newCourse)){
@@ -485,6 +489,19 @@ public class ServerController {
     
     }
 
+    private void handleGetTerms(Message<GetTermsRequest> msg, ServerConnection client) {
+
+        if(!client.isLoggedIn()){
+            client.sendMessage(MessageType.ADMIN_GET_TERMS, MessageStatus.FAILURE, new GetTermsResponse(null));
+            return;
+        }
+
+        LinkedList<Term> list = Term.get();
+
+        client.sendMessage(MessageType.ADMIN_GET_TERMS, MessageStatus.SUCCESS, new GetTermsResponse(list));
+    
+    }
+    
     private void handleAdminGetCourses(Message<AdminGetCoursesRequest> msg, ServerConnection client) {
     
         if(!client.validateAdmin()){

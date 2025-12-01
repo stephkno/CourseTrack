@@ -2,6 +2,8 @@ package global.requests;
 import java.io.Serializable;
 import java.util.LinkedList;
 
+import global.data.Term;
+
 public class AdminRequests {
 
     public record AdminGetUsersRequest() implements Serializable { }

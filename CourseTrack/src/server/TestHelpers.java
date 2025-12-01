@@ -104,7 +104,7 @@ public class TestHelpers {
 		Log.Msg("Received admin add department response: " + response.getStatus());
 	}
 	
-	private static int AddCourse(String courseName, int number, int units, String campus, String department, Client client)
+	private static Course AddCourse(String courseName, int number, int units, String campus, String department, LinkedList<Course> requirements, Client client)
 	{
 		Log.Msg("Sending admin add course request");
 
@@ -113,7 +113,8 @@ public class TestHelpers {
 			number,
 			units,
 			campus,
-			department
+			department,
+			requirements
 		);
 
 		Message<AddCourseResponse> response = client.sendAndWait(new Message<>(MessageType.ADMIN_ADD_COURSE, MessageStatus.REQUEST, newCourse ));
@@ -125,25 +126,21 @@ public class TestHelpers {
 		Course responseCourse = response.get().course();
 		
 		assert(responseCourse != null);
-		assert(responseCourse.getName().equals("Software Engineering"));
 		
 		Log.Msg(newCourse.name());
-
-		int courseId = responseCourse.getId();
-
 		Log.Msg("Received admin add course response: " + response.getStatus());
 		
-		return courseId;
+		return responseCourse;
 
 	}
 
-	private static void AddSection(int courseId, String campus, String department, Term term, String instructor, int capacity, MeetTime[] meetTimes, Client client)
+	private static void AddSection(Course course, String campus, String department, Term term, String instructor, int capacity, MeetTime[] meetTimes, Client client)
 	{
 
 		Log.Msg("Sending admin add section request");
 
 		AddSectionRequest newSection = new AddSectionRequest(
-			courseId,
+			course.getId(),
 			campus,
 			department,
 			term,
@@ -301,21 +298,49 @@ public class TestHelpers {
 		
 		AddDepartment("CSU East Bay", "CS", client);
 
-		int id = AddCourse("CS 1", 101, 3, "CSU East Bay", "CS", client);
-		int id1 = AddCourse("Computing Science 2", 201, 3, "CSU East Bay", "CS", client);
-		int id2 = AddCourse("Computing and Social Responsibility", 230, 3, "CSU East Bay", "CS", client);
-		int id3 = AddCourse("Computing Organization and Assembly Language", 221, 3, "CSU East Bay", "CS", client);
-		int id4 = AddCourse("Discrete Structures", 211, 3, "CSU East Bay", "CS", client);
-		int id5 = AddCourse("Programming Language Concepts", 311, 3, "CSU East Bay", "CS", client);
-		int id6 = AddCourse("Computer Architecture", 321, 3, "CSU East Bay", "CS", client);
-		int id7 = AddCourse("Data Structures and Algorithms", 301, 3, "CSU East Bay", "CS", client);
-		int id8 = AddCourse("Automata and Computation", 411, 3, "CSU East Bay", "CS", client);
-		int id9 = AddCourse("Software Engineering", 401, 3, "CSU East Bay", "CS", client);
-		int id10 = AddCourse("Operating Systems", 421, 3, "CSU East Bay", "CS", client);
-		int id11 = AddCourse("Computer Networks", 441, 3, "CSU East Bay", "CS", client);
-		int id12 = AddCourse("Analysis of Algorithms", 413, 3, "CSU East Bay", "CS", client);
+		LinkedList<Course> requirements = new LinkedList<>();
+
+		Course id = AddCourse("CS 1", 101, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id);
+
+		Course id1 = AddCourse("Computing Science 2", 201, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id1);
+
+		Course id2 = AddCourse("Computing and Social Responsibility", 230, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id2);
 		
-		int id13 = AddCourse("TestCourse", 555, 3, "CSU East Bay", "CS", client);
+		Course id3 = AddCourse("Computing Organization and Assembly Language", 221, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id3);
+
+		Course id4 = AddCourse("Discrete Structures", 211, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id4);
+
+		Course id5 = AddCourse("Programming Language Concepts", 311, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id5);
+
+		Course id6 = AddCourse("Computer Architecture", 321, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id6);
+
+		Course id7 = AddCourse("Data Structures and Algorithms", 301, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id7);
+
+		Course id8 = AddCourse("Automata and Computation", 411, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id8);
+
+		Course id9 = AddCourse("Software Engineering", 401, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id9);
+
+		Course id10 = AddCourse("Operating Systems", 421, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id10);
+
+		Course id11 = AddCourse("Computer Networks", 441, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id11);
+
+		Course id12 = AddCourse("Analysis of Algorithms", 413, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id12);
+		
+		Course id13 = AddCourse("TestCourse", 555, 3, "CSU East Bay", "CS", requirements, client);
+		requirements.Push(id13);
 
 		MeetTime[] meetTimes = new MeetTime[]{
 			new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(14, 30), LocalTime.of(14, 30)),

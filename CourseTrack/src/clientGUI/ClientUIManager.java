@@ -1,17 +1,21 @@
 package clientGUI;
 
+import java.awt.Color;
+import javax.swing.JFrame;
+
 import client.services.IAppGUIService;
+import client.ClientController;
+
 import clientGUI.Pages.*;
 import clientGUI.UIFramework.*;
 import clientGUI.UIInformations.*;
+
 import global.data.Campus;
 import global.data.Course;
 import global.data.Department;
 
-import java.awt.Color;
-import javax.swing.JFrame;
 import global.Log;
-import client.ClientController;
+import global.LinkedList;
 
 public class ClientUIManager {
     
@@ -129,8 +133,10 @@ public class ClientUIManager {
         Course[] courseInfo = new Course[20];
         for(int i = 0; i < 20; i++) {
             courseInfo[i] = campus.getDepartment("CS").getCourse(i);
-        }
-        Course[] myCourseInfo = {new Course("title", 1, 1, campus.getDepartment("Computer Science"))};
+        }  
+
+        // todo: add course requirements!
+        Course[] myCourseInfo = {new Course("title", 1, 1, campus.getDepartment("Computer Science"), new LinkedList<Course>())};
         new StudentPage(frame, courseInfo, myCourseInfo, hp);
     }
 

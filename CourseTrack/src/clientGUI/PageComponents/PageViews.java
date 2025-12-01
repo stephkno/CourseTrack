@@ -490,7 +490,9 @@ public class PageViews {
                 String departmentName = departmentChoose.getSelected().getText();
                 Campus campus = Campus.get(campusName);
                 Department department = campus.getDepartment(departmentName);
-                department.addCourse(new Course(courseTB.getText(), Integer.parseInt(courseNumberTB.getText()), Integer.parseInt(courseUnitsTB.getText()), department));
+                
+                // todo: add course requirements!
+                department.addCourse(new Course(courseTB.getText(), Integer.parseInt(courseNumberTB.getText()), Integer.parseInt(courseUnitsTB.getText()), department, new LinkedList<Course>()));
                 
                 modal.close();
             });
