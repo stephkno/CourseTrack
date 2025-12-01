@@ -43,7 +43,8 @@ public class nPanelDropDown extends nButton {
         addActionListener(e -> {
             expanded = !expanded;
             dropDownList.setVisible(expanded);
-            getParent().setComponentZOrder(this, 0);
+            getParent().setComponentZOrder(this, getParent().getComponentCount()-1);
+            
             updateSizeForState();
         });
     }

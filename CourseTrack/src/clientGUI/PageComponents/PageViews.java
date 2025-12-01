@@ -244,22 +244,60 @@ public class PageViews {
     // #region createDropView
     public static nFrame.ListLayout createDropView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService) {
         // heading
-        nPanelPlainText heading = new nPanelPlainText("Drop Courses");
+        nPanelPlainText heading = new nPanelPlainText("Schedule");
         heading.textColor = UITheme.TEXT_PRIMARY;
-
+        nPanelDropDown termChoose = new nPanelDropDown();
         // scrollable course list
         nScrollableList courseList = new nScrollableList();
         courseList.setInnerPadding(8);
         courseList.setItemSpacing(8);
-        Message<> getCoursesResponse = guiService.sendAndWait(
-                    MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new Student);
-        LinkedList<StudentScheduleItem> sections = getCoursesResponse.get().schedule();
-        for (StudentScheduleItem c : sections) {
-            if(c.getWaitlistPosition() == 0) {
-                courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService));
+        
+        Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
+                    MessageStatus.REQUEST, new GetTermsRequest());
+        LinkedList<Term> terms = getTermsResponse.get().terms();
+        for(Term t : terms) {
+            nButton b = new nButton();
+            b.setText(t.getDisplayName());
+            termChoose.addOption(b);
+            b.addActionListener(e -> {
+                courseList.clearItems();
+                Message<GetScheduleResponse> getCoursesResponse = guiService.sendAndWait(
+                        MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new GetScheduleRequest(t));
+                LinkedList<StudentScheduleItem> sections = getCoursesResponse.get().schedule();
+                for (StudentScheduleItem c : sections) {
+                    if(c.getWaitlistPosition() == 0) {
+                        courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService));
+                    }
+                }
+                courseList.revalidate();
+                courseList.repaint();
+            });
+            if (termChoose.getSelected().getText().equals(t.getDisplayName())) {
+                b.simulateClick();
             }
+            
         }
+        
 
+        nPanel searchRow = new nPanel() {
+            @Override
+            public void doLayout() {
+                int padding = 10;
+                int h = getHeight();
+                int w = getWidth();
+                int buttonWidth = 80;
+                int controlHeight = 28;
+
+                
+
+                termChoose.setBounds(padding, 0, w-padding*2, controlHeight);
+
+
+            }
+        };
+        searchRow.setLayout(null);
+        searchRow.setOpaque(false);
+        searchRow.add(termChoose);
         nPanel content = new nPanel() {
             @Override
             public void doLayout() {
@@ -272,19 +310,24 @@ public class PageViews {
 
                 heading.setBounds(padding, padding, w - padding * 2, headingHeight);
 
-                int listY = padding + searchRowHeight + padding;
+                int searchY = padding + headingHeight + padding;
+                searchRow.setBounds(padding, searchY, w - padding * 2, searchRowHeight);
+
+                int listY = searchY + searchRowHeight + padding;
                 int listH = h - listY - padding;
                 if (listH < 40)
                     listH = 40;
 
                 courseList.setBounds(padding, listY, w - padding * 2, listH);
+                setComponentZOrder(courseList, getComponentZOrder(searchRow)+1);
             }
         };
         content.setLayout(null);
         content.setOpaque(false);
         content.add(heading);
+        content.add(searchRow);
         content.add(courseList);
-
+        
         Component[] comps = { content };
 
         nFrame.ListLayout layout = new nFrame.ListLayout(frame, comps, new Dimension(w, h), x, y);
@@ -296,17 +339,92 @@ public class PageViews {
 
     // #endregion
     // #region createWaitlistView
-    public static nFrame.ListLayout createWaitlistView(nFrame frame, int x, int y, int w, int h) {
-        nPanelPlainText heading = new nPanelPlainText("Drop Course");
+    public static nFrame.ListLayout createWaitlistView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService) {
+        nPanelPlainText heading = new nPanelPlainText("Waitlist");
         heading.textColor = UITheme.TEXT_PRIMARY;
+        nPanelDropDown termChoose = new nPanelDropDown();
+        // scrollable course list
+        nScrollableList courseList = new nScrollableList();
+        courseList.setInnerPadding(8);
+        courseList.setItemSpacing(8);
+        
+        Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
+                    MessageStatus.REQUEST, new GetTermsRequest());
+        LinkedList<Term> terms = getTermsResponse.get().terms();
+        for(Term t : terms) {
+            nButton b = new nButton();
+            b.setText(t.getDisplayName());
+            termChoose.addOption(b);
+            b.addActionListener(e -> {
+                courseList.clearItems();
+                Message<GetScheduleResponse> getCoursesResponse = guiService.sendAndWait(
+                        MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new GetScheduleRequest(t));
+                LinkedList<StudentScheduleItem> sections = getCoursesResponse.get().schedule();
+                for (StudentScheduleItem c : sections) {
+                    if(c.getWaitlistPosition() > 0) {
+                        courseList.addItem(new Panels.WaitlistItemPanel(c, guiService));
+                    }
+                }
+                courseList.revalidate();
+                courseList.repaint();
+            });
+            if (termChoose.getSelected().getText().equals(t.getDisplayName())) {
+                b.simulateClick();
+            }
+            
+        }
+        
 
-        nPanelPlainText desc = new nPanelPlainText("WIP");
-        desc.textColor = UITheme.TEXT_MUTED;
+        nPanel searchRow = new nPanel() {
+            @Override
+            public void doLayout() {
+                int padding = 10;
+                int h = getHeight();
+                int w = getWidth();
+                int buttonWidth = 80;
+                int controlHeight = 28;
 
-        nPanel spacer = new nPanel();
-        spacer.setOpaque(false);
+                
 
-        Component[] comps = { heading, desc, spacer };
+                termChoose.setBounds(padding, 0, w-padding*2, controlHeight);
+
+
+            }
+        };
+        searchRow.setLayout(null);
+        searchRow.setOpaque(false);
+        searchRow.add(termChoose);
+        nPanel content = new nPanel() {
+            @Override
+            public void doLayout() {
+                int padding = 10;
+                int w = getWidth();
+                int h = getHeight();
+
+                int headingHeight = 32;
+                int searchRowHeight = 40;
+
+                heading.setBounds(padding, padding, w - padding * 2, headingHeight);
+
+                int searchY = padding + headingHeight + padding;
+                searchRow.setBounds(padding, searchY, w - padding * 2, searchRowHeight);
+
+                int listY = searchY + searchRowHeight + padding;
+                int listH = h - listY - padding;
+                if (listH < 40)
+                    listH = 40;
+
+                courseList.setBounds(padding, listY, w - padding * 2, listH);
+                setComponentZOrder(searchRow, getComponentCount()-1);
+            }
+        };
+        content.setLayout(null);
+        content.setOpaque(false);
+        content.add(heading);
+        content.add(searchRow);
+        content.add(courseList);
+        
+        Component[] comps = { content };
 
         nFrame.ListLayout layout = new nFrame.ListLayout(frame, comps, new Dimension(w, h), x, y);
         layout.backgroundColor = UITheme.BG_ELEVATED2;
@@ -320,74 +438,98 @@ public class PageViews {
     
     // #region createScheduleView
     @Deprecated
-    public static nFrame.ListLayout createScheduleView(nFrame frame, int x, int y, int w, int h) {
-        nPanelPlainText heading = new nPanelPlainText("View Schedule");
+    public static nFrame.ListLayout createScheduleView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService) {
+        nPanelPlainText heading = new nPanelPlainText("Schedule");
         heading.textColor = UITheme.TEXT_PRIMARY;
+        nPanelDropDown termChoose = new nPanelDropDown();
+        // scrollable course list
+        nScrollableList courseList = new nScrollableList();
+        courseList.setInnerPadding(8);
+        courseList.setItemSpacing(8);
+        
+        Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
+                    MessageStatus.REQUEST, new GetTermsRequest());
+        LinkedList<Term> terms = getTermsResponse.get().terms();
+        for(Term t : terms) {
+            nButton b = new nButton();
+            b.setText(t.getDisplayName());
+            termChoose.addOption(b);
+            b.addActionListener(e -> {
+                courseList.clearItems();
+                Message<GetScheduleResponse> getCoursesResponse = guiService.sendAndWait(
+                        MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new GetScheduleRequest(t));
+                LinkedList<StudentScheduleItem> sections = getCoursesResponse.get().schedule();
+                for (StudentScheduleItem c : sections) {
+                    if(c.getWaitlistPosition() == 0) {
+                        courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService));
+                    }
+                }
+                courseList.revalidate();
+                courseList.repaint();
+            });
+            if (termChoose.getSelected().getText().equals(t.getDisplayName())) {
+                b.simulateClick();
+            }
+            
+        }
+        
 
-        nPanelPlainText desc = new nPanelPlainText("WIP");
-        desc.textColor = UITheme.TEXT_MUTED;
+        nPanel searchRow = new nPanel() {
+            @Override
+            public void doLayout() {
+                int padding = 10;
+                int h = getHeight();
+                int w = getWidth();
+                int buttonWidth = 80;
+                int controlHeight = 28;
 
-        nPanel spacer = new nPanel();
-        spacer.setOpaque(false);
+                
 
-        Component[] comps = { heading, desc, spacer };
+                termChoose.setBounds(padding, 0, w-padding*2, controlHeight);
+
+
+            }
+        };
+        searchRow.setLayout(null);
+        searchRow.setOpaque(false);
+        searchRow.add(termChoose);
+        nPanel content = new nPanel() {
+            @Override
+            public void doLayout() {
+                int padding = 10;
+                int w = getWidth();
+                int h = getHeight();
+
+                int headingHeight = 32;
+                int searchRowHeight = 40;
+
+                heading.setBounds(padding, padding, w - padding * 2, headingHeight);
+
+                int searchY = padding + headingHeight + padding;
+                searchRow.setBounds(padding, searchY, w - padding * 2, searchRowHeight);
+
+                int listY = searchY + searchRowHeight + padding;
+                int listH = h - listY - padding;
+                if (listH < 40)
+                    listH = 40;
+
+                courseList.setBounds(padding, listY, w - padding * 2, listH);
+                setComponentZOrder(courseList, getComponentZOrder(searchRow)+1);
+            }
+        };
+        content.setLayout(null);
+        content.setOpaque(false);
+        content.add(heading);
+        content.add(searchRow);
+        content.add(courseList);
+        
+        Component[] comps = { content };
 
         nFrame.ListLayout layout = new nFrame.ListLayout(frame, comps, new Dimension(w, h), x, y);
         layout.backgroundColor = UITheme.BG_ELEVATED2;
         layout.setPadding(10, 10);
         layout.setStyle(nFrame.ListLayout.Style.NONE);
         return layout;
-        /*
-         * scheduleList = new nScrollableList();
-         * scheduleList.setInnerPadding(8);
-         * scheduleList.setItemSpacing(8);
-         * populateScheduleList(scheduleList); // initial (possibly empty)
-         * 
-         * nPanel content = new nPanel() {
-         * 
-         * @Override
-         * public void doLayout() {
-         * int padding = 10;
-         * int cw = getWidth();
-         * int ch = getHeight();
-         * 
-         * int headingHeight = 32;
-         * 
-         * heading.setBounds(
-         * padding,
-         * padding,
-         * cw - padding * 2,
-         * headingHeight);
-         * 
-         * int listY = padding + headingHeight + padding;
-         * int listH = ch - listY - padding;
-         * if (listH < 40) listH = 40;
-         * 
-         * scheduleList.setBounds(
-         * padding,
-         * listY,
-         * cw - padding * 2,
-         * listH);
-         * }
-         * };
-         * content.setLayout(null);
-         * content.setOpaque(false);
-         * content.add(heading);
-         * content.add(scheduleList);
-         * 
-         * Component[] comps = { content };
-         * 
-         * nFrame.ListLayout layout = new nFrame.ListLayout(
-         * frame,
-         * comps,
-         * new Dimension(w, h),
-         * x,
-         * y);
-         * layout.backgroundColor = UITheme.BG_ELEVATED2;
-         * layout.setPadding(10, 10);
-         * layout.setStyle(nFrame.ListLayout.Style.NONE);
-         * return layout;
-         */
     }
 
     // #endregion

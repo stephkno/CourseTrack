@@ -408,9 +408,9 @@ public class TestHelpers {
 		}
 
 		Logout(client);
-		Login("admin", "", client);
+		//Login("admin", "", client);
 
-		RemoveCampus("CSU East Bay", client);
+		//RemoveCampus("CSU East Bay", client);
     }
 
 	public static void main(String[] args){

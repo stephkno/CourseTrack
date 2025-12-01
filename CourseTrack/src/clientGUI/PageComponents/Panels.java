@@ -10,6 +10,7 @@ import global.data.Campus;
 import global.data.Course;
 import global.data.MeetTime;
 import global.data.Section;
+import global.data.StudentScheduleItem;
 import global.data.Term;
 import global.requests.AddCourseRequest;
 import global.requests.AddSectionRequest;
@@ -160,7 +161,7 @@ public class Panels {
                 nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
                 enrollButton.addActionListener(ee -> {
                     Message<AdminRemoveCourseResponse> removeResponse = guiService.sendAndWait(MessageType.ADMIN_REMOVE_COURSE,
-                            MessageStatus.REQUEST, new AdminRemoveCourseRequest(course.getCourse().getId()));
+                            MessageStatus.REQUEST, new AdminRemoveCourseRequest(course.getCourse().getCampus().getName(), course.getCourse().getDepartment().getName(), course.getCourse()));
                     if(removeResponse.getStatus() != MessageStatus.SUCCESS) {return;}
                     
                     Message<AddCourseResponse> addResponse = guiService.sendAndWait(MessageType.ADMIN_ADD_COURSE,
@@ -217,7 +218,7 @@ public class Panels {
                 nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
                 enrollButton.addActionListener(ee -> {
                     Message<AdminRemoveSectionResponse> removeResponse = guiService.sendAndWait(MessageType.ADMIN_REMOVE_COURSE,
-                            MessageStatus.REQUEST, new AdminRemoveSectionRequest(course.getId()));
+                            MessageStatus.REQUEST, new AdminRemoveSectionRequest(course.getCourse(), currentTerm, course));
                     if(removeResponse.getStatus() != MessageStatus.SUCCESS) {return;}
                     
                     Message<AddSectionResponse> addResponse = guiService.sendAndWait(MessageType.ADMIN_ADD_COURSE,
@@ -263,8 +264,8 @@ public class Panels {
                 panel.setPadding(5, 7);
                 nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
                 enrollButton.addActionListener(ee -> {
-                    Message<AdminRemoveCourseResponse> removeResponse = guiService.sendAndWait(MessageType.ADMIN_REMOVE_COURSE,
-                            MessageStatus.REQUEST, new AdminRemoveCourseRequest(course.getCourse().getId()));
+                    Message<AdminRemoveSectionResponse> removeResponse = guiService.sendAndWait(MessageType.ADMIN_REMOVE_COURSE,
+                            MessageStatus.REQUEST, new AdminRemoveSectionRequest(course.getCourse(), currentTerm, course));
                     if(removeResponse.getStatus() != MessageStatus.SUCCESS) {return;}
                     modal.close();
                 });
@@ -443,12 +444,130 @@ public class Panels {
             // Instructor + time
             g2d.setFont(UITheme.FONT_BODY);
             g2d.setColor(UITheme.TEXT_MUTED);
-            g2d.drawString("PUT INSTRUCTOR NAE" + " | " + "PUT COUSE TIME", //fix when getting access to Section
+            String meettimes = "Meet Times |";
+            for(MeetTime m : course.getMeetTimes()) {
+                meettimes += m.getDay() + "|";
+            }
+            g2d.drawString(meettimes, //fix when getting access to Section
                     x, y + g2d.getFontMetrics().getAscent());
+            
             y += g2d.getFontMetrics().getHeight();
             // Location
-            g2d.drawString("PUT LOCATION HERE",x, y + g2d.getFontMetrics().getAscent());
+            g2d.drawString(course.getInstructor(),x, y + g2d.getFontMetrics().getAscent());
             g2d.setRenderingHints(oldHints);
         }
     }
+    public static class WaitlistItemPanel extends nPanel {
+        private StudentScheduleItem course;
+        private nButton[] buttonList;
+        WaitlistItemPanel(StudentScheduleItem course, IAppGUIService guiService) {
+            setName("CourseItemPanel");
+            this.course = course;
+            setOpaque(false);
+            setLayout(null);
+            setPreferredSize(new Dimension(200, 70));
+
+            nButton DropButton = new nButton("Unqueue");
+            DropButton.setBackgroundColor(UITheme.SUCCESS);
+            add(DropButton);
+            DoDropButton(DropButton, guiService);
+            buttonList = new nButton[1];
+            buttonList[0] = DropButton;
+            doLayout();
+        }
+        private void DoDropButton(nButton DropButton, IAppGUIService guiService){
+            DropButton.addActionListener(e -> {
+                JFrame frame = getFrameWindow();
+                int w = 420;
+                int h = 280;
+
+                nButton enrollButton = new nButton("Leave Queue");
+                enrollButton.setBackgroundColor(UITheme.SUCCESS);
+                nButton cancelButton = new nButton("Cancel");
+                cancelButton.setBackgroundColor(UITheme.FAIL);
+                Component[] options = {
+                    enrollButton,
+                    cancelButton
+                };
+                nFrame.GridLayout lowerOptions = new nFrame.GridLayout((nFrame)frame, options, false);
+                lowerOptions.setGridSize(2, 1);
+                lowerOptions.setPadding(5);
+                Component[] enrollPanel = {
+                    new nPanelPlainText("Are you sure you want to drop this course?", UITheme.TEXT_PRIMARY),
+                    lowerOptions
+                };
+                nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10, false);
+                panel.setPadding(5, 7);
+                nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
+                enrollButton.addActionListener(ee -> {
+                    modal.close();
+                });
+                cancelButton.addActionListener(ee -> {
+                    modal.close();
+                });
+            });
+        
+        }
+        private JFrame getFrameWindow() {
+            java.awt.Container c = getParent();
+            while (c != null && !(c instanceof JFrame)) {
+                c = c.getParent();
+            }
+            return (c instanceof JFrame) ? (JFrame) c : null;
+        }
+
+        @Override
+        public void doLayout() {
+            int padding = 10;
+            int w = getWidth();
+            int h = getHeight();
+
+            int btnWidth = 80;
+            int btnHeight = 26;
+            int x = w - padding - btnWidth;
+            int y = (h - btnHeight) / 2;
+            for(int i = 0; i < buttonList.length; i++) {
+                nButton button = buttonList[i];
+                button.setBounds(x - i * ( btnWidth + padding ), y, btnWidth, btnHeight);
+            }
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            java.awt.Graphics2D g2d = (java.awt.Graphics2D) g;
+            RenderingHints oldHints = g2d.getRenderingHints();
+            g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+                    java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+            int w = getWidth();
+            int h = getHeight();
+            g2d.setColor(UITheme.BG_APP);
+            g2d.fillRoundRect(0, 0, w - 1, h - 1, 16, 16);
+            g2d.setColor(UITheme.BG_ELEVATED_ELEVATED);
+            g2d.drawRoundRect(0, 0, w - 1, h - 1, 16, 16);
+            int x = 12;
+            int y = 10;
+            // Title line
+            g2d.setFont(UITheme.FONT_BODY.deriveFont(java.awt.Font.BOLD));
+            g2d.setColor(UITheme.TEXT_PRIMARY);
+            g2d.drawString(course.getSection().getNumber() + " - " + course.getSection().getName() + " | Waitlist Position: " + course.getWaitlistPosition(),
+                    x, y + g2d.getFontMetrics().getAscent());
+            y += g2d.getFontMetrics().getHeight();
+            // Instructor + time
+            g2d.setFont(UITheme.FONT_BODY);
+            String meettimes = "Meet Times |";
+            for(MeetTime m : course.getSection().getMeetTimes()) {
+                meettimes += m.getDay() + "|";
+            }
+            g2d.drawString(meettimes, //fix when getting access to Section
+                    x, y + g2d.getFontMetrics().getAscent());
+            
+            y += g2d.getFontMetrics().getHeight();
+            // Location
+            g2d.drawString(course.getSection().getInstructor(),x, y + g2d.getFontMetrics().getAscent());
+            g2d.setRenderingHints(oldHints);
+        }
+    }
+
 }

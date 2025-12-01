@@ -31,18 +31,15 @@ public class StudentPage {
         Color navBg = UITheme.BG_APP;
 
         nButton navBrowse = new nButton("Browse Courses");
-        nButton navDrop = new nButton("Drop Course");
-        nButton navSchedule = new nButton("View Schedule");
+        nButton navDrop = new nButton("View Schedule/Drop Course");
         nButton navWaitlist = new nButton("Waitlist / Notices");
 
         navBrowse.setBackgroundColor(navBg);
         navDrop.setBackgroundColor(navBg);
-        navSchedule.setBackgroundColor(navBg);
         navWaitlist.setBackgroundColor(navBg);
 
         navList.append(navBrowse);
         navList.append(navDrop);
-        navList.append(navSchedule);
         navList.append(navWaitlist);
 
         Component[] navComponents = navList.toArray(new Component[navList.getLength()]);
@@ -60,20 +57,17 @@ public class StudentPage {
         // center views
         nFrame.ListLayout viewBrowse = PageViews.createBrowseView(frame, mainX, mainY, mainW, mainH, guiService, role);
         nFrame.ListLayout viewDrop = PageViews.createDropView(frame, mainX, mainY, mainW, mainH, guiService);
-        nFrame.ListLayout viewSchedule = PageViews.createScheduleView(frame, mainX, mainY, mainW, mainH);
-        nFrame.ListLayout viewWaitlist = PageViews.createWaitlistView(frame, mainX, mainY, mainW, mainH);
+        nFrame.ListLayout viewWaitlist = PageViews.createWaitlistView(frame, mainX, mainY, mainW, mainH, guiService);
 
         nPanel[] views = {
                 viewBrowse,
                 viewDrop,
-                viewSchedule,
                 viewWaitlist
         };
         clearCenterView(views);
         viewBrowse.setVisible(true);
         navBrowse.addActionListener(e -> {clearCenterView(views);viewBrowse.setVisible(true);});
         navDrop.addActionListener(e -> {clearCenterView(views);viewDrop.setVisible(true);});
-        navSchedule.addActionListener(e -> {clearCenterView(views);viewSchedule.setVisible(true);});
         navWaitlist.addActionListener(e -> {clearCenterView(views);viewWaitlist.setVisible(true);});
 
     }
