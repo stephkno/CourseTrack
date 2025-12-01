@@ -62,7 +62,10 @@ public class ServerController {
                 handlePing((Message<PingRequest>) msg, client);
                 break;
             }
-
+            case GET_CAMPUSES:{
+                handleGetCampuses((Message<GetCampusesRequest>) msg, client);
+                return;
+            }
             // user requests
             case USER_LOGOUT:{
                 handleLogout((Message<LogoutRequest>) msg, client);
@@ -743,9 +746,8 @@ public class ServerController {
             return;
         }
 
-        // todo: fix bug here where user goes null when casting to student(?)
         Student student = (Student)client.getUser();
-        if(student != null){
+        if(student == null){
             Log.Err("Get schedule: Cast to Student failed. User is not Student");
             client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null ));
             return;

@@ -33,7 +33,9 @@ public class User implements Serializable {
     LinkedList<Notification> notifications;
     
     public LinkedList<Notification> getNotifications(){
-        return notifications;
+        LinkedList<Notification> out = this.notifications;
+        this.notifications = new LinkedList<Notification>();
+        return out;
     }
 
     public void Ban(){

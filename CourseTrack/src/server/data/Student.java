@@ -25,6 +25,7 @@ public class Student extends User implements Serializable {
         super(name, password, UserType.STUDENT);
         this.id = nextId++;
         this.enrolledSections = new LinkedList<>();
+        this.waitlisted = new LinkedList<>();
     }
 
     public static void setNextId(int id){

@@ -362,14 +362,15 @@ public class TestHelpers {
 
 		Section droppedSection = Drop(sections.Get(0).getId(), sections.Get(0).getTerm(), client);
 		assert(droppedSection.numStudents() == 1);
+		
 		GetSchedule(term, client);
-
-		Logout(client);
 
 		LinkedList<Campus> campuses = GetCampuses(client);
 		for(Campus campus : campuses){
 			Log.Msg(campus.toString());
 		}
+
+		while(true){}
 
     }
 
