@@ -12,10 +12,10 @@ public class Admin extends User implements Serializable {
     int id;
     static int nextId = 0;
 
-    LinkedList<Campus> campuses;
-    LinkedList<Course> courses;
-    LinkedList<Department> departments;
-    LinkedList<Section> sections;
+    LinkedList<Campus> campuses = new LinkedList<>();
+    LinkedList<Course> courses = new LinkedList<>();
+    LinkedList<Department> departments = new LinkedList<>();
+    LinkedList<Section> sections = new LinkedList<>();
 
     public void addCampus(Campus campus){
         this.campuses.Push(campus);
