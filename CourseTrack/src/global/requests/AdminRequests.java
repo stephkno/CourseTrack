@@ -26,4 +26,5 @@ public class AdminRequests {
 
     public record AdminRemoveSectionRequest(int sectionId) implements Serializable { }
 
+    public record ReportRequest(Term term) implements Serializable { }
 }

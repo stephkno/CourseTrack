@@ -25,5 +25,7 @@ public class AdminResponses {
     public record AdminRemoveCourseResponse() implements Serializable { }
 
     public record AdminRemoveSectionResponse() implements Serializable { }
+    
+    public record DisplayReport(LinkedList<String> reportEntries) implements Serializable { }
 
 }
