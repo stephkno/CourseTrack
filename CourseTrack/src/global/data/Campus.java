@@ -100,6 +100,16 @@ public class Campus implements Serializable {
         return departments.Get(departmentName);
     }
 
+    public LinkedList<Department> getDepartments(){
+        LinkedList<Department> outlist = new LinkedList<>();
+
+        for(Department d : departments){
+            outlist.Push(d);
+        }
+        
+        return outlist;
+    }
+
     public boolean equals(Campus other){
         return id == other.id;
     }
