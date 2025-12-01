@@ -22,13 +22,15 @@ public class Section implements Serializable {
     int capacity;
     int num_enrolled;
     int num_waitlisted;
+    double percentageFull;
 
-    public Section(int capacity, Course course, Term term, Department department, String instructor, MeetTime[] meetTimes) {
+    public Section(int capacity, Course course, Term term, Department department, String instructor, MeetTime[] meetTimes, double percentageFull) {
         
         this.capacity = capacity;
         this.course = course;
         this.term = term;
         this.department = department;
+        this.percentageFull = percentageFull;
 
         this.students = new LinkedList<Student>();
         this.waitlist = new LinkedList<Student>();
@@ -190,10 +192,13 @@ public class Section implements Serializable {
         return id == other.id;
     }
     
+    public double getPercentFull() {
+        if (capacity == 0) return 0;
+        return percentageFull = ((double) num_enrolled / (double) capacity) * 100.0;
+    }
+
     public String toString(){
         String outstring = "";
-        
-        long percentage = ( (long)num_enrolled / (long)capacity ) * 100;
 
         outstring += "Course: " + course.getName() + 
         "\nSection no: " + number + 
@@ -202,7 +207,7 @@ public class Section implements Serializable {
         "\nTotal Capacity: " + capacity + 
         "\nTotal Enrolled: " + num_enrolled + 
         "\nTotal Waitlisted: " + num_waitlisted + 
-        "\n" + percentage + "% full\n";
+        "\n" + percentageFull + "% full\n";
 
         return outstring;
     }
