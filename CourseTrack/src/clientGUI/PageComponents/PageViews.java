@@ -69,30 +69,26 @@ public class PageViews {
         searchButton.addActionListener(e -> {
             courseList.clearItems();
             String query = searchBox.getText();
-            Message<AdminGetCoursesResponse> getCoursesResponse = guiService.sendAndWait(
-                    MessageType.ADMIN_GET_COURSES, MessageStatus.REQUEST, new AdminGetCoursesRequest());
-            LinkedList<Course> courses = getCoursesResponse.get().courses();
+
 
             Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                     MessageStatus.REQUEST, new GetTermsRequest());
             LinkedList<Term> terms = getTermsResponse.get().terms();
-            for (Course c : courses) {
-                if (c == null || campusChoose.getSelected() == null || departmentChoose.getSelected() == null) {
-                    continue;
-                }
-                if (!c.getCampus().getName().equals(campusChoose.getSelected().getText())) {
-                    continue;
-                }
-                if (!c.getDepartment().getName().equals(departmentChoose.getSelected().getText())) {
-                    continue;
-                }
-                if (c.getName().contains(query)) {
-                    for(Term t : terms) {
-                        if(!t.getDisplayName().equals(termChoose.getSelected().getText())) {continue;}
-                        courseList.addItem(new Panels.CourseItemPanel(c, userRole, t, guiService));
-                    }
-                    
-                }
+            if(terms == null) {return;}
+            Term cTerm = terms.Get(0);
+            for(Term t : terms) {
+                cTerm = t;
+                if(!t.getDisplayName().equals(termChoose.getSelected().getText())) {continue;}
+                break;                      
+            }
+            Message<BrowseSectionResponse> getCoursesResponse = guiService.sendAndWait(
+                    MessageType.STUDENT_BROWSE_SECTION, MessageStatus.REQUEST, new BrowseSectionRequest(query, campusChoose.getSelected().getText(), departmentChoose.getSelected().getText(), cTerm, 100));
+            LinkedList<Section> sections = getCoursesResponse.get().sections();
+
+            
+            if(sections == null) {sections = new LinkedList<Section>();}
+            for (Section c : sections) {
+                courseList.addItem(new Panels.CourseItemPanel(c, userRole, c.getTerm(), guiService));
             }
 
             courseList.revalidate();
@@ -109,10 +105,9 @@ public class PageViews {
                 departmentChoose.clearOptions();
                 termChoose.clearOptions();
 
-                Message<BrowseSectionResponse> getDepartmentsResponse = guiService.sendAndWait(
-                        MessageType.STUDENT_BROWSE_SECTION, MessageStatus.REQUEST, new BrowseSectionRequest());
+                
 
-                LinkedList<Department> departments = new LinkedList<>();// = getDepartmentsResponse.get().departments();
+                LinkedList<Department> departments = campus.getDepartments();// = getDepartmentsResponse.get().departments();
                 //if(departments)
                 for (Department department : departments) {
                     if (department == null) {
@@ -445,18 +440,21 @@ public class PageViews {
         searchButton.addActionListener(e -> {
             manageCourseList.clearItems();
             String query = searchBox.getText();
-            Message<AdminGetCoursesResponse> getCoursesResponse = guiService.sendAndWait(
-                    MessageType.ADMIN_GET_COURSES, MessageStatus.REQUEST, new AdminGetCoursesRequest());
-            LinkedList<Course> courses = getCoursesResponse.get().courses();
+
+
+            Message<AdminGetSectionsResponse> getSectionsResponse = guiService.sendAndWait(
+                    MessageType.ADMIN_GET_SECTIONS, MessageStatus.REQUEST, new AdminGetSectionsRequest());
+            LinkedList<Section> sections = getSectionsResponse.get().sections();
+
 
             Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                     MessageStatus.REQUEST, new GetTermsRequest());
             LinkedList<Term> terms = getTermsResponse.get().terms();
-            for (Course c : courses) {
+            for (Section c : sections) {
                 if (c == null || campusChoose.getSelected() == null || departmentChoose.getSelected() == null) {
                     continue;
                 }
-                if (!c.getCampus().getName().equals(campusChoose.getSelected().getText())) {
+                if (!c.getCourse().getCampus().getName().equals(campusChoose.getSelected().getText())) {
                     continue;
                 }
                 if (!c.getDepartment().getName().equals(departmentChoose.getSelected().getText())) {
@@ -465,7 +463,9 @@ public class PageViews {
                 if (c.getName().contains(query)) {
                     for(Term t : terms) {
                         if(!t.getDisplayName().equals(termChoose.getSelected().getText())) {continue;}
+                        
                         manageCourseList.addItem(new Panels.CourseItemPanel(c, userRole, t, guiService));
+                        
                     }
                     
                 }
@@ -476,6 +476,7 @@ public class PageViews {
         });
 
         for (Campus campus : campuses) {
+            
             nButton b = new nButton();
             b.setText(campus.getName());
             campusChoose.addOption(b);
@@ -585,8 +586,7 @@ public class PageViews {
                         termChoose.clearOptions();
 
                         Message<AdminGetDepartmentsResponse> getDepartmentsResponse = guiService.sendAndWait(
-                                MessageType.ADMIN_GET_DEPARTMENTS, MessageStatus.REQUEST,
-                                new AdminGetDepartmentsRequest());
+                                MessageType.ADMIN_GET_DEPARTMENTS, MessageStatus.REQUEST, new AdminGetDepartmentsRequest());
 
                         LinkedList<Department> departments = getDepartmentsResponse.get().departments();
                         for (Department department : departments) {
@@ -601,32 +601,19 @@ public class PageViews {
 
                             departmentChoose.addOption(db);
                             db.addActionListener(eeee -> {
-                                manageCourseList.clearItems();
                                 termChoose.clearOptions();
-                                Message<AdminGetCoursesResponse> getCoursesResponse = guiService.sendAndWait(
-                                        MessageType.ADMIN_GET_COURSES, MessageStatus.REQUEST,
-                                        new AdminGetCoursesRequest());
-                                LinkedList<Course> courses = getCoursesResponse.get().courses();
-                                Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(
-                                        MessageType.GET_TERMS, MessageStatus.REQUEST, new GetTermsRequest());
+
+                                Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
+                                        MessageStatus.REQUEST, new GetTermsRequest());
                                 LinkedList<Term> terms = getTermsResponse.get().terms();
                                 for (Term t : terms) {
                                     nButton tb = new nButton();
                                     tb.setText(t.getDisplayName());
                                     termChoose.addOption(tb);
                                 }
-                                for (Course course : courses) {
 
-                                    if (!course.getDepartment().getName().equals(department.getName())) {
-                                        continue;
-                                    }
-                                    manageCourseList.addItem(new Panels.CourseItemPanel(course, userRole));
-                                    System.out.println(course.getName());
-                                }
-                                termChoose.revalidate();
-                                termChoose.repaint();
-                                manageCourseList.revalidate();
-                                manageCourseList.repaint();
+                                searchButton.simulateClick();
+
                                 departmentChoose.revalidate();
                                 departmentChoose.repaint();
                             });
@@ -635,8 +622,7 @@ public class PageViews {
                             }
 
                         }
-                        termChoose.revalidate();
-                        termChoose.repaint();
+
                         manageCourseList.revalidate();
                         departmentChoose.revalidate();
                         campusChoose.revalidate();
@@ -894,7 +880,7 @@ public class PageViews {
         // #endregion
 
         ll.forEach(c -> {
-            list.addItem(new Panels.CourseItemPanel(c, userRole));
+            //list.addItem(new Panels.CourseItemPanel(c, userRole));
         });
         frame.resizeChildren();
         // printTree((Container) list, "root");

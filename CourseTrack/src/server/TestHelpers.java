@@ -344,7 +344,7 @@ public class TestHelpers {
 
 		MeetTime[] meetTimes = new MeetTime[]{
 			new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(14, 30), LocalTime.of(14, 30)),
-			new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(14, 30), LocalTime.of(14, 30))
+			new MeetTime(MeetTime.Day.WEDNESDAY, LocalTime.of(14, 30), LocalTime.of(14, 30))
 		};
 		
 		Term term = new Term(Term.Season.FALL, 2025);
