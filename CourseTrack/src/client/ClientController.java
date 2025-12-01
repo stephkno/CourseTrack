@@ -137,6 +137,38 @@ public class ClientController implements  IClientListenerService, IAppGUIService
     }
 
     @Override
+    public boolean sendLogoutRequest() {
+        Message<LogoutResponse> resp = client.sendAndWait(
+            new Message<>(
+                MessageType.USER_LOGOUT, 
+                MessageStatus.REQUEST, 
+                new LogoutRequest()
+            )
+        );
+
+        if (resp == null) {
+            clientUI.setLoginValidationMessage("No response from server.");
+            return false;
+        }
+
+        switch (resp.getStatus()) {
+            case SUCCESS -> {
+                clientUI.GoLoginPage(lInfo, this);
+                return true;
+            }
+
+            case FAILURE -> {
+                return false;
+            }
+
+            default -> {
+                return false;
+            }
+        }
+    }
+
+
+    @Override
     public LinkedList<Section> sendBrowseSectionRequest(String query, String campus, String department, Term term, int max_requests){
         Message<BrowseSectionResponse> resp = client.sendAndWait(
             new Message<>(

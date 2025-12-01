@@ -162,7 +162,7 @@ public class PageViews {
             @Override
             public void doLayout() {
                 int padding = 10;
-                int h = getHeight();
+                int h = 80;
                 int w = getWidth();
                 int buttonWidth = 80;
                 int controlHeight = 28;
@@ -215,7 +215,7 @@ public class PageViews {
                 heading.setBounds(padding, padding, w - padding * 2, headingHeight);
 
                 int searchY = padding + headingHeight + padding;
-                searchRow.setBounds(padding, searchY, w - padding * 2, searchRowHeight);
+                searchRow.setBounds(padding, searchY, w - padding * 2, h-searchY);
 
                 int listY = searchY + searchRowHeight + padding;
                 int listH = h - listY - padding;
@@ -283,7 +283,7 @@ public class PageViews {
             @Override
             public void doLayout() {
                 int padding = 10;
-                int h = getHeight();
+                int h = 40;
                 int w = getWidth();
                 int buttonWidth = 80;
                 int controlHeight = 28;
@@ -311,7 +311,7 @@ public class PageViews {
                 heading.setBounds(padding, padding, w - padding * 2, headingHeight);
 
                 int searchY = padding + headingHeight + padding;
-                searchRow.setBounds(padding, searchY, w - padding * 2, searchRowHeight);
+                searchRow.setBounds(padding, searchY, w - padding * 2, h-searchY);
 
                 int listY = searchY + searchRowHeight + padding;
                 int listH = h - listY - padding;
@@ -319,7 +319,6 @@ public class PageViews {
                     listH = 40;
 
                 courseList.setBounds(padding, listY, w - padding * 2, listH);
-                setComponentZOrder(courseList, getComponentZOrder(searchRow)+1);
             }
         };
         content.setLayout(null);
@@ -379,7 +378,7 @@ public class PageViews {
             @Override
             public void doLayout() {
                 int padding = 10;
-                int h = getHeight();
+                int h = 40;
                 int w = getWidth();
                 int buttonWidth = 80;
                 int controlHeight = 28;
@@ -407,7 +406,7 @@ public class PageViews {
                 heading.setBounds(padding, padding, w - padding * 2, headingHeight);
 
                 int searchY = padding + headingHeight + padding;
-                searchRow.setBounds(padding, searchY, w - padding * 2, searchRowHeight);
+                searchRow.setBounds(padding, searchY, w - padding * 2, h-searchY);
 
                 int listY = searchY + searchRowHeight + padding;
                 int listH = h - listY - padding;
@@ -415,15 +414,13 @@ public class PageViews {
                     listH = 40;
 
                 courseList.setBounds(padding, listY, w - padding * 2, listH);
-                setComponentZOrder(searchRow, getComponentCount()-1);
             }
         };
         content.setLayout(null);
         content.setOpaque(false);
         content.add(heading);
-        content.add(searchRow);
         content.add(courseList);
-        
+        content.add(searchRow);
         Component[] comps = { content };
 
         nFrame.ListLayout layout = new nFrame.ListLayout(frame, comps, new Dimension(w, h), x, y);
@@ -861,7 +858,7 @@ public class PageViews {
             @Override
             public void doLayout() {
                 int padding = 10;
-                int h = getHeight();
+                int h = 120;
                 int w = getWidth();
                 int buttonWidth = 80;
                 int controlHeight = 28;
@@ -962,7 +959,7 @@ public class PageViews {
                 heading.setBounds(padding, padding, cw - padding * 2, headingHeight);
 
                 int rowY = padding + headingHeight + padding;
-                controlRow.setBounds(padding, rowY, cw - padding * 2, rowHeight);
+                controlRow.setBounds(padding, rowY, cw - padding * 2, h-rowY);
 
                 int listY = rowY + rowHeight + padding;
                 int listH = ch - listY - padding;

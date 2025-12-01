@@ -12,7 +12,7 @@ import global.Message;
 public interface IAppGUIService {
     boolean sendLoginRequest(String username, String password);
     boolean sendRegisterRequest(String username, String password, UserType type);
-
+    boolean sendLogoutRequest();
     public <TObjResponse extends Serializable, TObjRequest extends Serializable>
     Message<TObjResponse> sendAndWait(MessageType type, MessageStatus status, TObjRequest obj);
 

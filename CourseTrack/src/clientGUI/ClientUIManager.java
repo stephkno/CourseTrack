@@ -112,7 +112,7 @@ public class ClientUIManager {
 
         String title = "Welcome, ";
         
-        HomePage hp = new HomePage(frame, logoutButtonAction, title);
+        HomePage hp = new HomePage(frame, guiService, title);
 
         frame.getContentPane().setBackground(UITheme.BG_APP);
         
@@ -125,7 +125,7 @@ public class ClientUIManager {
 
         String title = "Welcome, ";
 
-        HomePage hp = new HomePage(frame, logoutButtonAction, title);
+        HomePage hp = new HomePage(frame, guiService, title);
         frame.getContentPane().setBackground(UITheme.BG_APP);
 
 

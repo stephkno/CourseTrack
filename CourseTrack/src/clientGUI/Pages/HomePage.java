@@ -3,7 +3,13 @@ package clientGUI.Pages;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import client.services.IAppGUIService;
 import clientGUI.UIFramework.*;
+import global.Message;
+import global.MessageStatus;
+import global.MessageType;
+import global.requests.*;
+import global.responses.*;
 
 @SuppressWarnings("unused")
 public class HomePage {
@@ -17,15 +23,15 @@ public class HomePage {
     public int mainH;
     nPanelPlainText roleLabel;
 
-    public HomePage(nFrame frame, ButtonInterface logoutButtonAction, String headerRoleText) {
-        homePage(frame, logoutButtonAction, headerRoleText);
+    public HomePage(nFrame frame, IAppGUIService guiService, String headerRoleText) {
+        homePage(frame, guiService, headerRoleText);
     }
 
     public void setLabel(String text){
         roleLabel.setText(text);
     }
 
-    private void homePage(nFrame frame, ButtonInterface logoutButtonAction, String headerRoleText) {
+    private void homePage(nFrame frame, IAppGUIService guiService, String headerRoleText) {
         
         int frameW = frame.getWidth();
         int frameH = frame.getHeight();
@@ -50,7 +56,9 @@ public class HomePage {
         nButton logoutButton = new nButton("Logout");
         logoutButton.setBackgroundColor(UITheme.ACCENT);
 
-        logoutButton.addActionListener(e -> logoutButtonAction.run());
+        logoutButton.addActionListener(e -> {
+            guiService.sendLogoutRequest();
+        });
 
         nPanel headerPanel = new nPanel() {
             @Override
