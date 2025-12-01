@@ -18,7 +18,6 @@ import global.requests.*;
 import global.requests.AdminRequests.*;
 import global.responses.*;
 import global.responses.AdminResponses.*;
-import global.responses.StudentResponses.StudentGetScheduleResponse;
 import global.responses.StudentResponses.StudentGetUnitResponse;
 import server.data.Admin;
 import clientGUI.UIInformations.UserRole;

@@ -20,7 +20,7 @@ public class AdminRequests {
 
     public record AdminRemoveCampusRequest(String campus) implements Serializable { }
 
-    public record AdminRemoveDepartmentRequest(String departmentName) implements Serializable { }
+    public record AdminRemoveDepartmentRequest(String campus, String department) implements Serializable { }
 
     public record AdminRemoveCourseRequest(int courseId) implements Serializable { }
 

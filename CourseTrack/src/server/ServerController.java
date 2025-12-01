@@ -166,7 +166,7 @@ public class ServerController {
                 break;
             }
             case STUDENT_GET_SCHEDULE:{
-                handleStudentGetSchedule((Message<StudentGetScheduleRequest>) msg, client);
+                handleStudentGetSchedule((Message<GetScheduleRequest>) msg, client);
                 break;
             }
             case STUDENT_GET_UNITS:{
@@ -571,6 +571,14 @@ public class ServerController {
             return;
         }
 
+        String campusName = msg.get().campus();
+        String departmentName = msg.get().department();
+        Campus campus = Campus.get(campusName);
+        Department department = campus.getDepartment(departmentName);
+
+        ((Admin)client.getUser()).removeDepartment(department);
+//        Campus.removeDepartment(department);
+
         client.sendMessage(MessageType.ADMIN_REMOVE_DEPARTMENT, MessageStatus.FAILURE, new AdminRemoveDepartmentResponse());
     }
 
@@ -774,7 +782,7 @@ public class ServerController {
 
     }
 
-    private void handleStudentGetSchedule(Message<StudentGetScheduleRequest> msg, ServerConnection client) {
+    private void handleStudentGetSchedule(Message<GetScheduleRequest> msg, ServerConnection client) {
 
         // Note: only for students?
         if(!client.validateStudent()){
