@@ -246,7 +246,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
                 break;
             }
             case NOTIFICATION -> {
-                receiveNotificationRequest((Message<Notification>) request);
+                receiveNotificationRequest((Message<NotificationRequest>) request);
                 break;
             }
             default -> {
