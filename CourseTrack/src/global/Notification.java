@@ -4,7 +4,7 @@ public class Notification {
     String message;
     boolean sent = false;
 
-    public Notification(String message){
+    public Notification(String message) {
         this.message = message;
     }
 
@@ -12,7 +12,11 @@ public class Notification {
         return sent;
     }
 
-    public void send(){
+    public void send() {
         this.sent = true;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
