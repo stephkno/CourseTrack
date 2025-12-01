@@ -17,6 +17,7 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
 
     public static String[] messageTypes = {
         "PING_REQUEST",
+        "GET_CAMPUSES",
         "USER_REGISTER",
         "USER_LOGIN",
         "USER_LOGOUT",
@@ -44,8 +45,6 @@ public final class Message<TObjMessage extends Serializable> implements Serializ
         "ADMIN_REMOVE_UNIVERSITY",
         "ADMIN_ADD_DEPARTMENT",
         "ADMIN_REMOVE_DEPARTMENT",
-        "ADMIN_ADD_TERM",
-        "ADMIN_REMOVE_TERM",
         "ADMIN_ADD_COURSE",
         "ADMIN_REMOVE_COURSE",
         "ADMIN_ADD_SECTION",

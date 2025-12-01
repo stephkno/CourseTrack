@@ -15,7 +15,9 @@ public class Campus implements Serializable {
     static int nextId = 0;
     
     static HashMap<String, Campus> campuses = new HashMap<>();
-    
+    transient HashMap<String, Department> departments = new HashMap<>();
+    transient LinkedList<Student> students = new LinkedList<>();
+
     public static HashMap<String, Campus> get() {
         return campuses;
     }
@@ -56,10 +58,6 @@ public class Campus implements Serializable {
         }
     }
 
-
-    HashMap<String, Department> departments = new HashMap<>();
-    LinkedList<Student> students = new LinkedList<>();
-
     private Campus(String campusName) {
         this.campusName = campusName;
         this.id = Campus.nextId++;
@@ -91,12 +89,17 @@ public class Campus implements Serializable {
     }
 
     public String toString(){
-        String outstring = "";
 
-        outstring += campusName + "\nDepartments:\n";
-        
-        for(Department department : departments){
-            outstring += department.toString();
+        String outstring = new String(campusName);
+
+        if(departments != null){
+
+            outstring += campusName + "\nDepartments:\n";
+            
+            for(Department department : departments){
+                outstring += department.toString();
+            }
+
         }
 
         return outstring + "\n";

@@ -34,6 +34,27 @@ public class TestHelpers {
 	
 	}
 
+	static LinkedList<Campus> GetCampuses(Client client)
+	{
+
+		Log.Msg("Sending get campuses request");
+		
+		Message<GetCampusesResponse> response = client.sendAndWait(
+            new Message<GetCampusesRequest>(
+				MessageType.GET_CAMPUSES, 
+				MessageStatus.REQUEST, 
+				new GetCampusesRequest()
+			)
+        );
+
+		Log.Msg(response);	
+		assert(response.getStatus() == MessageStatus.SUCCESS);
+
+		Log.Msg("Received get campuses response " + response.get());
+		return response.get().campuses();
+	
+	}
+
 	static client.User Login(String username, String password, Client client)
 	{ 
 		if (!client.isConnected()) {
@@ -315,6 +336,10 @@ public class TestHelpers {
 		
 		Logout(client);
 
+		LinkedList<Campus> campuses = GetCampuses(client);
+		for(Campus campus : campuses){
+			Log.Msg(campus.toString());
+		}
     }
 
 	public static void main(String[] args){

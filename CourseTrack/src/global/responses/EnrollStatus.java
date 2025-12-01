@@ -1,0 +1,11 @@
+package global.responses;
+
+public enum EnrollStatus {
+    USER_NOT_A_STUDENT,
+    NOT_MET_REQUIREMENTS,
+    SCHEDULE_CONFLICT,
+    MAX_CREDITS_EXCEEDED,
+    SECTION_NOT_FOUND,
+    WAS_WAITLISTED,
+    WAS_ENROLLED
+}

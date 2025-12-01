@@ -7,6 +7,7 @@ import java.io.Serializable;
 public record EnrollSectionResponse(
     
     Section section,
-    int waitlist_position
+    int waitlist_position,
+    EnrollStatus status
 
 ) implements Serializable { }
