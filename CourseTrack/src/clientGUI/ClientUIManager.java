@@ -130,14 +130,10 @@ public class ClientUIManager {
 
         campus = Campus.get("CSU East Bay");
         
-        Course[] courseInfo = new Course[20];
-        for(int i = 0; i < 20; i++) {
-            courseInfo[i] = campus.getDepartment("CS").getCourse(i);
-        }  
 
         // todo: add course requirements!
         Course[] myCourseInfo = {new Course("title", 1, 1, campus.getDepartment("Computer Science"), new LinkedList<Course>())};
-        new StudentPage(frame, courseInfo, myCourseInfo, hp);
+        new StudentPage(frame, guiService, myCourseInfo, hp);
     }
 
 

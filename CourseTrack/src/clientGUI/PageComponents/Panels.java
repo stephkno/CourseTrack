@@ -2,18 +2,209 @@ package clientGUI.PageComponents;
 
 import clientGUI.UIFramework.*;
 import clientGUI.UIInformations.*;
+import global.LinkedList;
+import global.Message;
+import global.MessageStatus;
+import global.MessageType;
+import global.data.Campus;
 import global.data.Course;
+import global.data.Term;
+import global.requests.AddCourseRequest;
+import global.requests.AdminRequests.AdminGetCampusesRequest;
+import global.requests.AdminRequests.AdminRemoveCourseRequest;
+import global.responses.AddCourseResponse;
+import global.responses.AdminResponses.AdminGetCampusesResponse;
+import global.responses.AdminResponses.AdminRemoveCourseResponse;
 
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.RenderingHints;
+import java.util.HashMap;
+
 import javax.swing.JFrame;
+
+import client.services.IAppGUIService;
 
 public class Panels {
     public static class CourseItemPanel extends nPanel {
-        private final Course course;
+        private Course course;
         private nButton[] buttonList;
+        private Term currentTerm;
+        CourseItemPanel(Course _course, UserRole role, Term currentTerm, IAppGUIService guiService) {
+            setName("CourseItemPanel");
+            this.currentTerm = currentTerm;
+            course = _course;
+            setOpaque(false);
+            setLayout(null);
+            setPreferredSize(new Dimension(200, 70));
+
+            
+            switch (role) {
+                case admin -> {
+                    nButton editButton = new nButton("Edit");
+                    nButton deleteButton = new nButton("Delete");
+                    editButton.setBackgroundColor(UITheme.SUCCESS);
+                    deleteButton.setBackgroundColor(UITheme.FAIL);
+                    add(editButton);
+                    DoEditButton(editButton, guiService);
+                    add(deleteButton);
+                    DoRemoveButton(deleteButton, guiService);
+                    buttonList = new nButton[2];
+                    buttonList[1] = editButton; buttonList[0] = deleteButton;
+                }
+            
+                default -> {
+                    nButton enrollButton = new nButton("Enroll");
+                    enrollButton.setBackgroundColor(UITheme.SUCCESS);
+                    add(enrollButton);
+                    DoEnrollButton(enrollButton, guiService);
+                    buttonList = new nButton[1];
+                    buttonList[0] = enrollButton;
+                }
+            }
+            doLayout();
+        }
+
+        private void DoEnrollButton(nButton EnrollButton, IAppGUIService guiService){
+            EnrollButton.addActionListener(e -> {
+                JFrame frame = getFrameWindow();
+                int w = 420;
+                int h = 280;
+                int x = (frame.getWidth() - w) / 2;
+                int y = (frame.getHeight() - h) / 2;
+
+                
+
+                nButton enrollButton = new nButton("Enroll");
+                enrollButton.setBackgroundColor(UITheme.SUCCESS);
+                nButton cancelButton = new nButton("Cancel");
+                cancelButton.setBackgroundColor(UITheme.FAIL);
+                Component[] options = {
+                    enrollButton,
+                    cancelButton
+                };
+                nFrame.GridLayout lowerOptions = new nFrame.GridLayout((nFrame)frame, options, false);
+                lowerOptions.setGridSize(2, 1);
+                lowerOptions.setPadding(5);
+                Component[] enrollPanel = {
+                    new nPanelPlainText(course.getDepartment().getCampus().getName(), UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText(course.getDepartment().getName(), UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText(course.getNumber()+" | "+course.getName(), UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText("Units: "+course.getUnits(), UITheme.TEXT_PRIMARY),
+                    lowerOptions
+                };
+                nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10, false);
+                panel.setPadding(5, 7);
+                nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
+                enrollButton.addActionListener(ee -> {
+                    modal.close();
+                });
+                cancelButton.addActionListener(ee -> {
+                    modal.close();
+                });
+            });
+        
+        }
+        private void DoEditButton(nButton EditButton, IAppGUIService guiService){
+            EditButton.addActionListener(e -> {
+                JFrame frame = getFrameWindow();
+                int w = 420;
+                int h = 400;
+                int x = (frame.getWidth() - w) / 2;
+                int y = (frame.getHeight() - h) / 2;
+
+                
+
+                nButton enrollButton = new nButton("Save");
+                enrollButton.setBackgroundColor(UITheme.SUCCESS);
+                nButton cancelButton = new nButton("Cancel");
+                cancelButton.setBackgroundColor(UITheme.FAIL);
+                Component[] options = {
+                    enrollButton,
+                    cancelButton
+                };
+                nFrame.GridLayout lowerOptions = new nFrame.GridLayout((nFrame)frame, options, false);
+                lowerOptions.setGridSize(2, 1);
+                lowerOptions.setPadding(5);
+                nPanelTextBox courseTB = new nPanelTextBox(course.getName(), UITheme.TEXT_PRIMARY);
+                nPanelTextBox courseNumberTB = new nPanelTextBox(""+course.getNumber(), UITheme.TEXT_PRIMARY);
+                nPanelTextBox courseUnitsTB = new nPanelTextBox(""+course.getUnits(), UITheme.TEXT_PRIMARY);
+                Component[] enrollPanel = {
+                    new nPanelPlainText("Edit Course", UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText("Course", UITheme.TEXT_PRIMARY),
+                    courseTB,
+                    new nPanelPlainText("Course Number", UITheme.TEXT_PRIMARY),
+                    courseNumberTB,
+                    new nPanelPlainText("Course Units", UITheme.TEXT_PRIMARY),
+                    courseUnitsTB,
+                    lowerOptions
+                };
+                nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10, false);
+                panel.setPadding(5, 7);
+                nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
+                enrollButton.addActionListener(ee -> {
+                    Message<AdminRemoveCourseResponse> removeResponse = guiService.sendAndWait(MessageType.ADMIN_REMOVE_COURSE,
+                            MessageStatus.REQUEST, new AdminRemoveCourseRequest(course.getId()));
+                    if(removeResponse.getStatus() != MessageStatus.SUCCESS) {return;}
+                    
+                    Message<AddCourseResponse> addResponse = guiService.sendAndWait(MessageType.ADMIN_ADD_COURSE,
+                            MessageStatus.REQUEST, new AddCourseRequest(courseTB.getText(), Integer.valueOf(courseNumberTB.getText()), Integer.valueOf(courseUnitsTB.getText()), course.getCampus().getName(), course.getDepartment().getName(), course.getRequirements()));
+                    if(addResponse.getStatus() != MessageStatus.SUCCESS) {return;}
+
+                    course = addResponse.get().course();
+
+                    modal.close();
+                });
+                cancelButton.addActionListener(ee -> {
+                    modal.close();
+                });
+            });
+        
+        }
+        private void DoRemoveButton(nButton RemoveButton, IAppGUIService guiService){
+            RemoveButton.addActionListener(e -> {
+                JFrame frame = getFrameWindow();
+                int w = 420;
+                int h = 200;
+                int x = (frame.getWidth() - w) / 2;
+                int y = (frame.getHeight() - h) / 2;
+
+                
+
+                nButton enrollButton = new nButton("Yes");
+                enrollButton.setBackgroundColor(UITheme.SUCCESS);
+                nButton cancelButton = new nButton("Cancel");
+                cancelButton.setBackgroundColor(UITheme.FAIL);
+                Component[] options = {
+                    enrollButton,
+                    cancelButton
+                };
+                nFrame.GridLayout lowerOptions = new nFrame.GridLayout((nFrame)frame, options, false);
+                lowerOptions.setGridSize(2, 1);
+                lowerOptions.setPadding(5);
+                Component[] enrollPanel = {
+                    new nPanelPlainText("Are you sure you want to delete " + course.getName() + " ?", UITheme.TEXT_PRIMARY),
+                    lowerOptions
+                };
+                nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10, false);
+                panel.setPadding(5, 7);
+                nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
+                enrollButton.addActionListener(ee -> {
+                    Message<AdminRemoveCourseResponse> removeResponse = guiService.sendAndWait(MessageType.ADMIN_REMOVE_COURSE,
+                            MessageStatus.REQUEST, new AdminRemoveCourseRequest(course.getId()));
+                    if(removeResponse.getStatus() != MessageStatus.SUCCESS) {return;}
+                    modal.close();
+                });
+                cancelButton.addActionListener(ee -> {
+                    modal.close();
+                });
+            });
+        
+        }
+        
+
+
         CourseItemPanel(Course _course, UserRole role) {
             setName("CourseItemPanel");
 
@@ -47,6 +238,7 @@ public class Panels {
             }
             doLayout();
         }
+        
         private void DoEnrollButton(nButton EnrollButton){
             EnrollButton.addActionListener(e -> {
                 JFrame frame = getFrameWindow();
@@ -185,11 +377,15 @@ public class Panels {
             // Instructor + time
             g2d.setFont(UITheme.FONT_BODY);
             g2d.setColor(UITheme.TEXT_MUTED);
-            g2d.drawString("PUT INSTRUCTOR NAE" + " | " + "PUT COURSE TIME", //fix when getting access to Section
+            
+            if(course.getSections(currentTerm) != null) {
+                g2d.drawString("Sections: " + course.getSections(currentTerm).Length(), //fix when getting access to Section
                     x, y + g2d.getFontMetrics().getAscent());
-            y += g2d.getFontMetrics().getHeight();
+            }
+            
+            //y += g2d.getFontMetrics().getHeight();
             // Location
-            g2d.drawString("PUT LOCATION HERE",x, y + g2d.getFontMetrics().getAscent());
+            //g2d.drawString("PUT LOCATION HERE",x, y + g2d.getFontMetrics().getAscent());
             g2d.setRenderingHints(oldHints);
         }
     }

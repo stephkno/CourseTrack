@@ -49,6 +49,10 @@ public class Course implements Serializable {
         return nextId;
     }
 
+    public LinkedList<Course> getRequirements() {
+        return requirements;
+    }
+
     // add section to this course in this term and return id
     public int addSection(Term term, Section section) {
         

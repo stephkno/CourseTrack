@@ -17,7 +17,7 @@ public class nPanelDropDown extends nButton {
 
     private final nScrollableList dropDownList = new nScrollableList();
 
-    private int dropDownListHeight = 200;
+    private int dropDownListHeight = 100;
     private int collapsedHeight = -1;
     private Dimension preferredSz = new Dimension(10, 20);
 
@@ -120,15 +120,14 @@ public class nPanelDropDown extends nButton {
 
     private void updateSizeForState() {
         int w = getWidth();
+        int h = getHeight();
         if (collapsedHeight < 0) {
-            collapsedHeight = getHeight();
+            collapsedHeight = h;
         }
 
-        int newHeight = expanded
-                ? collapsedHeight + dropDownListHeight
-                : collapsedHeight;
 
-        setSize(w, newHeight);
+
+        setSize(w, h);
         revalidate();
         repaint();
 
@@ -146,7 +145,7 @@ public class nPanelDropDown extends nButton {
         newOption.addActionListener(e -> {
             selected = newOption;
         });
-        if(selected == null) {
+        if (selected == null) {
             selected = newOption;
         }
         dropDownList.addItem(newOption);
@@ -212,11 +211,11 @@ public class nPanelDropDown extends nButton {
         if (expanded) {
             tri.addPoint(cx - arrowSize, cy + arrowSize / 2);
             tri.addPoint(cx + arrowSize, cy + arrowSize / 2);
-            tri.addPoint(cx,            cy - arrowSize / 2);
+            tri.addPoint(cx, cy - arrowSize / 2);
         } else {
             tri.addPoint(cx - arrowSize, cy - arrowSize / 2);
             tri.addPoint(cx + arrowSize, cy - arrowSize / 2);
-            tri.addPoint(cx,             cy + arrowSize / 2);
+            tri.addPoint(cx, cy + arrowSize / 2);
         }
         g2d.setColor(arrowColor);
         g2d.fillPolygon(tri);
@@ -232,7 +231,7 @@ public class nPanelDropDown extends nButton {
             int maxTextWidth = cx - paddingX * 2;
             if (fm.stringWidth(label) > maxTextWidth) {
                 while (label.length() > 0 &&
-                    fm.stringWidth(label + "...") > maxTextWidth) {
+                        fm.stringWidth(label + "...") > maxTextWidth) {
                     label = label.substring(0, label.length() - 1);
                 }
                 label += "...";

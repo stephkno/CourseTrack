@@ -288,8 +288,8 @@ public class TestHelpers {
 		
 		StartClient();
 		
-		String username = "testuser";
-		String password = "password123";
+		String username = "admin";
+		String password = "";
 		
 		RegisterUser(username, password, UserType.ADMIN, client);
 		Login(username, password, client);
@@ -368,9 +368,9 @@ public class TestHelpers {
 
 		Logout(client);
 
-		RegisterUser("teststudent", "password", UserType.STUDENT, client);
+		RegisterUser("student", "", UserType.STUDENT, client);
 		
-		Login("teststudent", "password", client);
+		Login("student", "", client);
 
 		LinkedList<Section> sections = SearchCourses("softwa", "CSU East Bay", "CS", term, client);
 		
