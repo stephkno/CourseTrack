@@ -25,16 +25,17 @@ public class ServerController {
     public void handleMessage(Message<?> msg, ServerConnection client) {
 
         Log.Msg("Got message: " + msg.toString());
+        Log.Msg("Got message: " + msg.getType());
 
         // lobby requests
         if(!client.isLoggedIn()){
             
             switch(msg.getType()) {
+                
                 case GET_CAMPUSES:{
                     handleGetCampuses((Message<GetCampusesRequest>) msg, client);
                     return;
                 }
-
                 case USER_LOGIN:{
                     handleLogin((Message<LoginRequest>) msg, client);
                     return;
@@ -54,7 +55,12 @@ public class ServerController {
         client.getUser().setActive();
 
         switch(msg.getType()) {
-
+                
+            case GET_CAMPUSES:{
+                handleGetCampuses((Message<GetCampusesRequest>) msg, client);
+                return;
+            }
+            
             case PING_REQUEST:{
                 handlePing((Message<PingRequest>) msg, client);
                 break;
@@ -189,6 +195,8 @@ public class ServerController {
     }
 
     private void handleGetCampuses(Message<GetCampusesRequest> msg, ServerConnection client) {
+
+        Log.Msg("handleGetCampuses");
 
         LinkedList<Campus> campuses = new LinkedList<>();
 

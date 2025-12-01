@@ -23,7 +23,7 @@ public class TestHelpers {
 		Message<RegisterResponse> response = client.sendAndWait(
             new Message<RegisterRequest>(
 				MessageType.USER_REGISTER, 
-				MessageStatus.REQUEST, 
+				MessageStatus.REQUEST,
 				new RegisterRequest(username, password, type)
 			)
         );

@@ -193,9 +193,18 @@ public class ClientController implements  IClientListenerService, IAppGUIService
     @SuppressWarnings("unchecked")
     public void handleServerMessage(Message<?> request, Class<? extends Serializable> tClass) {
         switch (request.getType()) {
-            case CLIENT_UPDATE -> receiveUpdateRequest((Message<UpdateRequest>) request);
-            case PING_REQUEST -> receivePingRequest((Message<PingRequest>) request);
-            default -> System.err.println("Unhandled message type: " + request.getType());
+            case CLIENT_UPDATE -> {
+                receiveUpdateRequest((Message<UpdateRequest>) request);
+                break;
+            }
+            case PING_REQUEST -> {
+                receivePingRequest((Message<PingRequest>) request);
+                break;
+            }
+            default -> {
+                System.err.println("Unhandled message type: " + request.getType());
+                break;
+            }
         }
     }
 

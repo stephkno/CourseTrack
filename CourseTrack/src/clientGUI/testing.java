@@ -39,10 +39,10 @@ public class testing {
             // #region just so I can do some testing
 
             if ("admin".equals(lInfo.username)) {
-                clientUI.GoAdminPage(logoutButton);
+                //clientUI.GoAdminPage(logoutButton, );
             }
             if ("student".equals(lInfo.username)) {
-                clientUI.GoStudentPage(logoutButton);
+                //clientUI.GoStudentPage(logoutButton);
             }
             // #endregion
 
@@ -51,9 +51,9 @@ public class testing {
                     if (lInfo.password.equals(loginInfo[1])) {// check password
                         // send to respective page based on user type
                         if (loginInfo[2] == "STUDENT") {
-                            clientUI.GoStudentPage(logoutButton);
+                           // clientUI.GoStudentPage(logoutButton);
                         } else if (loginInfo[2] == "ADMIN") {
-                            clientUI.GoAdminPage(logoutButton);
+                            //clientUI.GoAdminPage(logoutButton);
                         }
                         didAuth = true;
                         break;
