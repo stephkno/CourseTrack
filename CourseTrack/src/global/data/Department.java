@@ -23,6 +23,12 @@ public class Department implements Serializable {
 
     }
 
+    public boolean removeCourse(Course course){
+        if(!courses.Contains(course)) return false;
+        courses.Remove(course);
+        return true;
+    }
+
     public boolean containsCourse(Course course){
         return courses.Contains(course);
     }

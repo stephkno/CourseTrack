@@ -577,18 +577,28 @@ public class ServerController {
         Department department = campus.getDepartment(departmentName);
 
         ((Admin)client.getUser()).removeDepartment(department);
-//        Campus.removeDepartment(department);
+        campus.removeDepartment(departmentName);
 
-        client.sendMessage(MessageType.ADMIN_REMOVE_DEPARTMENT, MessageStatus.FAILURE, new AdminRemoveDepartmentResponse());
+        client.sendMessage(MessageType.ADMIN_REMOVE_DEPARTMENT, MessageStatus.SUCCESS, new AdminRemoveDepartmentResponse());
     }
 
     private void handleAdminRemoveCourse(Message<AdminRemoveCourseRequest> msg, ServerConnection client) {
+
         if(!client.validateAdmin()){
             client.sendMessage(MessageType.ADMIN_REMOVE_COURSE, MessageStatus.FAILURE, new AdminRemoveCourseResponse());
             return;
         }
 
-        client.sendMessage(MessageType.ADMIN_REMOVE_COURSE, MessageStatus.FAILURE, new AdminRemoveCourseResponse());
+        String campusName = msg.get().campus();
+        String departmentName = msg.get().department();
+        Campus campus = Campus.get(campusName);
+        Department department = campus.getDepartment(departmentName);
+        Course course = msg.get().course();
+
+        ((Admin)client.getUser()).removeCourse(course);
+        department.removeCourse(course);
+
+        client.sendMessage(MessageType.ADMIN_REMOVE_COURSE, MessageStatus.SUCCESS, new AdminRemoveCourseResponse());
     }
 
     private void handleAdminRemoveSection(Message<AdminRemoveSectionRequest> msg, ServerConnection client) {
@@ -597,7 +607,14 @@ public class ServerController {
             return;
         }
 
-        client.sendMessage(MessageType.ADMIN_REMOVE_SECTION, MessageStatus.FAILURE, new AdminRemoveSectionResponse());
+        Course course = msg.get().course();
+        Section section = msg.get().section();
+        Term term = msg.get().term();
+
+        ((Admin)client.getUser()).removeSection(section);
+        course.removeSection(term, section);
+
+        client.sendMessage(MessageType.ADMIN_REMOVE_SECTION, MessageStatus.SUCCESS, new AdminRemoveSectionResponse());
     }
 
     private void handleStudentBrowseSection(Message<BrowseSectionRequest> msg, ServerConnection client) {

@@ -127,6 +127,12 @@ public class Campus implements Serializable {
         return newDepartment;
     }
 
+    public boolean removeDepartment(String departmentName){
+        if(!departments.Contains(departmentName)) return false;
+        departments.Remove(departmentName);
+        return true;
+    }
+
     public Department getDepartment(String departmentName) {
         return departments.Get(departmentName);
     }

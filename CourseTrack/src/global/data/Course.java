@@ -71,6 +71,12 @@ public class Course implements Serializable {
 
     }
 
+    public boolean removeSection(Term term, Section section){
+        if(!sections.Contains(term) || !sections.Get(term).Contains(section)) return false;
+        sections.Get(term).Remove(section);
+        return true;
+    }
+
     public LinkedList<Term> getTerms(){
         return sections.Keys();
     }
