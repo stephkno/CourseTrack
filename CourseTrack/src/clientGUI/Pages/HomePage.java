@@ -60,12 +60,16 @@ public class HomePage {
             guiService.sendLogoutRequest();
         });
 
+        nPanel bgPanel = new nPanel();
+
         nPanel headerPanel = new nPanel() {
             @Override
             public void doLayout() {
                 int w = getWidth();
                 int h = getHeight();
                 int pad = 12;
+
+                
 
                 int titleHeight = 26;
                 // title at top-left
@@ -87,6 +91,11 @@ public class HomePage {
                 int bx = w - pad - btnWidth;
                 int by = 4;
                 logoutButton.setBounds(bx, by, btnWidth, btnHeight);
+
+
+                bgPanel.setBounds(0, 0, w, 50+pad);
+                bgPanel.setBackground(UITheme.BG_ELEVATED);
+                bgPanel.setOpaque(true);
             }
         };
         headerPanel.setLayout(null);
@@ -94,6 +103,7 @@ public class HomePage {
         headerPanel.add(title);
         headerPanel.add(roleLabel);
         headerPanel.add(logoutButton);
+        headerPanel.add(bgPanel);
 
         Component[] titleComponents = { headerPanel };
 
