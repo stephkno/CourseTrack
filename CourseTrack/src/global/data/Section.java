@@ -18,7 +18,9 @@ public class Section implements Serializable {
     LinkedList<Student> students;
     // transient
     LinkedList<Student> waitlist;
+
     String instructor;
+    
     int capacity;
     int num_enrolled;
     int num_waitlisted;

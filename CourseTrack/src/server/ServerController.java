@@ -109,7 +109,7 @@ public class ServerController {
                 handleAdminGetDepartments((Message<AdminGetDepartmentsRequest>) msg, client);
                 break;
             }
-            case ADMIN_GET_TERMS:{
+            case GET_TERMS:{
                 handleGetTerms((Message<GetTermsRequest>) msg, client);
                 break;
             }
@@ -492,13 +492,16 @@ public class ServerController {
     private void handleGetTerms(Message<GetTermsRequest> msg, ServerConnection client) {
 
         if(!client.isLoggedIn()){
-            client.sendMessage(MessageType.ADMIN_GET_TERMS, MessageStatus.FAILURE, new GetTermsResponse(null));
+            client.sendMessage(MessageType.GET_TERMS, MessageStatus.FAILURE, new GetTermsResponse(null));
             return;
         }
 
-        LinkedList<Term> list = Term.get();
+        LinkedList<Term> list = new LinkedList<>();
+        for(Term term : Term.get()){
+            list.Push(term.shallowCopy());
+        }
 
-        client.sendMessage(MessageType.ADMIN_GET_TERMS, MessageStatus.SUCCESS, new GetTermsResponse(list));
+        client.sendMessage(MessageType.GET_TERMS, MessageStatus.SUCCESS, new GetTermsResponse(list));
     
     }
     

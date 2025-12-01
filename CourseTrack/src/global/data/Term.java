@@ -113,6 +113,10 @@ public class Term implements Serializable {
         return season == other.season && year == other.year;
     }
 
+    public Term shallowCopy(){
+        return new Term(this.season, this.year);
+    }
+
     public String toString(){
         String outstring = season + " " + year + "\n";
         if(sections == null) return outstring;
