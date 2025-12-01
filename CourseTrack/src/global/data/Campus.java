@@ -15,8 +15,16 @@ public class Campus implements Serializable {
     static int nextId = 0;
     
     static HashMap<String, Campus> campuses = new HashMap<>();
-    transient HashMap<String, Department> departments = new HashMap<>();
-    transient LinkedList<Student> students = new LinkedList<>();
+    // transient
+    HashMap<String, Department> departments = new HashMap<>();
+
+    // transient
+    LinkedList<Student> students = new LinkedList<>();
+
+    boolean serializeFull = false;
+    public void serializeFull(){
+        serializeFull = true;
+    }
 
     public static HashMap<String, Campus> get() {
         return campuses;

@@ -29,8 +29,8 @@ public class User implements Serializable {
     LocalDateTime lastActivity;
 
     transient public ServerConnection socket;
-
-    transient LinkedList<Notification> notifications;
+    // transient
+    LinkedList<Notification> notifications;
     
     public LinkedList<Notification> getNotifications(){
         return notifications;
@@ -77,7 +77,7 @@ public class User implements Serializable {
             newUser = (User)new Admin(username, password);
         }
 
-        users.Put(username, newUser);
+        User.users.Put(username, newUser);
         return newUser;
     }
 

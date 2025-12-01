@@ -83,3 +83,4 @@ coverage/
 
 # Server data
 ./server_data
+./server_data/*

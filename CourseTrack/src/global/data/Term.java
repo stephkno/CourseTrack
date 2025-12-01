@@ -14,7 +14,8 @@ public class Term implements Serializable {
     int year;
 
     static LinkedList<Term> terms = new LinkedList<>();
-    transient LinkedList<Section> sections = new LinkedList<>();
+    // transient
+    LinkedList<Section> sections = new LinkedList<>();
     
     public static LinkedList<Term> get() {
         return terms;

@@ -14,27 +14,46 @@ public class Shell implements Runnable {
     private Scanner scanner = new Scanner(System.in);
 
     private void PrintData(String[] args) {
-
-        //ServerController server = ServerController.Get();
-        HashMap<String, User> users = User.getUsers();
-        HashMap<String, Campus> campuses = Campus.get();
-        LinkedList<Term> terms = Term.get();
         
-        Log.Println("Users:");
-        for(Object user : users) {
-            Log.Println(user.toString());
+        boolean printusers = false;
+        boolean printcampus = false;
+        boolean printterms = false;
+
+        for(int i = 1; i < args.length; i++){
+            if(args[i].equals("users")) printusers = true;
+            if(args[i].equals("campus")) printcampus = true;
+            if(args[i].equals("terms")) printterms = true;
         }
 
-        Log.Println("Campuses:"); 
-        int c = 0;
+        if (!printusers && !printcampus && !printterms) {
+            printusers = printcampus = printterms = true;
+        }
         
-        for(Object campus : campuses) {
-            Log.Print(c++ + " " + campus.toString());
+        if(printusers){
+            HashMap<String, User> users = User.getUsers();
+            Log.Println("Users:");
+            for(Object user : users) {
+                Log.Println(user.toString());
+            }
         }
 
-        Log.Println("Terms:");
-        for(Object term : terms) {
-            Log.Print(term.toString());
+        if(printcampus){
+            HashMap<String, Campus> campuses = Campus.get();
+            Log.Println("Campuses:"); 
+            int c = 0;
+            
+            for(Object campus : campuses) {
+                Log.Print(c++ + " " + campus.toString());
+            }
+        }
+
+        if(printterms){
+            LinkedList<Term> terms = Term.get();
+            Log.Println("Terms:");
+
+            for(Object term : terms) {
+                Log.Print(term.toString());
+            }
         }
     
     }

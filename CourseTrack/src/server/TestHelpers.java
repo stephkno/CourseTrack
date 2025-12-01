@@ -228,8 +228,8 @@ public class TestHelpers {
 
 		Log.Msg("Received schedule response");
 
-		for(Section s : data.enrolledSections()){
-			Log.Msg(s);
+		for(StudentScheduleItem item : data.schedule()){
+			Log.Msg(item.toString());
 		}
 
 	}
@@ -362,13 +362,15 @@ public class TestHelpers {
 
 		Section droppedSection = Drop(sections.Get(0).getId(), sections.Get(0).getTerm(), client);
 		assert(droppedSection.numStudents() == 1);
-		
+		GetSchedule(term, client);
+
 		Logout(client);
 
 		LinkedList<Campus> campuses = GetCampuses(client);
 		for(Campus campus : campuses){
 			Log.Msg(campus.toString());
 		}
+
     }
 
 	public static void main(String[] args){

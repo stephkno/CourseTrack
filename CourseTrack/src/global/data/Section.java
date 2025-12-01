@@ -14,8 +14,10 @@ public class Section implements Serializable {
     Term term;
     Department department;
     MeetTime[] meetTimes;
-    transient LinkedList<Student> students;
-    transient LinkedList<Student> waitlist;
+    // transient
+    LinkedList<Student> students;
+    // transient
+    LinkedList<Student> waitlist;
     String instructor;
     int capacity;
     int num_enrolled;
@@ -28,8 +30,8 @@ public class Section implements Serializable {
         this.term = term;
         this.department = department;
 
-        this.students = new LinkedList<>();
-        this.waitlist = new LinkedList<>();
+        this.students = new LinkedList<Student>();
+        this.waitlist = new LinkedList<Student>();
 
         this.id = Section.nextId++;
         this.instructor = instructor;
@@ -118,6 +120,24 @@ public class Section implements Serializable {
         return waitlist;
     }
     
+    public int getWaitlistPosition(Student student){
+
+        if(!waitlist.Contains(student)){
+            return 0;
+        }
+
+        int i = 1;
+        for(Student s : waitlist){
+            if(s.equals(student)){
+                return i;
+            }
+            i++;
+        }
+        
+        return 0;
+
+    }
+
     public int waitlistLength(){
         return waitlist.Length();
     }

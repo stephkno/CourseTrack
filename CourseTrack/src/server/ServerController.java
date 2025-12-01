@@ -274,6 +274,13 @@ public class ServerController {
         User user = User.get(username);
         user.socket = client;
         user.login();
+
+        if(user == null){
+            Log.Err("ERROR: User null on login");
+        }else{
+            Log.Msg("Login in user: " + user);
+        }
+
         client.setUser(user);
 
         client.User clientUser = new client.User(user.getName(), user.getType());
@@ -731,20 +738,32 @@ public class ServerController {
 
         // Note: only for students?
         if(!client.validateStudent()){
-            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null, null ));
+            Log.Err("Get schedule: validateStudent failed. User is not Student");
+            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null ));
             return;
         }
 
-        // get currently enrolled sections s
+        // todo: fix bug here where user goes null when casting to student(?)
         Student student = (Student)client.getUser();
         if(student != null){
-            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null, null ));
+            Log.Err("Get schedule: Cast to Student failed. User is not Student");
+            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null ));
             return;
         }
 
         Log.Msg("Sending schedule response");
 
-        GetScheduleResponse res = new GetScheduleResponse(student.getEnrolledSections(), student.getWaitlistedSections());
+        LinkedList<StudentScheduleItem> schedule = new LinkedList<>();
+
+        // get currently enrolled sections 
+        for(Section section : student.getEnrolledSections()){
+            schedule.Push(new StudentScheduleItem(section, 0));
+        }
+        for(Section section : student.getWaitlistedSections()){
+            schedule.Push(new StudentScheduleItem(section, section.getWaitlistPosition(student)));
+        }
+
+        GetScheduleResponse res = new GetScheduleResponse(schedule);
         
         client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.SUCCESS, res);
 

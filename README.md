@@ -78,7 +78,7 @@ College Enrollment System
 
  - [x] 3.1.5.6 Classes scheduled/in progress
 
- - [ ] 3.1.5.7 Total credits ?
+ - [ ] 3.1.5.7 Total credits
 
  - [x] 3.1.6. Enrollment Validation
 
@@ -90,11 +90,11 @@ College Enrollment System
 
  - [x] 3.1.6.4 Student may only enroll in (max) credits per term
 
- - [ ] 3.1.7. Waitlisting
+ - [x] 3.1.7. Waitlisting
 
  - [x] 3.1.7.1 Students registering for a full class will be placed on waitlist
 
- - [ ] 3.1.7.2 Student can view their place in waitlist queue
+ - [x] 3.1.7.2 Student can view their place in waitlist queue
 
  - [x] 3.1.7.3 Student is automatically enrolled if students drop the class
 
