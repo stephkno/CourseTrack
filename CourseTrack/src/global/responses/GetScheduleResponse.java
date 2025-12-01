@@ -5,6 +5,7 @@ import global.LinkedList;
 
 public record GetScheduleResponse(
 
-    LinkedList<Section> enrolledSections
+    LinkedList<Section> enrolledSections,
+    LinkedList<Section> waitlistedSections
 
 ) implements Serializable { }

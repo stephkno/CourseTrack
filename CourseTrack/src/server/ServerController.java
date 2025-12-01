@@ -459,7 +459,7 @@ public class ServerController {
         }
 
         LinkedList<Campus> list = ((Admin)client.getUser()).getCampuses();
-        client.sendMessage(MessageType.ADMIN_GET_CAMPUSES, MessageStatus.FAILURE, new AdminGetCampusesResponse(list));
+        client.sendMessage(MessageType.ADMIN_GET_CAMPUSES, MessageStatus.SUCCESS, new AdminGetCampusesResponse(list));
     
     }
 
@@ -471,7 +471,7 @@ public class ServerController {
         }
 
         LinkedList<Department> list = ((Admin)client.getUser()).getDepartments();
-        client.sendMessage(MessageType.ADMIN_GET_DEPARTMENTS, MessageStatus.FAILURE, new AdminGetDepartmentsResponse(list));
+        client.sendMessage(MessageType.ADMIN_GET_DEPARTMENTS, MessageStatus.SUCCESS, new AdminGetDepartmentsResponse(list));
     
     }
 
@@ -483,7 +483,7 @@ public class ServerController {
         }
 
         LinkedList<Course> list = ((Admin)client.getUser()).getCourses();
-        client.sendMessage(MessageType.ADMIN_GET_COURSES, MessageStatus.FAILURE, new AdminGetCoursesResponse(list));
+        client.sendMessage(MessageType.ADMIN_GET_COURSES, MessageStatus.SUCCESS, new AdminGetCoursesResponse(list));
     
     }
 
@@ -494,7 +494,7 @@ public class ServerController {
         }
 
         LinkedList<Section> list = ((Admin)client.getUser()).getSections();
-        client.sendMessage(MessageType.ADMIN_GET_SECTIONS, MessageStatus.FAILURE, new AdminGetSectionsResponse(list));
+        client.sendMessage(MessageType.ADMIN_GET_SECTIONS, MessageStatus.SUCCESS, new AdminGetSectionsResponse(list));
     
     }
 
@@ -731,25 +731,21 @@ public class ServerController {
 
         // Note: only for students?
         if(!client.validateStudent()){
-            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null ));
+            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null, null ));
             return;
         }
 
         // get currently enrolled sections s
         Student student = (Student)client.getUser();
         if(student != null){
-            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null ));
+            client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.FAILURE, new GetScheduleResponse( null, null ));
             return;
         }
 
-        LinkedList<Section> sections = new LinkedList<>();
-
-        for(Section s : student.getEnrolledSections())
-            sections.Push(s);
-
         Log.Msg("Sending schedule response");
 
-        GetScheduleResponse res = new GetScheduleResponse(sections);
+        GetScheduleResponse res = new GetScheduleResponse(student.getEnrolledSections(), student.getWaitlistedSections());
+        
         client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.SUCCESS, res);
 
     }

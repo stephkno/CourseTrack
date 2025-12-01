@@ -35,6 +35,10 @@ public class Student extends User implements Serializable {
         waitlisted.Remove(section);
     }
 
+    public LinkedList<Section> getWaitlistedSections() { 
+        return waitlisted;
+    }
+
     public void addSection(Section section){
         enrolledSections.Push(section);
     }
@@ -43,12 +47,12 @@ public class Student extends User implements Serializable {
         enrolledSections.Remove(section);
     }
 
-    public int getStudentId() { 
-        return id;
-    }
-
     public LinkedList<Section> getEnrolledSections() { 
         return enrolledSections; 
+    }
+
+    public int getStudentId() { 
+        return id;
     }
     
     public boolean hasTaken(Course course){

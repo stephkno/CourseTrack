@@ -293,6 +293,7 @@ public class TestHelpers {
 		
 		String username = "testuser";
 		String password = "password123";
+		
 		RegisterUser(username, password, UserType.ADMIN, client);
 		Login(username, password, client);
 
