@@ -27,6 +27,11 @@ public class nPanelDropDown extends nButton {
         return selected;
     }
 
+    public void clearOptions() {
+        selected = null;
+        dropDownList.clearItems();
+    }
+
     public nPanelDropDown() {
         setName("nPanelDropDown");
         setOpaque(false);
@@ -141,8 +146,12 @@ public class nPanelDropDown extends nButton {
         newOption.addActionListener(e -> {
             selected = newOption;
         });
+        if(selected == null) {
+            selected = newOption;
+        }
         dropDownList.addItem(newOption);
         dropDownList.layoutItems();
+        revalidate();
         repaint();
     }
 
@@ -188,11 +197,13 @@ public class nPanelDropDown extends nButton {
 
         int headerHeight = (collapsedHeight > 0) ? collapsedHeight : rowHeight;
 
+        // background + border
         g2d.setColor(backgroundColor);
         g2d.fillRoundRect(0, 0, w - 1, headerHeight - 1, 8, 8);
         g2d.setColor(borderColor);
         g2d.drawRoundRect(0, 0, w - 1, headerHeight - 1, 8, 8);
 
+        // arrow
         int arrowSize = 6;
         int cx = w - paddingX - arrowSize;
         int cy = headerHeight / 2;
@@ -201,15 +212,36 @@ public class nPanelDropDown extends nButton {
         if (expanded) {
             tri.addPoint(cx - arrowSize, cy + arrowSize / 2);
             tri.addPoint(cx + arrowSize, cy + arrowSize / 2);
-            tri.addPoint(cx, cy - arrowSize / 2);
+            tri.addPoint(cx,            cy - arrowSize / 2);
         } else {
             tri.addPoint(cx - arrowSize, cy - arrowSize / 2);
             tri.addPoint(cx + arrowSize, cy - arrowSize / 2);
-            tri.addPoint(cx, cy + arrowSize / 2);
+            tri.addPoint(cx,             cy + arrowSize / 2);
         }
         g2d.setColor(arrowColor);
         g2d.fillPolygon(tri);
 
+        String label = selected == null ? "" : selected.getText();
+        if (label != null && !label.isEmpty()) {
+            g2d.setColor(textColor);
+            FontMetrics fm = g2d.getFontMetrics();
+
+            int textX = paddingX;
+            int textY = (headerHeight - fm.getHeight()) / 2 + fm.getAscent();
+
+            int maxTextWidth = cx - paddingX * 2;
+            if (fm.stringWidth(label) > maxTextWidth) {
+                while (label.length() > 0 &&
+                    fm.stringWidth(label + "...") > maxTextWidth) {
+                    label = label.substring(0, label.length() - 1);
+                }
+                label += "...";
+            }
+
+            g2d.drawString(label, textX, textY);
+        }
+
         g2d.setRenderingHints(oldHints);
     }
+
 }

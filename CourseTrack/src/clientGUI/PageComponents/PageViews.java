@@ -13,11 +13,12 @@ import global.data.Campus;
 import global.data.Course;
 import global.data.Department;
 import global.data.Section;
-import global.requests.AddCampusRequest;
-import global.requests.GetCampusesRequest;
-import global.requests.RegisterRequest;
-import global.responses.AddCampusResponse;
-import global.responses.GetCampusesResponse;
+import global.data.Term;
+import global.requests.*;
+import global.requests.AdminRequests.*;
+import global.responses.*;
+import global.responses.AdminResponses.*;
+import server.data.Admin;
 import clientGUI.UIInformations.UserRole;
 
 import global.Log;
@@ -289,9 +290,9 @@ public class PageViews {
     //#region createManageView
     public static nFrame.ListLayout createManageView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService, UserRole userRole) {
 
-        Message<GetCampusesResponse> response = guiService.sendAndWait(MessageType.GET_CAMPUSES, MessageStatus.REQUEST, new GetCampusesRequest());
-        Log.Msg(response);
-        //LinkedList<Campus> campuses = response.get().campuses();
+        Message<AdminGetCampusesResponse> response = guiService.sendAndWait(MessageType.ADMIN_GET_CAMPUSES, MessageStatus.REQUEST, new AdminGetCampusesRequest());
+        
+        LinkedList<Campus> campuses = response.get().campuses();
 
         nPanelPlainText heading = new nPanelPlainText("Manage Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
@@ -303,17 +304,96 @@ public class PageViews {
         nButton searchButton = new nButton("Search");
         searchButton.setBackgroundColor(UITheme.INFO);
 
-        nButton addButton = new nButton("Add");
+        nButton addButton = new nButton("Create Course");
         addButton.setBackgroundColor(UITheme.SUCCESS);
 
         nPanelDropDown campusChoose = new nPanelDropDown();
         nPanelDropDown departmentChoose = new nPanelDropDown();
+        nPanelDropDown termChoose = new nPanelDropDown();
 
-        //for(Campus c : campuses) {
-        //    nButton b = new nButton();
-        //    b.setText(c.getName());
-        //    campusChoose.addOption(b);
-        //}
+
+
+        
+        // scrollable list of courses
+        nScrollableList manageCourseList = new nScrollableList();
+        manageCourseList.setInnerPadding(8);
+        manageCourseList.setItemSpacing(8);
+        //////////searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
+
+        // wire up buttons
+        searchButton.addActionListener(e -> {
+            //////////searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
+        });
+
+        for(Campus campus : campuses) {
+            nButton b = new nButton();
+            b.setText(campus.getName());
+            campusChoose.addOption(b);
+            b.addActionListener(e ->{
+                manageCourseList.clearItems();
+                departmentChoose.clearOptions();
+                
+                
+                nButton selected = campusChoose.getSelected();
+                if(selected != null && campus.getName().equals(selected.getText())) {
+                    Message<AdminGetDepartmentsResponse> getDepartmentsResponse = guiService.sendAndWait(MessageType.ADMIN_GET_DEPARTMENTS, MessageStatus.REQUEST, new AdminGetDepartmentsRequest());
+                    
+                    LinkedList<Department> departments = getDepartmentsResponse.get().departments();
+
+                    for(Department department : departments) {
+                        if(department == null) {continue;}
+                        if(!department.getCampus().getName().equals(campus.getName())) {continue;}
+                        nButton db = new nButton();
+                        db.setText(department.getName());
+                        
+                        departmentChoose.addOption(db);
+
+
+                        db.addActionListener(ee -> {
+                            manageCourseList.clearItems();
+                            termChoose.clearOptions();
+                            Message<AdminGetCoursesResponse> getCoursesResponse = guiService.sendAndWait(MessageType.ADMIN_GET_COURSES, MessageStatus.REQUEST, new AdminGetCoursesRequest());
+                            LinkedList<Course> courses = getCoursesResponse.get().courses();
+
+                            Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS, MessageStatus.REQUEST, new GetTermsRequest());
+                            LinkedList<Term> terms = getTermsResponse.get().terms();
+                            for(Term t : terms) {
+                                nButton tb = new nButton();
+                                tb.setText(t.getDisplayName());
+                                termChoose.addOption(tb);
+                            }
+                            for(Course course : courses) {
+                                
+                                if(!course.getDepartment().getName().equals(department.getName())) { continue; }
+                                manageCourseList.addItem(new Panels.CourseItemPanel(course, userRole));
+                                System.out.println(course.getName());
+                            }
+                            manageCourseList.revalidate();
+                            manageCourseList.repaint();
+                            departmentChoose.revalidate();
+                            departmentChoose.repaint();
+                        });
+                        if(departmentChoose.getSelected().getText().equals(department.getName())) {
+                            db.simulateClick();
+                        }   
+                        
+                        
+                    }
+                }
+                manageCourseList.revalidate();
+                departmentChoose.revalidate();
+                campusChoose.revalidate();
+                manageCourseList.repaint();
+                departmentChoose.repaint();
+                campusChoose.repaint();
+            });
+
+
+            b.simulateClick();
+            
+        }
+        
+        
 
         nButton addCampusButton = new nButton("New Campus");
         addCampusButton.setBackgroundColor(UITheme.SUCCESS);
@@ -321,9 +401,10 @@ public class PageViews {
         addDepartmentButton.setBackgroundColor(UITheme.SUCCESS);
 
 
-
+        
 
         
+
 
 
         addCampusButton.addActionListener(e -> {//String name, int number, int units, Department department
@@ -353,9 +434,14 @@ public class PageViews {
             nPanelModal modal = new nPanelModal((nFrame)frame, panel, ww, hh);
             enrollButton.addActionListener(ee -> {
                 //#region ADDS CAMPUS HERE
-                Campus.add(campusTB.getText());      
+                Message<AddCampusResponse> addCampusResponse = guiService.sendAndWait(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.REQUEST, new AddCampusRequest(campusTB.getText()));
+                if(addCampusResponse.getStatus() == MessageStatus.SUCCESS) {
+                    nButton b = new nButton();
+                    b.setText(campusTB.getText());
+                    campusChoose.addOption(b);
+                    modal.close();
+                }
                 
-                modal.close();
             });
             cancelButton.addActionListener(ee -> {
                 modal.close();
@@ -390,11 +476,14 @@ public class PageViews {
             nPanelModal modal = new nPanelModal((nFrame)frame, panel, ww, hh);
             enrollButton.addActionListener(ee -> {
                 //#region ADDS DEPARTMENT HERE
-                String campusName = campusChoose.getSelected().getText();
-                Campus campus = Campus.get(campusName);
-                campus.addDepartment(departmentTB.getText());     
-                
-                modal.close();
+
+                Message<AddDepartmentResponse> addCampusResponse = guiService.sendAndWait(MessageType.ADMIN_ADD_DEPARTMENT, MessageStatus.REQUEST, new AddDepartmentRequest(campusChoose.getSelected().getText(), departmentTB.getText()));
+                if(addCampusResponse.getStatus() == MessageStatus.SUCCESS) {
+                    nButton b = new nButton();
+                    b.setText(departmentTB.getText());
+                    departmentChoose.addOption(b);
+                    modal.close();
+                }
             });
             cancelButton.addActionListener(ee -> {
                 modal.close();
@@ -405,28 +494,31 @@ public class PageViews {
         nPanel controlRow = new nPanel() {
             @Override
             public void doLayout() {
-                int buttonAmount = 2;
                 int padding = 10;
                 int h = getHeight();
-
+                int w = getWidth();
                 int buttonWidth = 80;
                 int controlHeight = 28;
 
-                int totalButtonsWidth = buttonWidth * buttonAmount + padding * (buttonAmount-1);
-                int boxWidth = getWidth() - totalButtonsWidth - padding * buttonAmount;
+                int boxWidth = w - buttonWidth - padding*2;
                 if (boxWidth < 80)
                     boxWidth = 80;
 
-                int yMid = (h) / 2;
+                int ySec = (int)(h * 0.33);
+                int yThir = (int) (h * 0.66);
+                
+                campusChoose.setBounds(padding, 0, (int)w/4 - padding, controlHeight);
+                addCampusButton.setBounds(padding+w/4, 0, (int)w/4 - padding, controlHeight);
+                departmentChoose.setBounds(padding+(int)w/2, 0, (int)w/4 - padding, controlHeight);
+                addDepartmentButton.setBounds(padding+(int)(w*0.75), 0, (int)w/4 - padding, controlHeight);
 
-                searchBox.setBounds(padding,yMid,boxWidth,controlHeight);
-                campusChoose.setBounds(padding, 0, (int)getWidth()/4 - padding, controlHeight);
-                addCampusButton.setBounds(padding+getWidth()/4, 0, (int)getWidth()/4 - padding, controlHeight);
-                departmentChoose.setBounds(padding+(int)getWidth()/2, 0, (int)getWidth()/4 - padding, controlHeight);
-                addDepartmentButton.setBounds(padding+(int)(getWidth()*0.75), 0, (int)getWidth()/4 - padding, controlHeight);
                 int bx = padding * 2 + boxWidth;
-                searchButton.setBounds(bx, yMid, buttonWidth, controlHeight);
-                addButton.setBounds(bx + buttonWidth + padding, yMid, buttonWidth, controlHeight);
+                addButton.setBounds(w/2 + padding, ySec, w/2 - padding, controlHeight);
+                termChoose.setBounds(padding, ySec, w/2 - padding, controlHeight);
+                
+                searchBox.setBounds(padding,yThir,boxWidth,controlHeight);
+                searchButton.setBounds(bx, yThir, buttonWidth,controlHeight);
+                
             }
         };
         controlRow.setLayout(null);
@@ -434,22 +526,14 @@ public class PageViews {
         controlRow.add(campusChoose);
         controlRow.add(departmentChoose);
         controlRow.add(addCampusButton);
+        controlRow.add(termChoose);
         controlRow.add(addDepartmentButton);
         controlRow.add(searchBox);
         controlRow.add(searchButton);
         controlRow.add(addButton);
         
 
-        // scrollable list of courses
-        nScrollableList manageCourseList = new nScrollableList();
-        manageCourseList.setInnerPadding(8);
-        manageCourseList.setItemSpacing(8);
-        //////////searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
-
-        // wire up buttons
-        searchButton.addActionListener(e -> {
-            //////////searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
-        });
+        
 
         addButton.addActionListener(e -> {//String name, int number, int units, Department department
             int ww = 420;
@@ -490,9 +574,7 @@ public class PageViews {
                 String departmentName = departmentChoose.getSelected().getText();
                 Campus campus = Campus.get(campusName);
                 Department department = campus.getDepartment(departmentName);
-                
-                // todo: add course requirements!
-                department.addCourse(new Course(courseTB.getText(), Integer.parseInt(courseNumberTB.getText()), Integer.parseInt(courseUnitsTB.getText()), department, new LinkedList<Course>()));
+                //department.addCourse(new Course(courseTB.getText(), Integer.parseInt(courseNumberTB.getText()), Integer.parseInt(courseUnitsTB.getText()), department));
                 
                 modal.close();
             });
@@ -508,7 +590,7 @@ public class PageViews {
                 int ch = getHeight();
 
                 int headingHeight = 32;
-                int rowHeight = 80;
+                int rowHeight = 120;
 
                 heading.setBounds(padding,padding,cw - padding * 2,headingHeight);
 

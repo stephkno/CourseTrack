@@ -99,6 +99,10 @@ public class nButton extends nRoundedPanel {
         listeners.foreach(l -> l.actionPerformed(evt));
     }
 
+    public void simulateClick() {
+        fireActionEvent();
+    }
+
     public void setText(String text) {
         this.text = text != null ? text : "";
         repaint();
