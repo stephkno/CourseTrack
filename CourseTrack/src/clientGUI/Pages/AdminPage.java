@@ -2,13 +2,15 @@ package clientGUI.Pages;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+
+import client.services.IAppGUIService;
 import clientGUI.UIFramework.*;
 import clientGUI.PageComponents.*;
 import clientGUI.UIInformations.*;
 import global.data.Course;
 public class AdminPage {
     
-    public AdminPage(nFrame frame, Course[] courses, HomePage homePage) {
+    public AdminPage(nFrame frame, IAppGUIService guiService, HomePage homePage) {
         int sidebarX = homePage.sidebarX;
         int sidebarY = homePage.sidebarY;
         int sidebarWidth = homePage.sidebarWidth;
@@ -17,9 +19,9 @@ public class AdminPage {
         int mainY = homePage.mainY;
         int mainW = homePage.mainW;
         int mainH = homePage.mainH;
-        buildAdminHome(frame, courses, sidebarX, sidebarY, sidebarWidth, sidebarHeight, mainX, mainY, mainW, mainH);
+        buildAdminHome(frame, guiService, sidebarX, sidebarY, sidebarWidth, sidebarHeight, mainX, mainY, mainW, mainH);
     }
-    private void buildAdminHome(nFrame frame, Course[] courses, int sidebarX, int sidebarY, int sidebarWidth, int sidebarHeight, int mainX, int mainY, int mainW, int mainH) {
+    private void buildAdminHome(nFrame frame, IAppGUIService guiService, int sidebarX, int sidebarY, int sidebarWidth, int sidebarHeight, int mainX, int mainY, int mainW, int mainH) {
 
         UIArrayList<Component> navList = new UIArrayList<>();
 
@@ -41,7 +43,7 @@ public class AdminPage {
         navLayout.setPadding(6, 6);
         navLayout.setStyle(nFrame.ListLayout.Style.NONE);
 
-        nFrame.ListLayout viewManage = PageViews.createManageView(frame, mainX, mainY, mainW, mainH, courses, UserRole.admin);
+        nFrame.ListLayout viewManage = PageViews.createManageView(frame, mainX, mainY, mainW, mainH, guiService, UserRole.admin);
         nFrame.ListLayout viewReports = PageViews.createReportsView(frame, mainX, mainY, mainW, mainH);
         Component[] views = {viewManage, viewReports};
         clearCenterView(views);

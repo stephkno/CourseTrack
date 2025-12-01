@@ -6,14 +6,24 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
+import client.services.IAppGUIService;
 import clientGUI.UIFramework.*;
 import global.LinkedList;
 import global.data.Campus;
 import global.data.Course;
 import global.data.Department;
+import global.data.Section;
+import global.requests.AddCampusRequest;
+import global.requests.GetCampusesRequest;
+import global.requests.RegisterRequest;
+import global.responses.AddCampusResponse;
+import global.responses.GetCampusesResponse;
 import clientGUI.UIInformations.UserRole;
 
 import global.Log;
+import global.Message;
+import global.MessageStatus;
+import global.MessageType;
 
 @SuppressWarnings("unused")
 public class PageViews {
@@ -277,7 +287,12 @@ public class PageViews {
     //#endregion
     */
     //#region createManageView
-    public static nFrame.ListLayout createManageView(nFrame frame, int x, int y, int w, int h, Course[] courses, UserRole userRole) {
+    public static nFrame.ListLayout createManageView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService, UserRole userRole) {
+
+        Message<GetCampusesResponse> response = guiService.sendAndWait(MessageType.GET_CAMPUSES, MessageStatus.REQUEST, new GetCampusesRequest());
+        Log.Msg(response);
+        //LinkedList<Campus> campuses = response.get().campuses();
+
         nPanelPlainText heading = new nPanelPlainText("Manage Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
         nPanelTextBox searchBox = new nPanelTextBox();
@@ -293,10 +308,23 @@ public class PageViews {
 
         nPanelDropDown campusChoose = new nPanelDropDown();
         nPanelDropDown departmentChoose = new nPanelDropDown();
+
+        //for(Campus c : campuses) {
+        //    nButton b = new nButton();
+        //    b.setText(c.getName());
+        //    campusChoose.addOption(b);
+        //}
+
         nButton addCampusButton = new nButton("New Campus");
         addCampusButton.setBackgroundColor(UITheme.SUCCESS);
         nButton addDepartmentButton = new nButton("New Department");
         addDepartmentButton.setBackgroundColor(UITheme.SUCCESS);
+
+
+
+
+        
+
 
         addCampusButton.addActionListener(e -> {//String name, int number, int units, Department department
             int ww = 420;
@@ -416,11 +444,11 @@ public class PageViews {
         nScrollableList manageCourseList = new nScrollableList();
         manageCourseList.setInnerPadding(8);
         manageCourseList.setItemSpacing(8);
-        searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
+        //////////searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
 
         // wire up buttons
         searchButton.addActionListener(e -> {
-            searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
+            //////////searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
         });
 
         addButton.addActionListener(e -> {//String name, int number, int units, Department department

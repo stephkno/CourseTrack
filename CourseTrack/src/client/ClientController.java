@@ -71,11 +71,11 @@ public class ClientController implements  IClientListenerService, IAppGUIService
                 if (currentUser.getUserType() == UserType.ADMIN) {
                     clientUI.GoAdminPage(() -> {
                         //logout();
-                    });
+                    }, this);
                 } else {
                     clientUI.GoStudentPage(() -> {
                         //logout();
-                    });
+                    }, this);
                 }
 
                 return true;

@@ -54,7 +54,7 @@ public class ClientUIManager {
         }
         
     }
-
+/* 
     public void GoAdminPage(ButtonInterface logoutButtonAction) {
         cleanUp();
 
@@ -100,6 +100,40 @@ public class ClientUIManager {
         Course[] myCourseInfo = {new Course("title", 1, 1, campus.getDepartment("Computer Science"))};
         new StudentPage(frame, courseInfo, myCourseInfo, hp);
     }
+    */
+    
+
+    public void GoAdminPage(ButtonInterface logoutButtonAction, IAppGUIService guiService) {
+        cleanUp();
+
+        String title = "Welcome, ";
+        
+        HomePage hp = new HomePage(frame, logoutButtonAction, title);
+
+        frame.getContentPane().setBackground(UITheme.BG_APP);
+        
+        new AdminPage(frame, guiService, hp);
+        //public AdminPage(nFrame frame, UICourseInfo[] courses, int sidebarX, int sidebarY, int sidebarWidth, int sidebarHeight, int mainX, int mainY, int mainW, int mainH) {
+    }
+
+    public void GoStudentPage(ButtonInterface logoutButtonAction, IAppGUIService guiService){
+        cleanUp();
+
+        String title = "Welcome, ";
+
+        HomePage hp = new HomePage(frame, logoutButtonAction, title);
+        frame.getContentPane().setBackground(UITheme.BG_APP);
+
+        campus = Campus.get("CSU East Bay");
+        
+        Course[] courseInfo = new Course[20];
+        for(int i = 0; i < 20; i++) {
+            courseInfo[i] = campus.getDepartment("CS").getCourse(i);
+        }
+        Course[] myCourseInfo = {new Course("title", 1, 1, campus.getDepartment("Computer Science"))};
+        new StudentPage(frame, courseInfo, myCourseInfo, hp);
+    }
+
 
     private void cleanUp() {
         frame.getContentPane().removeAll();
