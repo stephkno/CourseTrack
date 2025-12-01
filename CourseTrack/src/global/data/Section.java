@@ -202,6 +202,7 @@ public class Section implements Serializable {
         String outstring = "";
 
         outstring += "Course: " + course.getName() + 
+        " ID: " + id +
         "\nSection no: " + number + 
         "\nInstructor: " + instructor + 
         "\nCampus: " + department.getCampus().getName() + 

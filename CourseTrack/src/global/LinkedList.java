@@ -70,39 +70,50 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 		
 	}
 	
-	public void Remove(T t) {
+	public boolean Remove(T t) {
 		
-		if(t == first.data) {
+		if(first == null){
+			System.out.println("first null");
+			return false;
+		}		
+
+		if(first.data.equals(t)) {
+			System.out.println("A LinkedList: " + first.data.toString() + " " + t.toString());
 			first = first.next;
 			numItems--;
-			return;
+			return true;
 		}
 
 		Node<T> curr = first;
 
 	    while(curr != null){
 			
-			if(curr.data == t) {
+			if(curr.data.equals(t)) {
+
+				System.out.println("B LinkedList: " + first.data.toString() + " " + t.toString());
+
 				curr = curr.next;
-				break;
+				return true;
 			}
 
 			curr = curr.next;
 	    
 		} 
+		System.out.println("out");
 
+		return false;
 	}
 	
-	public void Remove(int i) {
+	public boolean Remove(int i) {
 		
 		if(i < 0 || i > numItems || first == null) {
-			return;
+			return false;
 		}
 		
 		if(i == 0) {
 			first = first.next;
 			numItems--;
-			return;
+			return true;
 		}
 
 		Node<T> curr = first;
@@ -115,6 +126,8 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 	    	curr.next = curr.next.next;
 	    	numItems--;
 	    }
+
+		return true;
 	
 	}
 	

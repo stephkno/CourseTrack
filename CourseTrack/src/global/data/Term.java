@@ -3,6 +3,7 @@ import global.LinkedList;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import global.Log;
 
 public class Term implements Serializable {
     
@@ -81,6 +82,14 @@ public class Term implements Serializable {
         }
         sections.Push(section);
         return true;
+    }
+
+    public boolean removeSection(Section section){
+
+        Log.Msg(sections.Length());
+
+        return sections.Remove(section);
+    
     }
 
     public LinkedList<Section> getSections(){

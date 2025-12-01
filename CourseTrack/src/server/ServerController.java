@@ -453,7 +453,7 @@ public class ServerController {
         Course course = department.getCourse(request.courseId());
         Term term = Term.get(request.term());
 
-        Section newSection = new Section(request.capacity(), course, request.term(), department, request.instructor(), request.meetTimes());
+        Section newSection = new Section(request.capacity(), course, term, department, request.instructor(), request.meetTimes());
         ((Admin)client.getUser()).addSection(newSection);
         
         if(!term.addSection(newSection)){
@@ -529,6 +529,7 @@ public class ServerController {
     }
 
     private void handleAdminGetSections(Message<AdminGetSectionsRequest> msg, ServerConnection client) {
+
         if(!client.validateAdmin()){
             client.sendMessage(MessageType.ADMIN_GET_SECTIONS, MessageStatus.FAILURE, new AdminGetSectionsResponse(null));
             return;
@@ -546,7 +547,6 @@ public class ServerController {
         }
 
         client.sendMessage(MessageType.ADMIN_REMOVE_USER, MessageStatus.FAILURE, new AdminRemoveUserResponse());
-    
     }
 
     private void handleAdminRemoveCampus(Message<AdminRemoveCampusRequest> msg, ServerConnection client) {
@@ -555,7 +555,13 @@ public class ServerController {
             return;
         }
 
-        client.sendMessage(MessageType.ADMIN_REMOVE_CAMPUS, MessageStatus.FAILURE, new AdminRemoveCampusResponse());
+        String campusName = msg.get().campus();
+        Campus campus = Campus.get(campusName);
+
+        ((Admin)client.getUser()).removeCampus(campus);
+        Campus.remove(campusName);
+
+        client.sendMessage(MessageType.ADMIN_REMOVE_CAMPUS, MessageStatus.SUCCESS, new AdminRemoveCampusResponse());
     
     }
 

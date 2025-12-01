@@ -59,6 +59,18 @@ public class TestHelpers {
 	
 	}
 
+	static void RemoveCampus(String campusName, Client client)
+	{
+
+		Log.Msg("Sending admin remove campus request");
+		Message<AdminRemoveCampusResponse> response = client.sendAndWait(new Message<>(MessageType.ADMIN_REMOVE_CAMPUS, MessageStatus.REQUEST, new AdminRemoveCampusRequest(campusName) ));
+		
+		assert(response.getStatus() == MessageStatus.SUCCESS);
+
+		Log.Msg("Received admin remove campus response: " + response.getStatus());
+
+	}
+
 	static client.User Login(String username, String password, Client client)
 	{ 
 		if (!client.isConnected()) {
@@ -396,7 +408,9 @@ public class TestHelpers {
 		}
 
 		Logout(client);
+		Login("admin", "", client);
 
+		RemoveCampus("CSU East Bay", client);
     }
 
 	public static void main(String[] args){

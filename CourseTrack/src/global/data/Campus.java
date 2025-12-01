@@ -46,6 +46,37 @@ public class Campus implements Serializable {
 
     }
 
+    public static void remove(String campusName){
+        
+        Campus campus = get(campusName);
+        
+        for(Department department : campus.getDepartments()){
+            Log.Msg("Removing department " + department.getName());
+
+            for(Course course : department.getCourses()){
+                Log.Msg("Removing course " + course.getName());
+                
+                for(Term term : course.getTerms()){
+                    for(Section section : course.getSections(term)){
+
+                        Log.Msg("Removing section " + section.getName());
+                        
+                        if(!term.removeSection(section)){
+                            Log.Err("Section not found");
+                        }else{
+                            Log.Msg("Section removed");
+                        }
+                        
+                    }
+                }
+            }
+        }
+
+        if(!campuses.Contains(campusName)) return;
+        campuses.Remove(campusName);
+
+    }
+
     public static boolean exists(String campusName) {
         return campuses.Contains(campusName);
     }
@@ -106,7 +137,7 @@ public class Campus implements Serializable {
         for(Department d : departments){
             outlist.Push(d);
         }
-        
+
         return outlist;
     }
 

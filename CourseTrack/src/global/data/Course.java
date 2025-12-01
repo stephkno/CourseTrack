@@ -57,8 +57,6 @@ public class Course implements Serializable {
     public int addSection(Term term, Section section) {
         
         LinkedList<Section> ll;
-        
-        Log.Msg(this);
 
         if(sections.Contains(term)){
             ll = sections.Get(term);
@@ -71,6 +69,10 @@ public class Course implements Serializable {
 
         return ll.Length();
 
+    }
+
+    public LinkedList<Term> getTerms(){
+        return sections.Keys();
     }
 
     public LinkedList<Section> getSections(Term term) {

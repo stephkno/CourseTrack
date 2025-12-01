@@ -37,6 +37,10 @@ public class Department implements Serializable {
         return null;
     }
 
+    public LinkedList<Course> getCourses(){
+        return courses;
+    }
+    
     public static void setNextId(int id){
         nextId = id;
     }

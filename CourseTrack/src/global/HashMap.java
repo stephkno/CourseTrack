@@ -8,7 +8,7 @@ public class HashMap<K,V> implements Iterable<V>, Serializable {
 	private int numBuckets = 8;
 	private int numElems = 0;
 	private float maxLoad = 1.0f;
-	
+
 	// hash table item stores both a key and data for search purposes
 	private class HashMapItem<K,V> implements Serializable {
 		
@@ -69,7 +69,7 @@ public class HashMap<K,V> implements Iterable<V>, Serializable {
 		// add new value to chain
 		buckets[index].Push(new HashMapItem<K,V>(key, value));
 		numElems++;
-		
+
 		// check load factor of table
 		if (getLoadFactor() > maxLoad) rehash(2);
 		
@@ -216,6 +216,23 @@ public class HashMap<K,V> implements Iterable<V>, Serializable {
 	
 		return Math.abs(input.hashCode()) % numBuckets;
 
+	}
+
+	public LinkedList<K> Keys(){
+		LinkedList<K> outKeys = new LinkedList<>();
+
+		for(int b = 0; b < buckets.length; b++) {
+			LinkedList<HashMapItem<K,V>> chain = buckets[b];
+			
+			if(chain != null) {
+				for(int j = 0; j < chain.Length(); j++) {
+					HashMapItem<K,V> item = chain.Get(j);
+					outKeys.Push(item.key);
+				}
+			}
+		}
+
+		return outKeys;
 	}
 	
 	public String toString() {
