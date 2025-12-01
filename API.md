@@ -267,3 +267,8 @@ client.sendRequest(new Message<RegisterRequest>(MessageType.USER_REGISTER, Messa
 ```java
 client.sendRequest(new Message<LoginRequest>(MessageType.USER_LOGIN, MessageStatus.REQUEST, new LoginRequest(username, password) ));
 ```
+
+Or with an IAppGuiService:
+```java
+guiService.sendRequest(MessageType.USER_REGISTER, MessageStatus.REQUEST, new RegisterRequest(username, password, type) );
+```

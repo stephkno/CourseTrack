@@ -33,8 +33,8 @@ public class ClientController implements  IClientListenerService, IAppGUIService
     }
 
     @Override
-    public <TObjMessage extends Serializable>
-    Message<TObjMessage> sendAndWait(MessageType type, MessageStatus status, TObjMessage obj) {
+    public <TObjResponse extends Serializable, TObjRequest extends Serializable>
+    Message<TObjResponse> sendAndWait(MessageType type, MessageStatus status, TObjRequest obj) {
         return client.sendAndWait(
             new Message<>(
                 type,

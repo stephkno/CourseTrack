@@ -258,6 +258,7 @@ public class ServerController {
 
         // add new campus
         Campus campus = Campus.add(campusName);
+        ((Admin)client.getUser()).addCampus(campus);
 
         // return success
         client.sendMessage(MessageType.ADMIN_ADD_CAMPUS, MessageStatus.SUCCESS, new AddCampusResponse(campus) );
@@ -295,6 +296,8 @@ public class ServerController {
         }
 
         Course newCourse = new Course(courseName, number, units, department);
+        ((Admin)client.getUser()).addCourse(newCourse);
+
         if(!department.addCourse(newCourse)){
             Log.Err("Course exists in department");
             client.sendMessage(MessageType.ADMIN_ADD_COURSE, MessageStatus.FAILURE, new AddCourseResponse(null) );
@@ -332,7 +335,9 @@ public class ServerController {
             return;
         }
         
-        campus.addDepartment(departmentName);
+        Department newDepartment = campus.addDepartment(departmentName);
+        ((Admin)client.getUser()).addDepartment(newDepartment);
+        
         Log.Msg("Campus added department");
 
         // send success response
@@ -365,6 +370,7 @@ public class ServerController {
 
         Department department = campus.getDepartment(request.department());
 
+
         // need to get course by name? id?
         Log.Msg(request.courseId());
 
@@ -372,6 +378,7 @@ public class ServerController {
         Term term = Term.get(request.term());
 
         Section newSection = new Section(request.capacity(), course, request.term(), department, request.instructor(), request.meetTimes());
+        ((Admin)client.getUser()).addSection(newSection);
         
         if(!term.addSection(newSection)){
             // return error response
