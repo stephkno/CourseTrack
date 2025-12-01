@@ -21,6 +21,12 @@ public class nPanelDropDown extends nButton {
     private int collapsedHeight = -1;
     private Dimension preferredSz = new Dimension(10, 20);
 
+    nButton selected = null;
+
+    public nButton getSelected() {
+        return selected;
+    }
+
     public nPanelDropDown() {
         setName("nPanelDropDown");
         setOpaque(false);
@@ -132,6 +138,9 @@ public class nPanelDropDown extends nButton {
         } else {
             newOption.setPreferredSize(new Dimension(getWidth(), 20));
         }
+        newOption.addActionListener(e -> {
+            selected = newOption;
+        });
         dropDownList.addItem(newOption);
         dropDownList.layoutItems();
         repaint();

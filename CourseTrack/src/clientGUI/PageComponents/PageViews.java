@@ -293,6 +293,87 @@ public class PageViews {
 
         nPanelDropDown campusChoose = new nPanelDropDown();
         nPanelDropDown departmentChoose = new nPanelDropDown();
+        nButton addCampusButton = new nButton("New Campus");
+        addCampusButton.setBackgroundColor(UITheme.SUCCESS);
+        nButton addDepartmentButton = new nButton("New Department");
+        addDepartmentButton.setBackgroundColor(UITheme.SUCCESS);
+
+        addCampusButton.addActionListener(e -> {//String name, int number, int units, Department department
+            int ww = 420;
+            int hh = 400;
+            
+            nButton enrollButton = new nButton("Save");
+            enrollButton.setBackgroundColor(UITheme.SUCCESS);
+            nButton cancelButton = new nButton("Cancel");
+            cancelButton.setBackgroundColor(UITheme.FAIL);
+            Component[] options = {
+                enrollButton,
+                cancelButton
+            };
+            nFrame.GridLayout lowerOptions = new nFrame.GridLayout((nFrame)frame, options, false);
+            lowerOptions.setGridSize(2, 1);
+            lowerOptions.setPadding(5);
+            nPanelTextBox campusTB = new nPanelTextBox(UITheme.TEXT_PRIMARY);
+            Component[] enrollPanel = {
+                new nPanelPlainText("Add Campus", UITheme.TEXT_PRIMARY),
+                new nPanelPlainText("Campus", UITheme.TEXT_PRIMARY),
+                campusTB,
+                lowerOptions
+            };
+            nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10, false);
+            panel.setPadding(5, 7);
+            nPanelModal modal = new nPanelModal((nFrame)frame, panel, ww, hh);
+            enrollButton.addActionListener(ee -> {
+                //#region ADDS CAMPUS HERE
+                Campus.add(campusTB.getText());      
+                
+                modal.close();
+            });
+            cancelButton.addActionListener(ee -> {
+                modal.close();
+            });
+        });
+
+
+        addDepartmentButton.addActionListener(e -> {//String name, int number, int units, Department department
+            int ww = 420;
+            int hh = 400;
+            
+            nButton enrollButton = new nButton("Save");
+            enrollButton.setBackgroundColor(UITheme.SUCCESS);
+            nButton cancelButton = new nButton("Cancel");
+            cancelButton.setBackgroundColor(UITheme.FAIL);
+            Component[] options = {
+                enrollButton,
+                cancelButton
+            };
+            nFrame.GridLayout lowerOptions = new nFrame.GridLayout((nFrame)frame, options, false);
+            lowerOptions.setGridSize(2, 1);
+            lowerOptions.setPadding(5);
+            nPanelTextBox departmentTB = new nPanelTextBox(UITheme.TEXT_PRIMARY);
+            Component[] enrollPanel = {
+                new nPanelPlainText("Add Department", UITheme.TEXT_PRIMARY),
+                new nPanelPlainText("Department", UITheme.TEXT_PRIMARY),
+                departmentTB,
+                lowerOptions
+            };
+            nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10, false);
+            panel.setPadding(5, 7);
+            nPanelModal modal = new nPanelModal((nFrame)frame, panel, ww, hh);
+            enrollButton.addActionListener(ee -> {
+                //#region ADDS DEPARTMENT HERE
+                String campusName = campusChoose.getSelected().getText();
+                Campus campus = Campus.get(campusName);
+                campus.addDepartment(departmentTB.getText());     
+                
+                modal.close();
+            });
+            cancelButton.addActionListener(ee -> {
+                modal.close();
+            });
+        });
+
+
         nPanel controlRow = new nPanel() {
             @Override
             public void doLayout() {
@@ -311,8 +392,10 @@ public class PageViews {
                 int yMid = (h) / 2;
 
                 searchBox.setBounds(padding,yMid,boxWidth,controlHeight);
-                campusChoose.setBounds(padding, 0, (int)getWidth()/2 - padding, controlHeight);
-                departmentChoose.setBounds(padding+(int)getWidth()/2, 0, (int)getWidth()/2 - padding, controlHeight);
+                campusChoose.setBounds(padding, 0, (int)getWidth()/4 - padding, controlHeight);
+                addCampusButton.setBounds(padding+getWidth()/4, 0, (int)getWidth()/4 - padding, controlHeight);
+                departmentChoose.setBounds(padding+(int)getWidth()/2, 0, (int)getWidth()/4 - padding, controlHeight);
+                addDepartmentButton.setBounds(padding+(int)(getWidth()*0.75), 0, (int)getWidth()/4 - padding, controlHeight);
                 int bx = padding * 2 + boxWidth;
                 searchButton.setBounds(bx, yMid, buttonWidth, controlHeight);
                 addButton.setBounds(bx + buttonWidth + padding, yMid, buttonWidth, controlHeight);
@@ -322,6 +405,8 @@ public class PageViews {
         controlRow.setOpaque(false);
         controlRow.add(campusChoose);
         controlRow.add(departmentChoose);
+        controlRow.add(addCampusButton);
+        controlRow.add(addDepartmentButton);
         controlRow.add(searchBox);
         controlRow.add(searchButton);
         controlRow.add(addButton);
@@ -360,10 +445,6 @@ public class PageViews {
             nPanelTextBox courseUnitsTB = new nPanelTextBox(UITheme.TEXT_PRIMARY);
             Component[] enrollPanel = {
                 new nPanelPlainText("Add Course", UITheme.TEXT_PRIMARY),
-                new nPanelPlainText("Campus", UITheme.TEXT_PRIMARY),
-                campusTB,
-                new nPanelPlainText("Department", UITheme.TEXT_PRIMARY),
-                departmentTB,
                 new nPanelPlainText("Course", UITheme.TEXT_PRIMARY),
                 courseTB,
                 new nPanelPlainText("Course Number", UITheme.TEXT_PRIMARY),
@@ -377,10 +458,10 @@ public class PageViews {
             nPanelModal modal = new nPanelModal((nFrame)frame, panel, ww, hh);
             enrollButton.addActionListener(ee -> {
                 //#region ADDS COURSE HERE
-                Campus.add(campusTB.getText());      
-                Campus campus = Campus.get(campusTB.getText());
-                campus.addDepartment(departmentTB.getText());
-                Department department = campus.getDepartment(departmentTB.getText());
+                String campusName = campusChoose.getSelected().getText();
+                String departmentName = departmentChoose.getSelected().getText();
+                Campus campus = Campus.get(campusName);
+                Department department = campus.getDepartment(departmentName);
                 department.addCourse(new Course(courseTB.getText(), Integer.parseInt(courseNumberTB.getText()), Integer.parseInt(courseUnitsTB.getText()), department));
                 
                 modal.close();
