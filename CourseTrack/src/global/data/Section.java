@@ -24,13 +24,12 @@ public class Section implements Serializable {
     int num_waitlisted;
     double percentageFull;
 
-    public Section(int capacity, Course course, Term term, Department department, String instructor, MeetTime[] meetTimes, double percentageFull) {
+    public Section(int capacity, Course course, Term term, Department department, String instructor, MeetTime[] meetTimes) {
         
         this.capacity = capacity;
         this.course = course;
         this.term = term;
         this.department = department;
-        this.percentageFull = percentageFull;
 
         this.students = new LinkedList<Student>();
         this.waitlist = new LinkedList<Student>();
