@@ -844,14 +844,26 @@ public class ServerController {
             String departmentName = department.getName();
 
             String reportLine = String.format(
-                "%s %d - Section %d (%s / %s): Enrollment %d/%d",
+                "%s %d - Section %d%n" +
+                "Campus: %s%n" +
+                "Department: %s%n" +
+                "Enrollment %d/%d%n"  +
+                "Waitlist: %d%n" +
+                "Fill status: %.2f%% full%n" +
+                "Change in enrollment: %.2f%%%n" +
+                "Change in waitlist: %.2f%%%n%n",
                 course.getName(),
                 course.getNumber(),
                 section.getNumber(),
                 campusName,
                 departmentName,
                 section.numStudents(),
-                section.getCapacity()
+                section.getCapacity(),
+                section.waitlistLength(),
+                section.getPercentFull(),
+                term.getEnrollmentPercentageChange(section),
+                term.getWaitlistPercentageChange(section)
+
             );
 
             reportEntries.Push(reportLine);

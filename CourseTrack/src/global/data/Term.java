@@ -126,5 +126,93 @@ public class Term implements Serializable {
         }
         return outstring;
     }
+    
+    //get previous term
+    public Term getPreviousTerm() {
+        Season prevSeason = null;
+        int prevYear = year;
 
+        switch (season) {
+            case SPRING:
+                prevSeason = Season.WINTER;
+                break;
+            case SUMMER:
+                prevSeason = Season.SPRING;
+                break;
+            case FALL:
+                prevSeason = Season.SUMMER;
+                break;
+            case WINTER:
+                prevSeason = Season.FALL;
+                prevYear = year - 1;
+                break;
+            default:
+                return null;
+        }
+
+        for (Term term : terms) {
+            if (term.season == prevSeason && term.year == prevYear) {
+                return term;
+            }
+        }
+
+        return null;
+    }
+
+    //find matching section in other previous term
+    private Section findMatchingSectionInPrevTerm(Term otherTerm, Section section) {
+        if (otherTerm == null || section == null) {
+            return null;
+        }
+
+        int courseId = section.getCourse().getId();
+        int number = section.getNumber();
+
+        for (Section s : otherTerm.getSections()) {
+            if (s.getCourse().getId() == courseId &&
+                s.getNumber() == number) {
+                return s;
+            }
+        }
+
+        return null;
+    }
+
+    //math for % change in enrollment
+    public double getEnrollmentPercentageChange(Section section) {
+        Term previousTerm = getPreviousTerm();
+        Section previousSection = findMatchingSectionInPrevTerm(previousTerm, section);
+
+        if (previousSection == null) {
+            return 0.0;
+        }
+
+        int previousEnrolled = previousSection.numStudents();
+        int currentEnrolled = section.numStudents();
+
+        if (previousEnrolled == 0) {
+            return 0.0; // avoid divide-by-zero
+        }
+
+        return ((double)(currentEnrolled - previousEnrolled) / (double) previousEnrolled) * 100.0;
+    }
+
+    //math for % change in waitlist
+    public double getWaitlistPercentageChange(Section section) {
+        Term previousTerm = getPreviousTerm();
+        Section previousSection = findMatchingSectionInPrevTerm(previousTerm, section);
+
+        if (previousSection == null) {
+            return 0.0;
+        }
+
+        int previousWaitlist = previousSection.waitlistLength();
+        int currentWaitlist = section.waitlistLength();
+
+        if (previousWaitlist == 0) {
+            return 0.0; // avoid divide-by-zero
+        }
+
+        return ((double)(currentWaitlist - previousWaitlist) / (double) previousWaitlist) * 100.0;
+    }
 }
