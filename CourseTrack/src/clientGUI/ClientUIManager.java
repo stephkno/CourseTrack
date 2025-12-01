@@ -130,10 +130,7 @@ public class ClientUIManager {
 
 
         
-
-        // todo: add course requirements!
-        Course[] myCourseInfo = {new Course("title", 1, 1, campus.getDepartment("Computer Science"), new LinkedList<Course>())};
-        new StudentPage(frame, guiService, myCourseInfo, hp);
+        new StudentPage(frame, guiService, hp);
     }
 
 

@@ -13,7 +13,7 @@ import global.data.Course;
 public class StudentPage {
     //#region buildStudentHome
     
-    public StudentPage(nFrame frame, IAppGUIService guiService, Course[] currentCourses, HomePage homePage) {
+    public StudentPage(nFrame frame, IAppGUIService guiService, HomePage homePage) {
         int sidebarX = homePage.sidebarX;
         int sidebarY = homePage.sidebarY;
         int sidebarWidth = homePage.sidebarWidth;
@@ -22,9 +22,9 @@ public class StudentPage {
         int mainY = homePage.mainY;
         int mainW = homePage.mainW;
         int mainH = homePage.mainH;
-        buildStudentHome(frame, UserRole.student, guiService, currentCourses, sidebarX, sidebarY, sidebarWidth, sidebarHeight, mainX, mainY, mainW, mainH);
+        buildStudentHome(frame, UserRole.student, guiService, sidebarX, sidebarY, sidebarWidth, sidebarHeight, mainX, mainY, mainW, mainH);
     }
-    public void buildStudentHome(nFrame frame, UserRole role, IAppGUIService guiService, Course[] currentCourses, int sidebarX, int sidebarY,int sidebarWidth, int sidebarHeight,int mainX, int mainY,int mainW, int mainH) {
+    public void buildStudentHome(nFrame frame, UserRole role, IAppGUIService guiService, int sidebarX, int sidebarY,int sidebarWidth, int sidebarHeight,int mainX, int mainY,int mainW, int mainH) {
 
         UIArrayList<Component> navList = new UIArrayList<>();
 
@@ -59,7 +59,7 @@ public class StudentPage {
 
         // center views
         nFrame.ListLayout viewBrowse = PageViews.createBrowseView(frame, mainX, mainY, mainW, mainH, guiService, role);
-        nFrame.ListLayout viewDrop = PageViews.createDropView(frame, currentCourses, mainX, mainY, mainW, mainH);
+        nFrame.ListLayout viewDrop = PageViews.createDropView(frame, null, mainX, mainY, mainW, mainH);
         nFrame.ListLayout viewSchedule = PageViews.createScheduleView(frame, mainX, mainY, mainW, mainH);
         nFrame.ListLayout viewWaitlist = PageViews.createWaitlistView(frame, mainX, mainY, mainW, mainH);
 

@@ -34,9 +34,21 @@ public class PageViews {
     // #region createBrowseView
     public static nFrame.ListLayout createBrowseView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService,UserRole userRole) {
         
-        Message<GetCampusesResponse> response = guiService.sendAndWait(MessageType.GET_CAMPUSES,
-                MessageStatus.REQUEST, new GetCampusesRequest());
+        
+
+        Message<GetCampusesResponse> response = guiService.sendAndWait(MessageType.GET_CAMPUSES,MessageStatus.REQUEST, new GetCampusesRequest());
         LinkedList<Campus> campuses = response.get().campuses();
+
+
+
+
+        
+        
+
+        nPanelDropDown campusChoose = new nPanelDropDown();
+        nPanelDropDown departmentChoose = new nPanelDropDown();
+        nPanelDropDown termChoose = new nPanelDropDown();
+
 
         nPanelPlainText heading = new nPanelPlainText("Browse Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
@@ -50,47 +62,24 @@ public class PageViews {
         nButton searchButton = new nButton("Search");
         searchButton.setBackgroundColor(UITheme.INFO);
 
-        // row with search box + button
-        nPanel searchRow = new nPanel() {
-            @Override
-            public void doLayout() {
-                int padding = 10;
-                int h = getHeight();
-
-                int buttonWidth = 90;
-                int controlHeight = 28;
-
-                int boxWidth = getWidth() - buttonWidth - padding * 3;
-                int yMid = (h - controlHeight) / 2;
-
-                searchBox.setBounds(padding, yMid, boxWidth, controlHeight);
-
-                searchButton.setBounds(padding * 2 + boxWidth, yMid, buttonWidth, controlHeight);
-            }
-        };
-        searchRow.setLayout(null);
-        searchRow.setOpaque(false);
-        searchRow.add(searchBox);
-        searchRow.add(searchButton);
-
-        // scrollable course list
         nScrollableList courseList = new nScrollableList();
         courseList.setInnerPadding(8);
         courseList.setItemSpacing(8);
-        
-        String tempcampusname = "CSU East Bay";
-        /*searchButton.addActionListener(e -> {
+
+        searchButton.addActionListener(e -> {
             courseList.clearItems();
             String query = searchBox.getText();
-            Message<StudentGetScheduleResponse> getCoursesResponse = guiService.sendAndWait(
-                    MessageType.STUDENT_BROWSE_SECTION, MessageStatus.REQUEST, new StudentGetUnitResponse());
+            Message<AdminGetCoursesResponse> getCoursesResponse = guiService.sendAndWait(
+                    MessageType.ADMIN_GET_COURSES, MessageStatus.REQUEST, new AdminGetCoursesRequest());
             LinkedList<Course> courses = getCoursesResponse.get().courses();
 
             Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                     MessageStatus.REQUEST, new GetTermsRequest());
             LinkedList<Term> terms = getTermsResponse.get().terms();
             for (Course c : courses) {
-
+                if (c == null || campusChoose.getSelected() == null || departmentChoose.getSelected() == null) {
+                    continue;
+                }
                 if (!c.getCampus().getName().equals(campusChoose.getSelected().getText())) {
                     continue;
                 }
@@ -108,8 +97,111 @@ public class PageViews {
 
             courseList.revalidate();
             courseList.repaint();
-        });*/
+        });
+        
 
+        for (Campus campus : campuses) {
+            nButton b = new nButton();
+            b.setText(campus.getName());
+            campusChoose.addOption(b);
+            b.addActionListener(e -> {
+                courseList.clearItems();
+                departmentChoose.clearOptions();
+                termChoose.clearOptions();
+
+                Message<BrowseSectionResponse> getDepartmentsResponse = guiService.sendAndWait(
+                        MessageType.STUDENT_BROWSE_SECTION, MessageStatus.REQUEST, new BrowseSectionRequest());
+
+                LinkedList<Department> departments = new LinkedList<>();// = getDepartmentsResponse.get().departments();
+                //if(departments)
+                for (Department department : departments) {
+                    if (department == null) {
+                        continue;
+                    }
+                    if (!department.getCampus().getName().equals(campus.getName())) {
+                        continue;
+                    }
+                    nButton db = new nButton();
+                    db.setText(department.getName());
+
+                    departmentChoose.addOption(db);
+                    db.addActionListener(ee -> {
+                        termChoose.clearOptions();
+
+                        Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
+                                MessageStatus.REQUEST, new GetTermsRequest());
+                        LinkedList<Term> terms = getTermsResponse.get().terms();
+                        for (Term t : terms) {
+                            nButton tb = new nButton();
+                            tb.setText(t.getDisplayName());
+                            termChoose.addOption(tb);
+                        }
+
+                        searchButton.simulateClick();
+
+                        departmentChoose.revalidate();
+                        departmentChoose.repaint();
+                    });
+                    if (departmentChoose.getSelected().getText().equals(department.getName())) {
+                        db.simulateClick();
+                    }
+
+                }
+
+                courseList.revalidate();
+                departmentChoose.revalidate();
+                campusChoose.revalidate();
+                courseList.repaint();
+                departmentChoose.repaint();
+                campusChoose.repaint();
+            });
+
+            nButton selected = campusChoose.getSelected();
+            if (selected != null && campus.getName().equals(selected.getText())) {
+                b.simulateClick();
+            }
+
+        }
+
+        nPanel searchRow = new nPanel() {
+            @Override
+            public void doLayout() {
+                int padding = 10;
+                int h = getHeight();
+                int w = getWidth();
+                int buttonWidth = 80;
+                int controlHeight = 28;
+
+                int boxWidth = w - buttonWidth - padding * 2;
+                if (boxWidth < 80)
+                    boxWidth = 80;
+
+                int yMid = h/2;
+
+                campusChoose.setBounds(padding, 0, (int) w / 3 - padding, controlHeight);
+                
+                departmentChoose.setBounds(padding + (int) (w*0.33), 0, (int) w / 3 - padding, controlHeight);
+                
+                termChoose.setBounds(padding + (int) (w*0.66), 0, w / 3 - padding, controlHeight);
+
+                int bx = padding * 2 + boxWidth;
+                
+                
+
+                searchBox.setBounds(padding, yMid, boxWidth, controlHeight);
+                searchButton.setBounds(bx, yMid, buttonWidth, controlHeight);
+
+            }
+        };
+        searchRow.setLayout(null);
+        searchRow.setOpaque(false);
+        searchRow.add(searchBox);
+        searchRow.add(searchButton);
+
+
+        
+        
+        
         // content panel inside the card: heading at top, searchRow, then list filling
         // rest
         nPanel content = new nPanel() {
@@ -120,7 +212,7 @@ public class PageViews {
                 int h = getHeight();
 
                 int headingHeight = 32;
-                int searchRowHeight = 40;
+                int searchRowHeight = 80;
 
                 heading.setBounds(padding, padding, w - padding * 2, headingHeight);
 
@@ -531,6 +623,8 @@ public class PageViews {
                                     manageCourseList.addItem(new Panels.CourseItemPanel(course, userRole));
                                     System.out.println(course.getName());
                                 }
+                                termChoose.revalidate();
+                                termChoose.repaint();
                                 manageCourseList.revalidate();
                                 manageCourseList.repaint();
                                 departmentChoose.revalidate();
@@ -541,7 +635,8 @@ public class PageViews {
                             }
 
                         }
-
+                        termChoose.revalidate();
+                        termChoose.repaint();
                         manageCourseList.revalidate();
                         departmentChoose.revalidate();
                         campusChoose.revalidate();
@@ -612,6 +707,7 @@ public class PageViews {
                         departmentChoose.revalidate();
                         departmentChoose.repaint();
                     });
+                    b.simulateClick();
                     modal.close();
                 }
             });
