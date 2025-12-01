@@ -56,6 +56,10 @@ public class nFrame extends JFrame {
         return c;
     }
 
+    public Component addOverlay(Component comp) {
+        return super.add(comp);
+    }
+
     public void resizeChildren() {
         if (baseSize.width == 0 || baseSize.height == 0)
             return;
@@ -104,7 +108,8 @@ public class nFrame extends JFrame {
             repaint();
         }
 
-        public ListLayout(nFrame frame,Component[] components,Dimension size,int xPos,int yPos) {
+        
+        public ListLayout(nFrame frame,Component[] components,Dimension size,int xPos,int yPos, boolean addComponentToFrame) {
             setLayout(null);
             setOpaque(false);
             setSize(size);
@@ -117,8 +122,10 @@ public class nFrame extends JFrame {
                     }
                 }
             }
-
-            frame.add(this);
+            if(addComponentToFrame) {
+                frame.add(this);
+            }
+            
             layoutChildren();
 
             addComponentListener(new ComponentAdapter() {
@@ -127,32 +134,17 @@ public class nFrame extends JFrame {
                     layoutChildren();
                 }
             });
+        }
+        public ListLayout(nFrame frame,Component[] components,Dimension size,int xPos,int yPos) {
+            this(frame, components, size, xPos, yPos, true);
         }
         public ListLayout(nFrame frame,Component[] components) {
-            setLayout(null);
-            setOpaque(false);
-            setSize(new Dimension(10, 10));
-            setLocation(10, 10);
-
-            if (components != null) {
-                for (Component c : components) {
-                    if (c != null) {
-                        add(c);
-                    }
-                }
-            }
-
-            frame.add(this);
-            layoutChildren();
-
-            addComponentListener(new ComponentAdapter() {
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    layoutChildren();
-                }
-            });
+            this(frame, components, new Dimension(10, 10), 10, 10);
         }
-
+        public ListLayout(nFrame frame,Component[] components, boolean addComponentToFrame) {
+            this(frame, components, new Dimension(10, 10), 10, 10, addComponentToFrame);
+        }
+        
         public void setDirection(Direction direction) {
             this.direction = direction;
             layoutChildren();
@@ -253,7 +245,7 @@ public class nFrame extends JFrame {
         private int rows;
         private int padding = 0;
 
-        public GridLayout(nFrame frame,Component[] components,Dimension size,int xPos,int yPos) {
+        public GridLayout(nFrame frame,Component[] components,Dimension size,int xPos,int yPos, boolean addComponentToFrame) {
             this.componentList = (components != null) ? components : new Component[0];
             this.cols = Math.max(1, this.componentList.length);
             this.rows = 1;
@@ -268,8 +260,10 @@ public class nFrame extends JFrame {
                     add(c);
                 }
             }
-
-            frame.add(this);
+            if(addComponentToFrame) {
+                frame.add(this);
+            }
+            
             layoutChildren();
 
             addComponentListener(new ComponentAdapter() {
@@ -279,31 +273,14 @@ public class nFrame extends JFrame {
                 }
             });
         }
+        public GridLayout(nFrame frame,Component[] components,Dimension size,int xPos,int yPos) {
+            this(frame, components, size, xPos, yPos, true);
+        }
         public GridLayout(nFrame frame,Component[] components) {
-            this.componentList = (components != null) ? components : new Component[0];
-            this.cols = Math.max(1, this.componentList.length);
-            this.rows = 1;
-
-            setLayout(null);
-            setSize(new Dimension(10, 10));
-            setLocation(10, 10);
-            setOpaque(false);
-
-            for (Component c : componentList) {
-                if (c != null) {
-                    add(c);
-                }
-            }
-
-            frame.add(this);
-            layoutChildren();
-
-            addComponentListener(new ComponentAdapter() {
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    layoutChildren();
-                }
-            });
+            this(frame, components, new Dimension(10, 10), 10, 10);
+        }
+        public GridLayout(nFrame frame,Component[] components, boolean addComponentToFrame) {
+            this(frame, components, new Dimension(10, 10), 10, 10, addComponentToFrame);
         }
 
         public void setPadding(int padding) {

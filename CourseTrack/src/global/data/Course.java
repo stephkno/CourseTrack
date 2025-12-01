@@ -95,6 +95,10 @@ public class Course implements Serializable {
         return campus;
     }
 
+    public LinkedList<Section> getSections(Term term) {
+        return sections.Get(term);
+    }
+
     public String toString() {
         String outstring = "";
         outstring += name + " " + number;
@@ -102,7 +106,7 @@ public class Course implements Serializable {
     }
 
     public boolean equals(Course other) {
-        if(name.equals(other) && number == other.number) return true;
+        if(name.equals(other.name) && number == other.number) return true;
         return false;
     }
 

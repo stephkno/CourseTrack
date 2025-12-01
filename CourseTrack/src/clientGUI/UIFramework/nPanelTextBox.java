@@ -26,6 +26,19 @@ public class nPanelTextBox extends nPanel {
     
 
     public nPanelTextBox(String initialText) {
+        this(initialText, Color.BLACK);
+    }
+
+    public nPanelTextBox(Color c) {
+        this("", c);
+    }
+
+    public nPanelTextBox() {
+        this("");
+    }
+
+    public nPanelTextBox(String initialText, Color textColor) {
+        this.textColor = textColor;
         document.setText(initialText);
         setOpaque(false);
         setFocusable(true);
@@ -78,10 +91,6 @@ public class nPanelTextBox extends nPanel {
                 }
             }
         });
-    }
-
-    public nPanelTextBox() {
-        this("");
     }
 
     public void setText(String _text) {

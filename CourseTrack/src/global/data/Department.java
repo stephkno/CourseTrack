@@ -43,6 +43,10 @@ public class Department implements Serializable {
         this.id = Department.nextId++;
     }
 
+    public int length() {
+        return courses.Length();
+    }
+
     public Campus getCampus() { 
         return campus; 
     }

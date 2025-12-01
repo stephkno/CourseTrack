@@ -21,19 +21,7 @@ public class LoginPage {
         loginInformation = _loginInformation;
         loginPage(frame);
     }
-
-
-    //This section is so I can do local testing
-
-    private ButtonInterface loginButtonFunction;
-    private ButtonInterface registerButtonFunction;
-    public LoginPage(nFrame frame, LoginInformation _loginInformation, LoginType logintype, ButtonInterface loginButtonFunction, ButtonInterface registerButtonFunction) {
-        this.loginButtonFunction = loginButtonFunction;
-        this.registerButtonFunction = registerButtonFunction;
-        type = logintype;
-        loginInformation = _loginInformation;
-        testLoginPage(frame);
-    }
+    
     private void loginPage(nFrame frame) {
         
 
@@ -164,6 +152,21 @@ public class LoginPage {
         frame.revalidate();
         frame.repaint();
     }
+    
+
+    //This section is so I can do local testing
+
+    private ButtonInterface loginButtonFunction;
+    private ButtonInterface registerButtonFunction;
+    public LoginPage(nFrame frame, LoginInformation _loginInformation, LoginType logintype, ButtonInterface loginButtonFunction, ButtonInterface registerButtonFunction) {
+        this.loginButtonFunction = loginButtonFunction;
+        this.registerButtonFunction = registerButtonFunction;
+        type = logintype;
+        loginInformation = _loginInformation;
+        testLoginPage(frame);
+    }
+    
+    
     private void testLoginPage(nFrame frame) {
         
 
@@ -206,23 +209,8 @@ public class LoginPage {
         nButton loginButton = new nButton(type == LoginType.LOGIN ? "Login" : "Register");
         loginButton.setBackgroundColor(UITheme.ACCENT);
 
-        loginButton.addActionListener(e -> {
-            loginInformation.username = usernameInput.getText();
-            loginInformation.password = passwordInput.getText();
-            loginInformation.confirmationPassword = passwordInputConfirm.getText();
-
-            // checkbox
-            UserType userType = checkBox.getState() ? UserType.ADMIN : UserType.STUDENT;
-
-            if(type == LoginType.LOGIN) { loginButtonFunction.run(); }
-            else { registerButtonFunction.run(); }
-            
-            loginInformation.password = "";
-            loginInformation.confirmationPassword = "";
-            passwordInput.setText("");
-            passwordInputConfirm.setText("");
-        });
-        Log.Msg("BUILDING TEST");
+        
+        System.out.println("BUILDING TEST");
         nPanelPlainText errorText = new nPanelPlainText("");
         errorText.textColor = UITheme.FAIL;
 
@@ -270,7 +258,29 @@ public class LoginPage {
 
             list.setChildren(newComponents);
         });
+        loginButton.addActionListener(e -> {
+            loginInformation.username = usernameInput.getText();
+            loginInformation.password = passwordInput.getText();
+            loginInformation.confirmationPassword = passwordInputConfirm.getText();
 
+            // checkbox
+            UserType userType = checkBox.getState() ? UserType.ADMIN : UserType.STUDENT;
+
+            if(type == LoginType.LOGIN) { loginButtonFunction.run(); }
+            else {
+                registerButtonFunction.run(); 
+                type = LoginType.LOGIN;
+                registerButton.setText("Create An Account");
+                loginButton.setText("Login");
+                Component[] newComponents = loginComponents;
+                list.setChildren(newComponents);
+            }
+            
+            loginInformation.password = "";
+            loginInformation.confirmationPassword = "";
+            passwordInput.setText("");
+            passwordInputConfirm.setText("");
+        });
 
         int width = 300;
         int height = 260;

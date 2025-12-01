@@ -4,8 +4,13 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 
+import javax.swing.JFrame;
+
 import clientGUI.UIFramework.*;
-import clientGUI.UIInformations.UICourseInfo;
+import global.LinkedList;
+import global.data.Campus;
+import global.data.Course;
+import global.data.Department;
 import clientGUI.UIInformations.UserRole;
 
 import global.Log;
@@ -14,7 +19,7 @@ import global.Log;
 public class PageViews {
 
     //#region createBrowseView
-    public static nFrame.ListLayout createBrowseView(nFrame frame,int x, int y, int w, int h, UICourseInfo[] courses, UserRole userRole) {
+    public static nFrame.ListLayout createBrowseView(nFrame frame,int x, int y, int w, int h, Course[] courses, UserRole userRole) {
         // heading
         nPanelPlainText heading = new nPanelPlainText("Browse Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
@@ -55,11 +60,11 @@ public class PageViews {
         nScrollableList courseList = new nScrollableList();
         courseList.setInnerPadding(8);
         courseList.setItemSpacing(8);
-        searchScrollableList(courseList, "", courses, UserRole.student);
+        searchBrowseManageScrollableList(frame, courseList, "", courses, UserRole.student);
 
         searchButton.addActionListener(e -> {
             String query = searchBox.getText();
-            searchScrollableList(frame, courseList, query, courses, UserRole.student);
+            searchBrowseManageScrollableList(frame, courseList, query, courses, UserRole.student);
         });
 
         // content panel inside the card: heading at top, searchRow, then list filling
@@ -105,19 +110,47 @@ public class PageViews {
 
 
     //#region createDropView
-    public static nFrame.ListLayout createDropView(nFrame frame,int x, int y, int w, int h) {
-        nPanelPlainText heading = new nPanelPlainText("Drop Course");
+    public static nFrame.ListLayout createDropView(nFrame frame, Course[] courses, int x, int y, int w, int h) {
+        // heading
+        nPanelPlainText heading = new nPanelPlainText("Drop Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
-        nPanelPlainText desc = new nPanelPlainText("WIP");
-        desc.textColor = UITheme.TEXT_MUTED;
 
-        nPanel spacer = new nPanel();
-        spacer.setOpaque(false);
+        // scrollable course list
+        nScrollableList courseList = new nScrollableList();
+        courseList.setInnerPadding(8);
+        courseList.setItemSpacing(8);
+        searchDropScrollableList(frame, courseList, courses, UserRole.student);
 
-        Component[] comps = { heading, desc, spacer };
 
-        nFrame.ListLayout layout = new nFrame.ListLayout(frame, comps,new Dimension(w, h), x, y);
+        nPanel content = new nPanel() {
+            @Override
+            public void doLayout() {
+                int padding = 10;
+                int w = getWidth();
+                int h = getHeight();
+
+                int headingHeight = 32;
+                int searchRowHeight = 40;
+
+                heading.setBounds(padding,padding,w - padding * 2,headingHeight);
+
+                int listY = padding + searchRowHeight + padding;
+                int listH = h - listY - padding;
+                if (listH < 40)
+                    listH = 40;
+
+                courseList.setBounds(padding,listY,w - padding * 2,listH);
+            }
+        };
+        content.setLayout(null);
+        content.setOpaque(false);
+        content.add(heading);
+        content.add(courseList);
+
+        Component[] comps = { content };
+        
+        nFrame.ListLayout layout = new nFrame.ListLayout(frame,comps,new Dimension(w, h),x,y);
         layout.backgroundColor = UITheme.BG_ELEVATED2;
         layout.setPadding(10, 10);
         layout.setStyle(nFrame.ListLayout.Style.NONE);
@@ -244,10 +277,9 @@ public class PageViews {
     //#endregion
     */
     //#region createManageView
-    public static nFrame.ListLayout createManageView(nFrame frame, int x, int y, int w, int h, UICourseInfo[] courses, UserRole userRole) {
+    public static nFrame.ListLayout createManageView(nFrame frame, int x, int y, int w, int h, Course[] courses, UserRole userRole) {
         nPanelPlainText heading = new nPanelPlainText("Manage Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
-
         nPanelTextBox searchBox = new nPanelTextBox();
         searchBox.textColor = UITheme.TEXT_PRIMARY;
         searchBox.backgroundColor = UITheme.BG_APP;
@@ -259,7 +291,8 @@ public class PageViews {
         nButton addButton = new nButton("Add");
         addButton.setBackgroundColor(UITheme.SUCCESS);
 
-
+        nPanelDropDown campusChoose = new nPanelDropDown();
+        nPanelDropDown departmentChoose = new nPanelDropDown();
         nPanel controlRow = new nPanel() {
             @Override
             public void doLayout() {
@@ -275,10 +308,11 @@ public class PageViews {
                 if (boxWidth < 80)
                     boxWidth = 80;
 
-                int yMid = (h - controlHeight) / 2;
+                int yMid = (h) / 2;
 
                 searchBox.setBounds(padding,yMid,boxWidth,controlHeight);
-
+                campusChoose.setBounds(padding, 0, (int)getWidth()/2 - padding, controlHeight);
+                departmentChoose.setBounds(padding+(int)getWidth()/2, 0, (int)getWidth()/2 - padding, controlHeight);
                 int bx = padding * 2 + boxWidth;
                 searchButton.setBounds(bx, yMid, buttonWidth, controlHeight);
                 addButton.setBounds(bx + buttonWidth + padding, yMid, buttonWidth, controlHeight);
@@ -286,26 +320,74 @@ public class PageViews {
         };
         controlRow.setLayout(null);
         controlRow.setOpaque(false);
+        controlRow.add(campusChoose);
+        controlRow.add(departmentChoose);
         controlRow.add(searchBox);
         controlRow.add(searchButton);
         controlRow.add(addButton);
+        
 
         // scrollable list of courses
         nScrollableList manageCourseList = new nScrollableList();
         manageCourseList.setInnerPadding(8);
         manageCourseList.setItemSpacing(8);
-        searchScrollableList(manageCourseList, searchBox.getText(), courses, userRole);
+        searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
 
         // wire up buttons
         searchButton.addActionListener(e -> {
-            searchScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
+            searchBrowseManageScrollableList(frame, manageCourseList, searchBox.getText(), courses, userRole);
         });
 
-        addButton.addActionListener(e -> {
-            UICourseInfo newCourse = new UICourseInfo("CS000", "New Course", "Instructor", "Time", "Location");
-            //showCourseEditDialog(frame, newCourse, true); 
-            //#region do this 
-            //#endregion
+        addButton.addActionListener(e -> {//String name, int number, int units, Department department
+            int ww = 420;
+            int hh = 400;
+            
+            nButton enrollButton = new nButton("Save");
+            enrollButton.setBackgroundColor(UITheme.SUCCESS);
+            nButton cancelButton = new nButton("Cancel");
+            cancelButton.setBackgroundColor(UITheme.FAIL);
+            Component[] options = {
+                enrollButton,
+                cancelButton
+            };
+            nFrame.GridLayout lowerOptions = new nFrame.GridLayout((nFrame)frame, options, false);
+            lowerOptions.setGridSize(2, 1);
+            lowerOptions.setPadding(5);
+            nPanelTextBox campusTB = new nPanelTextBox(UITheme.TEXT_PRIMARY);
+            nPanelTextBox departmentTB = new nPanelTextBox(UITheme.TEXT_PRIMARY);
+            nPanelTextBox courseTB = new nPanelTextBox(UITheme.TEXT_PRIMARY);
+            nPanelTextBox courseNumberTB = new nPanelTextBox(UITheme.TEXT_PRIMARY);
+            nPanelTextBox courseUnitsTB = new nPanelTextBox(UITheme.TEXT_PRIMARY);
+            Component[] enrollPanel = {
+                new nPanelPlainText("Add Course", UITheme.TEXT_PRIMARY),
+                new nPanelPlainText("Campus", UITheme.TEXT_PRIMARY),
+                campusTB,
+                new nPanelPlainText("Department", UITheme.TEXT_PRIMARY),
+                departmentTB,
+                new nPanelPlainText("Course", UITheme.TEXT_PRIMARY),
+                courseTB,
+                new nPanelPlainText("Course Number", UITheme.TEXT_PRIMARY),
+                courseNumberTB,
+                new nPanelPlainText("Course Units", UITheme.TEXT_PRIMARY),
+                courseUnitsTB,
+                lowerOptions
+            };
+            nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10, false);
+            panel.setPadding(5, 7);
+            nPanelModal modal = new nPanelModal((nFrame)frame, panel, ww, hh);
+            enrollButton.addActionListener(ee -> {
+                //#region ADDS COURSE HERE
+                Campus.add(campusTB.getText());      
+                Campus campus = Campus.get(campusTB.getText());
+                campus.addDepartment(departmentTB.getText());
+                Department department = campus.getDepartment(departmentTB.getText());
+                department.addCourse(new Course(courseTB.getText(), Integer.parseInt(courseNumberTB.getText()), Integer.parseInt(courseUnitsTB.getText()), department));
+                
+                modal.close();
+            });
+            cancelButton.addActionListener(ee -> {
+                modal.close();
+            });
         });
         nPanel content = new nPanel() {
             @Override
@@ -315,7 +397,7 @@ public class PageViews {
                 int ch = getHeight();
 
                 int headingHeight = 32;
-                int rowHeight = 40;
+                int rowHeight = 80;
 
                 heading.setBounds(padding,padding,cw - padding * 2,headingHeight);
 
@@ -373,40 +455,54 @@ public class PageViews {
         return layout;
     }
     //#endregion
-    private static void searchScrollableList(nScrollableList list, String query, UICourseInfo[] courses, UserRole userRole) {
+
+    private static void searchBrowseManageScrollableList(nFrame frame, nScrollableList list, String query, Course[] courses, UserRole userRole) {
         String q = (query == null) ? "" : query.trim().toLowerCase();
         list.clearItems();
 
-        for (UICourseInfo c : courses) {
+        //#region just some temp logic for search query
+        LinkedList<Course> ll = new LinkedList<Course>();
+        for (Course c : courses) {
             if (!q.isEmpty()) {
-                String haystack = (c.code + " " + c.title + " " + c.instructor).toLowerCase();
+                String haystack = (c.getName()).toLowerCase();
                 if (!haystack.contains(q))
                     continue;
             }
-            list.addItem(new Panels.CourseItemPanel(c, userRole));
-            
+            ll.Push(c); 
         }
-        
-        //printTree((Container) list, "root");
-        //for debuging
-    }
-    private static void searchScrollableList(nFrame frame, nScrollableList list, String query, UICourseInfo[] courses, UserRole userRole) {
-        String q = (query == null) ? "" : query.trim().toLowerCase();
-        list.clearItems();
+        //#endregion
 
-        for (UICourseInfo c : courses) {
-            if (!q.isEmpty()) {
-                String haystack = (c.code + " " + c.title + " " + c.instructor).toLowerCase();
-                if (!haystack.contains(q))
-                    continue;
-            }
+        ll.forEach(c -> {
             list.addItem(new Panels.CourseItemPanel(c, userRole));
-            
-        }
+        });
         frame.resizeChildren();
         //printTree((Container) list, "root");
         //for debuging
     }
+    private static void searchDropScrollableList(nFrame frame, nScrollableList list, Course[] courses, UserRole userRole) {
+        String q = "".trim().toLowerCase();
+        list.clearItems();
+        
+        //#region just some temp logic for search query
+        LinkedList<Course> ll = new LinkedList<Course>();
+        for (Course c : courses) {
+            if (!q.isEmpty()) {
+                String haystack = (c.getName()).toLowerCase();
+                if (!haystack.contains(q))
+                    continue;
+            }
+            ll.Push(c); 
+        }
+        //#endregion
+
+        ll.forEach(c -> {
+            list.addItem(new Panels.DropItemPanel(c, userRole));
+        });
+        frame.resizeChildren();
+        //printTree((Container) list, "root");
+        //for debuging
+    }
+
     private static void printTree(Container c, String currText){
         Component[] children = c.getComponents();
         for(Component child : children) {

@@ -5,9 +5,10 @@ import java.awt.Dimension;
 import clientGUI.UIFramework.*;
 import clientGUI.PageComponents.*;
 import clientGUI.UIInformations.*;
+import global.data.Course;
 public class AdminPage {
     
-    public AdminPage(nFrame frame, UICourseInfo[] courses, HomePage homePage) {
+    public AdminPage(nFrame frame, Course[] courses, HomePage homePage) {
         int sidebarX = homePage.sidebarX;
         int sidebarY = homePage.sidebarY;
         int sidebarWidth = homePage.sidebarWidth;
@@ -18,7 +19,7 @@ public class AdminPage {
         int mainH = homePage.mainH;
         buildAdminHome(frame, courses, sidebarX, sidebarY, sidebarWidth, sidebarHeight, mainX, mainY, mainW, mainH);
     }
-    private void buildAdminHome(nFrame frame, UICourseInfo[] courses, int sidebarX, int sidebarY, int sidebarWidth, int sidebarHeight, int mainX, int mainY, int mainW, int mainH) {
+    private void buildAdminHome(nFrame frame, Course[] courses, int sidebarX, int sidebarY, int sidebarWidth, int sidebarHeight, int mainX, int mainY, int mainW, int mainH) {
 
         UIArrayList<Component> navList = new UIArrayList<>();
 

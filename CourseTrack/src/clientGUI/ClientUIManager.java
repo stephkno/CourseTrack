@@ -4,6 +4,10 @@ import client.services.IAppGUIService;
 import clientGUI.Pages.*;
 import clientGUI.UIFramework.*;
 import clientGUI.UIInformations.*;
+import global.data.Campus;
+import global.data.Course;
+import global.data.Department;
+
 import java.awt.Color;
 import javax.swing.JFrame;
 import global.Log;
@@ -15,20 +19,10 @@ public class ClientUIManager {
     private final int startingWidth = 500;
     private final int startingHeight = 500;
     nFrame frame;
+    
+    public static Campus campus = null;
 
-    private static final UIArrayList<UICourseInfo> COURSES = new UIArrayList<>();
-    static {
-        COURSES.append(new UICourseInfo("CS101", "Introduction to Computer Science", "Dr. Lin", "MWF 10:00-10:50", "ENGR 201"));
-        COURSES.append(new UICourseInfo("CS135", "Discrete Structures", "Dr. Patel", "TR 9:30-10:45", "SCI 110"));
-        COURSES.append(new UICourseInfo("CS241", "Data Structures & Algorithms", "Dr. Alvarez", "MWF 13:00-13:50", "ENGR 305"));
-        COURSES.append(new UICourseInfo("CS321", "Operating Systems", "Dr. Nguyen", "TR 11:00-12:15", "ENGR 415"));
-        COURSES.append(new UICourseInfo("CS352", "Database Systems", "Dr. Kim", "MWF 14:00-14:50", "SCI 208"));
-        COURSES.append(new UICourseInfo("MATH221", "Linear Algebra", "Dr. Brown", "TR 8:00-9:15", "MATH 120"));
-        COURSES.append(new UICourseInfo("PHYS135", "Introductory Physics I", "Dr. Carter", "MWF 9:00-9:50", "PHY 101"));
-        COURSES.append(new UICourseInfo("CS355", "Computer Networks", "Dr. Rossi", "TR 14:00-15:15", "ENGR 420"));
-        COURSES.append(new UICourseInfo("CS399", "Special Topics: Game Development", "Dr. Miller", "MW 15:30-16:45", "LAB 12"));
-    }
-
+    
     public ClientUIManager(){
         frame = new nFrame(title, startingWidth, startingHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,7 +63,19 @@ public class ClientUIManager {
         HomePage hp = new HomePage(frame, logoutButtonAction, title);
 
         frame.getContentPane().setBackground(UITheme.BG_APP);
-        UICourseInfo[] courseInfo = COURSES.toArray(new UICourseInfo[COURSES.getLength()]);
+        Course[] courseInfo = {};
+        String campusCurrent = "CSUEB";
+        if(!Campus.exists(campusCurrent)) {
+            new AdminPage(frame, courseInfo, hp);
+            return;
+        }
+        campus = Campus.get(campusCurrent);
+        //I need to ask some questions about the campus object before i can make this work properly
+        Department department = campus.getDepartment("Computer Science");
+        courseInfo = new Course[department.length()];
+        for(int i = 0; i < department.length(); i++) {
+            courseInfo[i] = department.getCourse(i);
+        }
         
         new AdminPage(frame, courseInfo, hp);
         //public AdminPage(nFrame frame, UICourseInfo[] courses, int sidebarX, int sidebarY, int sidebarWidth, int sidebarHeight, int mainX, int mainY, int mainW, int mainH) {
@@ -82,9 +88,16 @@ public class ClientUIManager {
 
         HomePage hp = new HomePage(frame, logoutButtonAction, title);
         frame.getContentPane().setBackground(UITheme.BG_APP);
-        UICourseInfo[] courseInfo = COURSES.toArray(new UICourseInfo[COURSES.getLength()]);
+
+        campus = Campus.get("CSUEB");
+
         
-        new StudentPage(frame, courseInfo, hp);
+        Course[] courseInfo = new Course[20];
+        for(int i = 0; i < 20; i++) {
+            courseInfo[i] = campus.getDepartment("Computer Science").getCourse(i);
+        }
+        Course[] myCourseInfo = {new Course("title", 1, 1, campus.getDepartment("Computer Science"))};
+        new StudentPage(frame, courseInfo, myCourseInfo, hp);
     }
 
     private void cleanUp() {

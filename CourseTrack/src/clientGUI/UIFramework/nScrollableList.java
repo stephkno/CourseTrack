@@ -27,7 +27,7 @@ public class nScrollableList extends nPanel implements MouseWheelListener {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                //layoutItems();
+                layoutItems();
             }
         });
     }
@@ -62,7 +62,11 @@ public class nScrollableList extends nPanel implements MouseWheelListener {
         scrollOffset = 0;
         layoutItems();
     }
-
+    
+    public void forEach(UIArrayList.forEachAction<nPanel> action) {
+        items.foreach(action);
+    }
+    
     public void setItemSpacing(int spacing) {
         this.itemSpacing = Math.max(0, spacing);
         layoutItems();
@@ -133,6 +137,7 @@ public class nScrollableList extends nPanel implements MouseWheelListener {
         int w = getWidth();
         int h = getHeight();
         g2d.fillRoundRect(0, 0, w - 1, h - 1, cornerRadius, cornerRadius);
+
         g2d.setRenderingHints(oldHints);
     }
 }
