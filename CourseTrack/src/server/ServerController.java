@@ -803,11 +803,44 @@ public class ServerController {
     }
 
     private void handleStudentGetUnits(Message<StudentGetUnitRequest> msg, ServerConnection client){
-        
+        if(!client.validateStudent()){
+            client.sendMessage(MessageType.STUDENT_GET_UNITS, MessageStatus.FAILURE, new StudentGetUnitResponse(0));
+            return;
+        }
+
+        Student student = (Student)client.getUser();
+        StudentGetUnitRequest request = msg.get();
+
+        int totalUnits = 0;
+
+        for(Section section : student.getEnrolledSections()){
+            totalUnits += section.getCourse().getUnits();
+        }
+
+        StudentGetUnitResponse res = new StudentGetUnitResponse(totalUnits);
+        client.sendMessage(MessageType.STUDENT_GET_UNITS, MessageStatus.SUCCESS, res);  
     }
 
     private void handleStudentGetProgress(Message<StudentGetProgressRequest> msg, ServerConnection client){
-        
+       if(!client.validateStudent()){
+            client.sendMessage(MessageType.STUDENT_GET_PROGRESS, MessageStatus.FAILURE, new StudentGetProgressResponse(null,0));
+            return;
+        }
+
+        Student student = (Student)client.getUser();
+
+        LinkedList<Course> completed = student.getCompletedCourses();
+        if(completed == null){
+            completed = new LinkedList<>();
+        }
+
+        int completedUnits = 0;
+        for(Course course : completed){
+            completedUnits += course.getUnits();
+        }
+
+        StudentGetProgressResponse res = new StudentGetProgressResponse(completed, completedUnits);
+        client.sendMessage(MessageType.STUDENT_GET_PROGRESS, MessageStatus.SUCCESS, res); 
     }
 
     private void handleLogout(Message<LogoutRequest> msg, ServerConnection client) {

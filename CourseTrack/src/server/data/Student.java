@@ -3,8 +3,8 @@ package server.data;
 import client.UserType;
 import global.LinkedList;
 import global.data.Course;
-import global.data.Section;
 import global.data.Department;
+import global.data.Section;
 import java.io.Serializable;
 
 public class Student extends User implements Serializable {
@@ -26,6 +26,7 @@ public class Student extends User implements Serializable {
         this.id = nextId++;
         this.enrolledSections = new LinkedList<>();
         this.waitlisted = new LinkedList<>();
+        this.pastSections = new LinkedList<>();
     }
 
     public static void setNextId(int id){
@@ -62,6 +63,15 @@ public class Student extends User implements Serializable {
     public int getStudentId() { 
         return id;
     }
+
+    public LinkedList<Course> getCompletedCourses(){
+        return pastSections;
+    }
+
+    public void addCompletedCourse(Course course){
+        pastSections.Push(course);
+    }
+
     
     public boolean hasTaken(Course course){
         return pastSections.Contains(course);
