@@ -20,10 +20,19 @@ public class nFrame extends JFrame {
     public static class TrackedChild {
         public final Component comp;
         public final Rectangle initialBounds;
-
-        TrackedChild(Component comp) {
+        public final nFrame frame;
+        TrackedChild(Component comp, nFrame frame) {
             this.comp = comp;
+            double sx = frame.getWidth()/frame.baseSize.getWidth();
+            double sy = frame.getWidth()/frame.baseSize.getWidth();
+            Rectangle r = comp.getBounds();
+            int newX = r.x-(int) Math.round(r.x * sx)/2;
+            int newY = r.y-(int) Math.round(r.y * sy)/2;
+            int newW = (int) Math.round(r.width * sx);
+            int newH = (int) Math.round(r.height * sy);
             this.initialBounds = comp.getBounds();
+            //comp.setBounds(newX, newY, newW, newH);
+            this.frame = frame;
         }
     }
 
@@ -52,7 +61,7 @@ public class nFrame extends JFrame {
     @Override
     public Component add(Component comp) {
         Component c = super.add(comp);
-        trackedChildren.append(new TrackedChild(c));
+        trackedChildren.append(new TrackedChild(c, this));
         return c;
     }
 
@@ -79,6 +88,12 @@ public class nFrame extends JFrame {
 
         revalidate();
         repaint();
+    }
+
+    public void reset() {
+        getContentPane().removeAll();
+        trackedChildren.clear();
+        
     }
 
     public static class ListLayout extends nPanel {

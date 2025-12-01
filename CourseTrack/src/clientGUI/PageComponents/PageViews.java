@@ -41,8 +41,7 @@ public class PageViews {
 
         
         LinkedList<Campus> campuses = response.get().campuses();
-
-        Log.Msg(campuses.Length());
+        if(campuses == null) {campuses = new LinkedList<Campus>();}
 
 
 
@@ -82,7 +81,6 @@ public class PageViews {
             Term cTerm = terms.Get(0);
             for(Term t : terms) {
                 cTerm = t;
-                if(termChoose.getSelected() == null) {continue;}
                 if(!t.getDisplayName().equals(termChoose.getSelected().getText())) {continue;}
                 break;                      
             }
@@ -269,6 +267,7 @@ public class PageViews {
                 Message<GetScheduleResponse> getCoursesResponse = guiService.sendAndWait(
                         MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new GetScheduleRequest(t));
                 LinkedList<StudentScheduleItem> sections = getCoursesResponse.get().schedule();
+                if(sections == null) {sections = new LinkedList<StudentScheduleItem>();}
                 for (StudentScheduleItem c : sections) {
                     if(c.getWaitlistPosition() == 0) {
                         courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService));
@@ -364,6 +363,7 @@ public class PageViews {
                 Message<GetScheduleResponse> getCoursesResponse = guiService.sendAndWait(
                         MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new GetScheduleRequest(t));
                 LinkedList<StudentScheduleItem> sections = getCoursesResponse.get().schedule();
+                if(sections == null) {sections = new LinkedList<StudentScheduleItem>();}
                 for (StudentScheduleItem c : sections) {
                     if(c.getWaitlistPosition() > 0) {
                         courseList.addItem(new Panels.WaitlistItemPanel(c, guiService));
@@ -452,6 +452,7 @@ public class PageViews {
         Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                     MessageStatus.REQUEST, new GetTermsRequest());
         LinkedList<Term> terms = getTermsResponse.get().terms();
+        if(terms == null) {terms = new LinkedList<Term>();}
         for(Term t : terms) {
             nButton b = new nButton();
             b.setText(t.getDisplayName());
@@ -461,6 +462,7 @@ public class PageViews {
                 Message<GetScheduleResponse> getCoursesResponse = guiService.sendAndWait(
                         MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new GetScheduleRequest(t));
                 LinkedList<StudentScheduleItem> sections = getCoursesResponse.get().schedule();
+                if(sections == null) {sections = new LinkedList<StudentScheduleItem>();}
                 for (StudentScheduleItem c : sections) {
                     if(c.getWaitlistPosition() == 0) {
                         courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService));
@@ -607,6 +609,8 @@ public class PageViews {
             Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                     MessageStatus.REQUEST, new GetTermsRequest());
             LinkedList<Term> terms = getTermsResponse.get().terms();
+
+            if(sections == null) {sections = new LinkedList<Section>();}
             for (Section c : sections) {
                 if (c == null || campusChoose.getSelected() == null || departmentChoose.getSelected() == null) {
                     continue;
@@ -618,6 +622,7 @@ public class PageViews {
                     continue;
                 }
                 if (c.getName().contains(query)) {
+                    if(terms == null) {terms = new LinkedList<Term>();}
                     for(Term t : terms) {
                         if(!t.getDisplayName().equals(termChoose.getSelected().getText())) {continue;}
                         
@@ -631,7 +636,7 @@ public class PageViews {
             manageCourseList.revalidate();
             manageCourseList.repaint();
         });
-
+        if(campuses == null) {campuses = new LinkedList<Campus>();}
         for (Campus campus : campuses) {
             
             nButton b = new nButton();
@@ -646,6 +651,7 @@ public class PageViews {
                         MessageType.ADMIN_GET_DEPARTMENTS, MessageStatus.REQUEST, new AdminGetDepartmentsRequest());
 
                 LinkedList<Department> departments = getDepartmentsResponse.get().departments();
+                if(departments == null) {departments = new LinkedList<Department>();}
                 for (Department department : departments) {
                     if (department == null) {
                         continue;
@@ -663,6 +669,7 @@ public class PageViews {
                         Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                                 MessageStatus.REQUEST, new GetTermsRequest());
                         LinkedList<Term> terms = getTermsResponse.get().terms();
+                        if(terms == null) {terms = new LinkedList<Term>();}
                         for (Term t : terms) {
                             nButton tb = new nButton();
                             tb.setText(t.getDisplayName());
@@ -763,6 +770,7 @@ public class PageViews {
                                 Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                                         MessageStatus.REQUEST, new GetTermsRequest());
                                 LinkedList<Term> terms = getTermsResponse.get().terms();
+                                if(terms == null) {terms = new LinkedList<Term>();}
                                 for (Term t : terms) {
                                     nButton tb = new nButton();
                                     tb.setText(t.getDisplayName());
@@ -839,6 +847,7 @@ public class PageViews {
                         Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                                 MessageStatus.REQUEST, new GetTermsRequest());
                         LinkedList<Term> terms = getTermsResponse.get().terms();
+                        if(terms == null) {terms= new LinkedList<Term>();}
                         for (Term t : terms) {
                             nButton tb = new nButton();
                             tb.setText(t.getDisplayName());

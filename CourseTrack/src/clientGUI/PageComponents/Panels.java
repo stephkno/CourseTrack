@@ -24,7 +24,8 @@ import global.responses.EnrollSectionResponse;
 import global.responses.AdminResponses.AdminGetCampusesResponse;
 import global.responses.AdminResponses.AdminRemoveCourseResponse;
 import global.responses.AdminResponses.AdminRemoveSectionResponse;
-
+import global.requests.*;
+import global.responses.*;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -500,6 +501,10 @@ public class Panels {
                 panel.setPadding(5, 7);
                 nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
                 enrollButton.addActionListener(ee -> {
+                    Message<DropSectionResponse> dropSectionRequest = guiService.sendAndWait(
+                        MessageType.STUDENT_DROP, MessageStatus.REQUEST,
+                        new DropSectionRequest(course.getSection().getId(), course.getSection().getTerm()));
+                    if(dropSectionRequest.getStatus() != MessageStatus.SUCCESS) {return;}
                     modal.close();
                 });
                 cancelButton.addActionListener(ee -> {
