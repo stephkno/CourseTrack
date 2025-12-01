@@ -13,6 +13,7 @@ import global.data.Campus;
 import global.data.Course;
 import global.data.Department;
 import global.data.Section;
+import global.data.StudentScheduleItem;
 import global.data.Term;
 import global.requests.*;
 import global.requests.AdminRequests.*;
@@ -172,11 +173,11 @@ public class PageViews {
 
                 int yMid = h/2;
 
-                campusChoose.setBounds(padding, 0, (int) w / 3 - padding, controlHeight);
+                campusChoose.setBounds(padding, 0, (int) (w * 0.33) - padding, controlHeight);
                 
-                departmentChoose.setBounds(padding + (int) (w*0.33), 0, (int) w / 3 - padding, controlHeight);
+                departmentChoose.setBounds(padding + (int) (w*0.33), 0, (int) (w * 0.33) - padding, controlHeight);
                 
-                termChoose.setBounds(padding + (int) (w*0.66), 0, w / 3 - padding, controlHeight);
+                termChoose.setBounds(padding + (int) (w*0.66), 0, (int) (w * 0.33) - padding, controlHeight);
 
                 int bx = padding * 2 + boxWidth;
                 
@@ -191,6 +192,9 @@ public class PageViews {
         searchRow.setOpaque(false);
         searchRow.add(searchBox);
         searchRow.add(searchButton);
+        searchRow.add(departmentChoose);
+        searchRow.add(campusChoose);
+        searchRow.add(termChoose);
 
 
         
@@ -238,7 +242,7 @@ public class PageViews {
     // #endregion
 
     // #region createDropView
-    public static nFrame.ListLayout createDropView(nFrame frame, Course[] courses, int x, int y, int w, int h) {
+    public static nFrame.ListLayout createDropView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService) {
         // heading
         nPanelPlainText heading = new nPanelPlainText("Drop Courses");
         heading.textColor = UITheme.TEXT_PRIMARY;
@@ -247,7 +251,14 @@ public class PageViews {
         nScrollableList courseList = new nScrollableList();
         courseList.setInnerPadding(8);
         courseList.setItemSpacing(8);
-        searchDropScrollableList(frame, courseList, courses, UserRole.student);
+        Message<> getCoursesResponse = guiService.sendAndWait(
+                    MessageType.STUDENT_GET_SCHEDULE, MessageStatus.REQUEST, new Student);
+        LinkedList<StudentScheduleItem> sections = getCoursesResponse.get().schedule();
+        for (StudentScheduleItem c : sections) {
+            if(c.getWaitlistPosition() == 0) {
+                courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService));
+            }
+        }
 
         nPanel content = new nPanel() {
             @Override
@@ -305,7 +316,10 @@ public class PageViews {
     }
 
     // #endregion
+
+    
     // #region createScheduleView
+    @Deprecated
     public static nFrame.ListLayout createScheduleView(nFrame frame, int x, int y, int w, int h) {
         nPanelPlainText heading = new nPanelPlainText("View Schedule");
         heading.textColor = UITheme.TEXT_PRIMARY;
@@ -861,55 +875,6 @@ public class PageViews {
     }
     // #endregion
 
-    private static void searchBrowseManageScrollableList(nFrame frame, nScrollableList list, String query,
-            Course[] courses, UserRole userRole) {
-        String q = (query == null) ? "" : query.trim().toLowerCase();
-        list.clearItems();
-
-        // #region just some temp logic for search query
-        LinkedList<Course> ll = new LinkedList<Course>();
-        for (Course c : courses) {
-            if (!q.isEmpty()) {
-                String haystack = (c.getName()).toLowerCase();
-                if (!haystack.contains(q))
-                    continue;
-            }
-            ll.Push(c);
-        }
-        // #endregion
-
-        ll.forEach(c -> {
-            //list.addItem(new Panels.CourseItemPanel(c, userRole));
-        });
-        frame.resizeChildren();
-        // printTree((Container) list, "root");
-        // for debuging
-    }
-
-    private static void searchDropScrollableList(nFrame frame, nScrollableList list, Course[] courses,
-            UserRole userRole) {
-        String q = "".trim().toLowerCase();
-        list.clearItems();
-
-        // #region just some temp logic for search query
-        LinkedList<Course> ll = new LinkedList<Course>();
-        for (Course c : courses) {
-            if (!q.isEmpty()) {
-                String haystack = (c.getName()).toLowerCase();
-                if (!haystack.contains(q))
-                    continue;
-            }
-            ll.Push(c);
-        }
-        // #endregion
-
-        ll.forEach(c -> {
-            list.addItem(new Panels.DropItemPanel(c, userRole));
-        });
-        frame.resizeChildren();
-        // printTree((Container) list, "root");
-        // for debuging
-    }
 
     private static void printTree(Container c, String currText) {
         Component[] children = c.getComponents();

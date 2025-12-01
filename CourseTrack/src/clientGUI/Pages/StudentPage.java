@@ -59,7 +59,7 @@ public class StudentPage {
 
         // center views
         nFrame.ListLayout viewBrowse = PageViews.createBrowseView(frame, mainX, mainY, mainW, mainH, guiService, role);
-        nFrame.ListLayout viewDrop = PageViews.createDropView(frame, null, mainX, mainY, mainW, mainH);
+        nFrame.ListLayout viewDrop = PageViews.createDropView(frame, mainX, mainY, mainW, mainH, guiService);
         nFrame.ListLayout viewSchedule = PageViews.createScheduleView(frame, mainX, mainY, mainW, mainH);
         nFrame.ListLayout viewWaitlist = PageViews.createWaitlistView(frame, mainX, mainY, mainW, mainH);
 

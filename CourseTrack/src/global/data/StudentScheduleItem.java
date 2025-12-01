@@ -15,4 +15,11 @@ public class StudentScheduleItem implements Serializable {
       return section.toString() + " Waitlisted: " + waitlistPosition;
     }
 
+    public Section getSection() {
+      return section;
+    }
+    public int getWaitlistPosition() {
+      return waitlistPosition;
+    }
+
 }

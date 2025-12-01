@@ -16,8 +16,10 @@ import global.requests.AddSectionRequest;
 import global.requests.AdminRequests.AdminGetCampusesRequest;
 import global.requests.AdminRequests.AdminRemoveCourseRequest;
 import global.requests.AdminRequests.AdminRemoveSectionRequest;
+import global.requests.EnrollSectionRequest;
 import global.responses.AddCourseResponse;
 import global.responses.AddSectionResponse;
+import global.responses.EnrollSectionResponse;
 import global.responses.AdminResponses.AdminGetCampusesResponse;
 import global.responses.AdminResponses.AdminRemoveCourseResponse;
 import global.responses.AdminResponses.AdminRemoveSectionResponse;
@@ -107,6 +109,8 @@ public class Panels {
                 panel.setPadding(5, 7);
                 nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
                 enrollButton.addActionListener(ee -> {
+                    Message<EnrollSectionResponse> enrollResponse = guiService.sendAndWait(MessageType.STUDENT_ENROLL, MessageStatus.REQUEST, new EnrollSectionRequest(course.getId(), course.getTerm()));
+                    if(enrollResponse.getStatus() != MessageStatus.SUCCESS) {return;}
                     modal.close();
                 });
                 cancelButton.addActionListener(ee -> {
@@ -318,7 +322,7 @@ public class Panels {
             // Title line
             g2d.setFont(UITheme.FONT_BODY.deriveFont(java.awt.Font.BOLD));
             g2d.setColor(UITheme.TEXT_PRIMARY);
-            g2d.drawString(course.getNumber() + " - " + course.getName(),
+            g2d.drawString(course.getCourse().getNumber() + " - " + course.getName(),
                     x, y + g2d.getFontMetrics().getAscent());
             y += g2d.getFontMetrics().getHeight();
             // Instructor + time
@@ -338,11 +342,12 @@ public class Panels {
         }
     }
     public static class DropItemPanel extends nPanel {
-        private final Course course;
+        private Section course;
         private nButton[] buttonList;
-        DropItemPanel(Course _course, UserRole role) {
+        private Term currentTerm;
+        DropItemPanel(Section _course, Term currentTerm, IAppGUIService guiService) {
             setName("CourseItemPanel");
-
+            this.currentTerm = currentTerm;
             course = _course;
             setOpaque(false);
             setLayout(null);
@@ -351,12 +356,12 @@ public class Panels {
             nButton DropButton = new nButton("Drop");
             DropButton.setBackgroundColor(UITheme.SUCCESS);
             add(DropButton);
-            DoDropButton(DropButton);
+            DoDropButton(DropButton, guiService);
             buttonList = new nButton[1];
             buttonList[0] = DropButton;
             doLayout();
         }
-        private void DoDropButton(nButton DropButton){
+        private void DoDropButton(nButton DropButton, IAppGUIService guiService){
             DropButton.addActionListener(e -> {
                 JFrame frame = getFrameWindow();
                 int w = 420;
