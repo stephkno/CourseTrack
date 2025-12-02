@@ -1007,6 +1007,8 @@ public class PageViews {
         Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS, MessageStatus.REQUEST,
                 new GetTermsRequest());
         LinkedList<Term> terms = getTermsResponse.get().terms();
+        final LinkedList<Term> termsFinal = terms; 
+
         if (terms == null) {
             terms = new LinkedList<Term>();
         }
@@ -1041,7 +1043,7 @@ public class PageViews {
             }
           
         Term selectedTerm = null;
-            for (Term term : terms) {
+            for (Term term : termsFinal) {
                 if (term != null && term.getDisplayName().equals(selected.getText())) {
                     selectedTerm = term;
                     break;
