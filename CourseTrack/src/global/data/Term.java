@@ -118,8 +118,12 @@ public class Term implements Serializable {
         return season + " " + year;
     }
 
-    public boolean equals(Term other) {
-        return season == other.season && year == other.year;
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;              // same reference
+        if (!(other instanceof Term)) return false;  // type check
+        Term o = (Term) other;                       // cast Object to Term
+        return this.season == o.season && this.year == o.year; // access fields safely
     }
 
     public Term shallowCopy(){

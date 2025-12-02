@@ -72,8 +72,9 @@ public class Department implements Serializable {
         return name;
     }
 
-    public boolean equals(Campus other){
-        return id == other.id;
+    @Override
+    public boolean equals(Object other){
+        return id == ((Department)other).id;
     }
 
     public String toString(){
