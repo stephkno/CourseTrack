@@ -666,6 +666,7 @@ public class ServerController {
         if(!section.getCourse().verifyPrereqs(student)){
             Log.Err("Student not eligible for course");
             client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,0,EnrollStatus.NOT_MET_REQUIREMENTS));
+            client.getUser().Notify("You have not met the requirements for this course.");
             return;
         }
         
@@ -680,8 +681,9 @@ public class ServerController {
 
             // iterate all meet times of currently enrolled classes
             if(section.conflicts(other.getMeetTimes())){
-            Log.Err("Student schedule conflict");
+                Log.Err("Student schedule conflict");
                 client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,0,EnrollStatus.SCHEDULE_CONFLICT));
+                client.getUser().Notify("Your schedule conflicts with another registered section.");
                 return;
             }
     
@@ -702,14 +704,13 @@ public class ServerController {
 
         }
 
-        Log.Err("Adding student to section!");
+        Log.Msg("Adding student to section!");
 
         // add student to section
         section.addStudent(student);
         student.addSection(section);
         
         assert(section.numStudents() > 0);
-        Log.Err("Num students: " + section.numStudents());
 
         EnrollSectionResponse res = new EnrollSectionResponse(section, 0, EnrollStatus.WAS_ENROLLED);
         client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.SUCCESS, res);
@@ -737,11 +738,6 @@ public class ServerController {
             section.removeWaitlist(student);
             student.removeWaitlist(section);
 
-            // notify every student below this one that they moved up in waitlist?
-            //for(Student s : section.getWaitlist()){
-            //    s.Notify("Waitlist promotion!");
-            //}
-
             client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.SUCCESS, new DropSectionResponse(section));
             return;
 
@@ -760,11 +756,6 @@ public class ServerController {
 
             studentOnWaitlist.Notify("You have been enrolled!");
 
-            // iterate students in wait list and notify them of waitlist promotion?
-            //for(Student s : section.getWaitlist()){
-            //    s.Notify("Your waitlist position has changed.");
-            //}
-       
         }
 
         DropSectionResponse res = new DropSectionResponse(section);

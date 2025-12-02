@@ -239,7 +239,7 @@ public class TestHelpers {
         csuEastBayRequirements.Push(csEB201);
         Course csEB301 = AddCourse("Operating Systems", 401, 3, "CSU East Bay", "CS", csuEastBayRequirements, client);
 
-        Course csEB555 = AddCourse("Test", 555, 1, "CSU East Bay", "CS", csuEastBayRequirements, client);
+        Course csEB555 = AddCourse("Waitlist Demonstration", 555, 1, "CSU East Bay", "CS", csuEastBayRequirements, client);
 
         LinkedList<Course> sfsuRequirements = new LinkedList<>();
         Course sfsuCS101 = AddCourse("Programming 1", 101, 3, "SFSU", "CS", sfsuRequirements, client);
