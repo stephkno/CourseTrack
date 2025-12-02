@@ -8,6 +8,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
 import java.awt.RenderingHints;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
@@ -23,13 +25,13 @@ public class nFrame extends JFrame {
         public final nFrame frame;
         TrackedChild(Component comp, nFrame frame) {
             this.comp = comp;
-            double sx = frame.getWidth()/frame.baseSize.getWidth();
-            double sy = frame.getWidth()/frame.baseSize.getWidth();
-            Rectangle r = comp.getBounds();
-            int newX = r.x-(int) Math.round(r.x * sx)/2;
-            int newY = r.y-(int) Math.round(r.y * sy)/2;
-            int newW = (int) Math.round(r.width * sx);
-            int newH = (int) Math.round(r.height * sy);
+            //double sx = frame.getWidth()/frame.baseSize.getWidth();
+            //double sy = frame.getWidth()/frame.baseSize.getWidth();
+            //Rectangle r = comp.getBounds();
+            //int newX = r.x-(int) Math.round(r.x * sx)/2;
+            //int newY = r.y-(int) Math.round(r.y * sy)/2;
+            //int newW = (int) Math.round(r.width * sx);
+            //int newH = (int) Math.round(r.height * sy);
             this.initialBounds = comp.getBounds();
             //comp.setBounds(newX, newY, newW, newH);
             this.frame = frame;
@@ -93,7 +95,13 @@ public class nFrame extends JFrame {
     public void reset() {
         getContentPane().removeAll();
         trackedChildren.clear();
-        
+        setSize(baseSize);
+        GraphicsConfiguration gc = this.getGraphicsConfiguration();
+        GraphicsDevice gd = gc.getDevice();
+        Rectangle screenBounds = gd.getDefaultConfiguration().getBounds();
+        int posX = (int) (screenBounds.x + screenBounds.width/2 - getWidth()/2);
+        int posY = (int) (screenBounds.y + screenBounds.height/2 - getHeight()/2);
+        setLocation(posX, posY);
     }
 
     public static class ListLayout extends nPanel {

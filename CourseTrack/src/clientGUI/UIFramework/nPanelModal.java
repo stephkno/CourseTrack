@@ -21,7 +21,12 @@ public class nPanelModal extends nPanel {
     private final Component content;
     private final int contentWidth;
     private final int contentHeight;
-
+    private boolean displayed = true;
+    private Runnable onClosed = null;
+    public nPanelModal(nFrame frame, Component content, int contentWidth, int contentHeight, Runnable onClosed) {
+        this(frame, content, contentWidth, contentHeight);
+        this.onClosed = onClosed;
+    }
     public nPanelModal(nFrame frame, Component content, int contentWidth, int contentHeight) {
         this.frame = frame;
         this.glass = (JComponent) frame.getGlassPane();
@@ -92,7 +97,13 @@ public class nPanelModal extends nPanel {
         glass.remove(this);
         glass.revalidate();
         glass.repaint();
+        displayed = false;
+        if(onClosed != null) {
+            onClosed.run();
+        }
     }
+
+    public boolean isDisplayed() {return displayed;}
 
     @Override
     protected void paintComponent(java.awt.Graphics g) {

@@ -3,12 +3,16 @@ package client;
 import client.services.IAppGUIService;
 import client.services.IClientListenerService;
 import clientGUI.ClientUIManager;
+import clientGUI.UIFramework.nPanelModal;
 import clientGUI.UIInformations.LoginInformation;
 import global.*;
 import global.data.*;
 import global.requests.*;
 import global.responses.*;
 import java.io.Serializable;
+import java.util.concurrent.CountDownLatch;
+
+import javax.swing.SwingUtilities;
 
 public class ClientController implements  IClientListenerService, IAppGUIService {
     private ClientListener clientListener;
@@ -69,13 +73,9 @@ public class ClientController implements  IClientListenerService, IAppGUIService
                 currentUser = resp.get().user();
 
                 if (currentUser.getUserType() == UserType.ADMIN) {
-                    clientUI.GoAdminPage(() -> {
-                        //logout();
-                    }, this);
+                    clientUI.GoAdminPage(this);
                 } else {
-                    clientUI.GoStudentPage(() -> {
-                        //logout();
-                    }, this);
+                    clientUI.GoStudentPage(this);
                 }
                 clientUI.setLabel("Welcome, " + currentUser.getUserName());
 
@@ -226,11 +226,36 @@ public class ClientController implements  IClientListenerService, IAppGUIService
 
         if (request.get() == null)
             return;
-        
-        for(Notification notification : request.get().notifications()){
-            Log.Msg("Received Notification request: " + notification.getMessage());
-        }
+        Thread notificationThread  = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(Notification notification : request.get().notifications()){
+                    CountDownLatch latch = new CountDownLatch(1);
 
+                    // Show the modal on the EDT
+                    SwingUtilities.invokeLater(() -> {
+                        nPanelModal modal = clientUI.DisplayNotification(
+                            notification.getMessage(),
+                            () -> {
+                                latch.countDown();
+                            }
+                        );
+                    });
+
+                    // Block this background thread until the modal is closed
+                    try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+
+                    Log.Msg("Received Notification request: " + notification.getMessage());
+                }
+            }
+        });
+        
+        notificationThread.start();
     }
 
     @Override

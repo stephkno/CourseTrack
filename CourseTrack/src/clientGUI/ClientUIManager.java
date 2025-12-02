@@ -1,6 +1,11 @@
 package clientGUI;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import client.services.IAppGUIService;
@@ -15,6 +20,9 @@ import global.data.Course;
 import global.data.Department;
 
 import global.Log;
+import global.Message;
+import global.MessageStatus;
+import global.MessageType;
 import global.LinkedList;
 
 public class ClientUIManager {
@@ -112,7 +120,7 @@ public class ClientUIManager {
     */
     
 
-    public void GoAdminPage(ButtonInterface logoutButtonAction, IAppGUIService guiService) {
+    public void GoAdminPage(IAppGUIService guiService) {
         cleanUp();
 
         String title = "";
@@ -125,7 +133,7 @@ public class ClientUIManager {
         //public AdminPage(nFrame frame, UICourseInfo[] courses, int sidebarX, int sidebarY, int sidebarWidth, int sidebarHeight, int mainX, int mainY, int mainW, int mainH) {
     }
 
-    public void GoStudentPage(ButtonInterface logoutButtonAction, IAppGUIService guiService){
+    public void GoStudentPage(IAppGUIService guiService){
         cleanUp();
         String title = "";
 
@@ -135,6 +143,34 @@ public class ClientUIManager {
         new StudentPage(frame, guiService, hp);
     }
 
+    public nPanelModal DisplayNotification(String notificationText, Runnable onClose) {
+        Container glass = (Container) frame.getGlassPane();
+        nPanelModal[] existingModals = (nPanelModal[]) glass.getComponents();
+        for(nPanelModal modal : existingModals) {modal.close();}
+        int w = 420;
+        int h = 280;
+
+        nButton enrollButton = new nButton("OK");
+        enrollButton.setBackgroundColor(UITheme.SUCCESS);
+        Component[] options = {
+            enrollButton
+        };
+        nFrame.GridLayout lowerOptions = new nFrame.GridLayout((nFrame)frame, options, false);
+        lowerOptions.setGridSize(2, 1);
+        lowerOptions.setPadding(5);
+        Component[] enrollPanel = {
+            new nPanelPlainText("!NOTIFICATION!", UITheme.TEXT_PRIMARY),
+            new nPanelPlainText(notificationText, UITheme.TEXT_PRIMARY),
+            lowerOptions
+        };
+        nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10, false);
+        panel.setPadding(5, 7);
+        nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h, onClose);
+        enrollButton.addActionListener(ee -> {
+            modal.close();
+        });
+        return modal;
+    }
 
     private void cleanUp() {
         frame.reset();

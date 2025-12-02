@@ -129,7 +129,6 @@ public class LoginPage {
                 errorText
         };
 
-        Log.Msg(checkBox.getX() + " " + checkBox.getY() + " " + checkBox.getWidth() + " " + checkBox.getHeight());
 
         Component[] components = type == LoginType.LOGIN ? loginComponents : registerComponents;
 
@@ -153,7 +152,7 @@ public class LoginPage {
 
 
         int width = 300;
-        int height = 260;
+        int height = 350;
 
         int x = (int) ((frame.getSize().getWidth() - width) / 2);
         int y = (int) ((frame.getSize().getHeight() - height) / 2);
