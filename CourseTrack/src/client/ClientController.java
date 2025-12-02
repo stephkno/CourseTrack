@@ -227,11 +227,11 @@ public class ClientController implements  IClientListenerService, IAppGUIService
         if (request.get() == null)
             return;
 
-        Log.Msg("Received notification: " + request.get().notifications().Get(0).getMessage());
 
         Thread notificationThread  = new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.Msg("Received " + request.get().notifications().Length() + " Notifications");
                 for(Notification notification : request.get().notifications()){
                     CountDownLatch latch = new CountDownLatch(1);
 

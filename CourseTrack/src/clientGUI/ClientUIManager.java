@@ -145,8 +145,13 @@ public class ClientUIManager {
 
     public nPanelModal DisplayNotification(String notificationText, Runnable onClose) {
         Container glass = (Container) frame.getGlassPane();
-        nPanelModal[] existingModals = (nPanelModal[]) glass.getComponents();
-        for(nPanelModal modal : existingModals) {modal.close();}
+        Component[] existingModals = glass.getComponents();
+        for(Component potentialModal : existingModals) {
+            if(potentialModal instanceof nPanelModal) {
+                nPanelModal modal = (nPanelModal) potentialModal;
+                modal.close();
+            }
+        }
         int w = 420;
         int h = 280;
 
@@ -156,7 +161,7 @@ public class ClientUIManager {
             enrollButton
         };
         nFrame.GridLayout lowerOptions = new nFrame.GridLayout((nFrame)frame, options, false);
-        lowerOptions.setGridSize(2, 1);
+        lowerOptions.setGridSize(1, 1);
         lowerOptions.setPadding(5);
         Component[] enrollPanel = {
             new nPanelPlainText("!NOTIFICATION!", UITheme.TEXT_PRIMARY),
