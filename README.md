@@ -114,7 +114,7 @@ College Enrollment System
 
  - [ ] 3.1.10.1 User has a collapsible notifications window.
 
- - [ ] 3.1.10.2 User is shown notifications while logged in.
+ - [x] 3.1.10.2 User is shown notifications while logged in.
 
  - [x] 3.1.10.3 Notifications alert users to important events such as a student being enrolled in a course.
 

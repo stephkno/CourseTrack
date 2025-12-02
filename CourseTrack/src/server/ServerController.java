@@ -305,11 +305,7 @@ public class ServerController {
 
         Log.Msg("Login successful for user: " + username);
         client.sendMessage(MessageType.USER_LOGIN, MessageStatus.SUCCESS, new LoginResponse(clientUser) );
-        
-        //client.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( user.getNotifications() )));
-        LinkedList<Notification> testnotifs = new LinkedList<>();
-        testnotifs.Push(new Notification("Test notification"));
-        client.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( testnotifs )));
+        client.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( user.getNotifications() )));
         
     }
 
@@ -693,13 +689,15 @@ public class ServerController {
 
         // validate waitlist
         if(section.full()){
-            Log.Err("Section waitlist full");
+            Log.Err("Section full! Student is placed on waitlist");
             
             // send waitlist response
             int waitlist_position = section.addWaitlist(student);
             student.addWaitlist(section);
             
             client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null, waitlist_position, EnrollStatus.WAS_WAITLISTED));
+            client.getUser().Notify("You have been waitlisted for section " + section.getCourse().getName() + ":" + section.getNumber());
+
             return;
 
         }

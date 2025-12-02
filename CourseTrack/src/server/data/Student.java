@@ -49,6 +49,7 @@ public class Student extends User implements Serializable {
     }
 
     public void addSection(Section section){
+        if(enrolledSections.Contains(section)) return;
         enrolledSections.Push(section);
     }
 

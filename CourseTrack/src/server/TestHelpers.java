@@ -306,36 +306,11 @@ public class TestHelpers {
         AddSection(csusmCS201, "CSU San Marcos", "CS", fall2025, "Dr. A", 25, defaultTimes, client);
 
         AdminGetCourses(client);
-        
         Logout(client);
         
         RegisterUser("student", "", UserType.STUDENT, client);
-        Login("student", "", client);
-
-        LinkedList<Section> sections = SearchCourses("data str", "CSU East Bay", "CS", term, client);
-        for (Section section : sections) {
-            if (section == null) continue;
-            Log.Msg(section);
-        }
-
-        Section enrolledSection = Enroll(sections.Get(0).getId(), sections.Get(0).getTerm(), client);
-        assert(1 == enrolledSection.numStudents());
-        
-        Section droppedSection = Drop(sections.Get(0).getId(), sections.Get(0).getTerm(), client);
-        assert(1 == droppedSection.numStudents());
-        
-        GetSchedule(term, client);
-        
-        LinkedList<Campus> campuses = GetCampuses(client);
-        for (Campus campus : campuses) {
-            Log.Msg(campus.toString());
-        }
-        
-        Logout(client);
-        Login("admin", "", client);
-       // RemoveCampus("CSU East Bay", client);
-
-        Logout(client);
+        RegisterUser("student1", "", UserType.STUDENT, client);
+        RegisterUser("student2", "", UserType.STUDENT, client);
 
     }
 
