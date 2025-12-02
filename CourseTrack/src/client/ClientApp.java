@@ -2,7 +2,7 @@ package client;
 
 import global.Log;
 
-public class ClientApp {
+public class ClientApp  {
 	
 	public static void main(String[] args) {
 		var client = new Client("localhost", 7777);

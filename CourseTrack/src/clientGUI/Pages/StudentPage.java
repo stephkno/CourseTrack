@@ -55,10 +55,10 @@ public class StudentPage {
         navLayout.setStyle(nFrame.ListLayout.Style.NONE);
 
         // center views
-        nFrame.ListLayout viewBrowse = PageViews.createBrowseView(frame, mainX, mainY, mainW, mainH, guiService, role);
-        nFrame.ListLayout viewDrop = PageViews.createDropView(frame, mainX, mainY, mainW, mainH, guiService);
-        nFrame.ListLayout viewWaitlist = PageViews.createWaitlistView(frame, mainX, mainY, mainW, mainH, guiService);
-            
+        nFrame.ListLayout viewBrowse = PageViews.createBrowseView(frame, mainX, mainY, mainW, mainH, guiService, role, navBrowse);
+        nFrame.ListLayout viewDrop = PageViews.createDropView(frame, mainX, mainY, mainW, mainH, guiService, navDrop);
+        nFrame.ListLayout viewWaitlist = PageViews.createWaitlistView(frame, mainX, mainY, mainW, mainH, guiService, navWaitlist);
+
         nPanel[] views = {
                 viewBrowse,
                 viewDrop,
@@ -66,10 +66,12 @@ public class StudentPage {
         };
         clearCenterView(views);
         viewBrowse.setVisible(true);
-        navBrowse.addActionListener(e -> {clearCenterView(views);viewBrowse.setVisible(true);});
+        navBrowse.addActionListener(e -> {
+            clearCenterView(views);viewBrowse.setVisible(true);
+        });
         navDrop.addActionListener(e -> {clearCenterView(views);viewDrop.setVisible(true);});
         navWaitlist.addActionListener(e -> {clearCenterView(views);viewWaitlist.setVisible(true);});
-
+        
     }
     
     

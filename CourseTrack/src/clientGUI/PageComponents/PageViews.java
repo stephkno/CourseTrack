@@ -32,7 +32,7 @@ import global.MessageType;
 public class PageViews {
 
     // #region createBrowseView
-    public static nFrame.ListLayout createBrowseView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService,UserRole userRole) {
+    public static nFrame.ListLayout createBrowseView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService,UserRole userRole, nButton goToButton) {
         
         
 
@@ -91,7 +91,7 @@ public class PageViews {
             
             if(sections == null) {sections = new LinkedList<Section>();}
             for (Section c : sections) {
-                courseList.addItem(new Panels.CourseItemPanel(c, userRole, c.getTerm(), guiService));
+                courseList.addItem(new Panels.StudentCourseItemPanel(c, userRole, c.getTerm(), guiService));
             }
 
             courseList.revalidate();
@@ -157,6 +157,7 @@ public class PageViews {
             nButton selected = campusChoose.getSelected();
             if (selected != null && campus.getName().equals(selected.getText())) {
                 b.simulateClick();
+                goToButton.addActionListener(e->{b.simulateClick();});
             }
 
         }
@@ -245,7 +246,7 @@ public class PageViews {
     // #endregion
 
     // #region createDropView
-    public static nFrame.ListLayout createDropView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService) {
+    public static nFrame.ListLayout createDropView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService, nButton goToButton) {
         // heading
         nPanelPlainText heading = new nPanelPlainText("Schedule");
         heading.textColor = UITheme.TEXT_PRIMARY;
@@ -278,6 +279,7 @@ public class PageViews {
             });
             if (termChoose.getSelected().getText().equals(t.getDisplayName())) {
                 b.simulateClick();
+                goToButton.addActionListener(e->{b.simulateClick();});
             }
             
         }
@@ -342,7 +344,7 @@ public class PageViews {
 
     // #endregion
     // #region createWaitlistView
-    public static nFrame.ListLayout createWaitlistView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService) {
+    public static nFrame.ListLayout createWaitlistView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService, nButton goToButton) {
         nPanelPlainText heading = new nPanelPlainText("Waitlist");
         heading.textColor = UITheme.TEXT_PRIMARY;
         nPanelDropDown termChoose = new nPanelDropDown();
@@ -350,7 +352,6 @@ public class PageViews {
         nScrollableList courseList = new nScrollableList();
         courseList.setInnerPadding(8);
         courseList.setItemSpacing(8);
-        
         Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                     MessageStatus.REQUEST, new GetTermsRequest());
         LinkedList<Term> terms = getTermsResponse.get().terms();
@@ -374,6 +375,7 @@ public class PageViews {
             });
             if (termChoose.getSelected().getText().equals(t.getDisplayName())) {
                 b.simulateClick();
+                goToButton.addActionListener(e->{b.simulateClick();});
             }
             
         }
@@ -473,6 +475,7 @@ public class PageViews {
             });
             if (termChoose.getSelected().getText().equals(t.getDisplayName())) {
                 b.simulateClick();
+                
             }
             
         }
@@ -601,21 +604,21 @@ public class PageViews {
             String query = searchBox.getText();
 
 
-            Message<AdminGetSectionsResponse> getSectionsResponse = guiService.sendAndWait(
-                    MessageType.ADMIN_GET_SECTIONS, MessageStatus.REQUEST, new AdminGetSectionsRequest());
-            LinkedList<Section> sections = getSectionsResponse.get().sections();
+            Message<AdminGetCoursesResponse> getSectionsResponse = guiService.sendAndWait(
+                    MessageType.ADMIN_GET_COURSES, MessageStatus.REQUEST, new AdminGetCoursesRequest());
+            LinkedList<Course> sections = getSectionsResponse.get().courses();
 
 
             Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS,
                     MessageStatus.REQUEST, new GetTermsRequest());
             LinkedList<Term> terms = getTermsResponse.get().terms();
 
-            if(sections == null) {sections = new LinkedList<Section>();}
-            for (Section c : sections) {
+            if(sections == null) {sections = new LinkedList<Course>();}
+            for (Course c : sections) {
                 if (c == null || campusChoose.getSelected() == null || departmentChoose.getSelected() == null) {
                     continue;
                 }
-                if (!c.getCourse().getCampus().getName().equals(campusChoose.getSelected().getText())) {
+                if (!c.getCampus().getName().equals(campusChoose.getSelected().getText())) {
                     continue;
                 }
                 if (!c.getDepartment().getName().equals(departmentChoose.getSelected().getText())) {
