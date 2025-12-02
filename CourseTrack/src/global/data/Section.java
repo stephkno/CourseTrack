@@ -104,6 +104,14 @@ public class Section implements Serializable {
         
     }
 
+    public boolean hasOpenSeats(){
+        return this.students.Length() < this.capacity;
+    }
+
+    public boolean isEnrolled(Student student){
+        return students.Contains(student);
+    }
+
     public int numStudents() { 
         return num_enrolled;
     }

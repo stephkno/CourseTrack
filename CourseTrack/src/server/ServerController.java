@@ -732,30 +732,29 @@ public class ServerController {
         Student student = (Student)client.getUser();
         Section section = term.getSection(sectionId);
 
-        // check if student is on waitlist instead of enrolled
         if(section.waitlisted(student)){
-          
             section.removeWaitlist(student);
             student.removeWaitlist(section);
-
             client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.SUCCESS, new DropSectionResponse(section));
             return;
+        }
 
+        if(!section.isEnrolled(student)){
+            client.sendMessage(MessageType.STUDENT_DROP, MessageStatus.FAILURE, new DropSectionResponse(null));
+            return;
         }
         
         section.removeStudent(student);
         student.removeSection(section);
 
-        // waitlist logic
-        if(section.waitlistLength() > 0){
+        while(section.hasOpenSeats() && section.waitlistLength() > 0){
+            Student next = section.popWaitlist(); 
 
-            Student studentOnWaitlist = section.popWaitlist();
-            
-            section.addStudent(studentOnWaitlist);
-            studentOnWaitlist.addSection(section);
-
-            studentOnWaitlist.Notify("You have been enrolled!");
-
+            if(!section.isEnrolled(next)){
+                section.addStudent(next);
+                next.addSection(section);
+                next.Notify("You have been enrolled in " + section.getCourse().getName());
+            }
         }
 
         DropSectionResponse res = new DropSectionResponse(section);
