@@ -44,15 +44,16 @@ public class StudentPage {
 
         Component[] navComponents = navList.toArray(new Component[navList.getLength()]);
 
-        nFrame.ListLayout navLayout = new nFrame.ListLayout(
+        nFrame.GridLayout navLayout = new nFrame.GridLayout(
                 frame,
                 navComponents,
                 new Dimension(sidebarWidth, sidebarHeight),
                 sidebarX,
                 sidebarY);
-        navLayout.backgroundColor = UITheme.BG_ELEVATED2;
-        navLayout.setPadding(6, 6);
-        navLayout.setStyle(nFrame.ListLayout.Style.NONE);
+        navLayout.setBackground(UITheme.BG_ELEVATED2);
+        navLayout.setOpaque(true);
+        navLayout.setPadding(6);
+        navLayout.setGridSize(3, 1);
 
         // center views
         nFrame.ListLayout viewBrowse = PageViews.createBrowseView(frame, mainX, mainY, mainW, mainH, guiService, role, navBrowse);

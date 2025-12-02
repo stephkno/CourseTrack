@@ -36,14 +36,15 @@ public class HomePage {
         int frameW = frame.getWidth();
         int frameH = frame.getHeight();
         int titleHeight = 80;
-        sidebarWidth = 220;
-        sidebarHeight = frameH - titleHeight - 40;
-        sidebarX = 20;
-        sidebarY = titleHeight + 20;
-        mainX = sidebarX + sidebarWidth + 20;
-        mainY = sidebarY;
-        mainW = frameW - mainX - 20;
-        mainH = sidebarHeight;
+        sidebarWidth = frameW;
+        sidebarHeight = titleHeight/2;
+        sidebarX = 0;
+        sidebarY = titleHeight;
+
+        mainX = 10;
+        mainY = titleHeight + titleHeight/2 + 10;
+        mainW = frameW-20;
+        mainH = frameH-(mainY+20);
         nPanelPlainText title = new nPanelPlainText("courseTrack Home");
         title.setAlignment(nPanel.CrossStringAlignments.BOTTOM, nPanel.MainStringAlignments.LEFT);
         title.textColor = UITheme.TEXT_PRIMARY;

@@ -174,7 +174,7 @@ public class Panels {
             }
             
             firstRow += "Capacity: " + course.getStudents().Length() + "/" + course.getCapacity() + " | Waitlisted: " + course.getWaitlist().Length();
-            y += g2d.getFontMetrics().getAscent();
+            
             g2d.drawString(firstRow,x, y);
             
             g2d.drawString(secondRow,x, y + g2d.getFontMetrics().getAscent()+ 2 );
@@ -433,8 +433,8 @@ public class Panels {
             
 
             y += g2d.getFontMetrics().getAscent();
-            int numsections = course.getSections(currentTerm) == null ? 0 : course.getSections(currentTerm).Length();
-            g2d.drawString("Sections: " + numsections,x, y + g2d.getFontMetrics().getAscent()+ 2 );
+            //int numsections = course.getSections(currentTerm) == null ? 0 : course.getSections(currentTerm).Length();
+            //g2d.drawString("Sections: " + numsections,x, y + g2d.getFontMetrics().getAscent()+ 2 );
             g2d.setRenderingHints(oldHints);
         }
     }
@@ -505,7 +505,7 @@ public class Panels {
                     Message<AdminRemoveSectionResponse> removeResponse = guiService.sendAndWait(MessageType.ADMIN_REMOVE_SECTION,
                             MessageStatus.REQUEST, new AdminRemoveSectionRequest(course.getCourse(), currentTerm, course));
                     if(removeResponse.getStatus() != MessageStatus.SUCCESS) {return;}
-                    Log.Msg("TEST");
+                    
                     Message<AddSectionResponse> addResponse = guiService.sendAndWait(MessageType.ADMIN_ADD_SECTION,
                             MessageStatus.REQUEST, new AddSectionRequest(course.getCourse().getId(), course.getCourse().getCampus().getName(), course.getDepartment().getName(), course.getTerm(), instructorTB.getText(), Integer.valueOf(capacityTB.getText()), course.getMeetTimes()));
                     if(addResponse.getStatus() != MessageStatus.SUCCESS) {return;}

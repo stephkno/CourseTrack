@@ -27,21 +27,22 @@ public class AdminPage {
 
         Color navBg = UITheme.BG_APP;
         nButton navManage = new nButton("Manage Courses");
-        nButton navReports = new nButton("Generate Reports");
+        //nButton navReports = new nButton("Generate Reports");
         
 
         navManage.setBackgroundColor(navBg);
-        navReports.setBackgroundColor(navBg);
+        //navReports.setBackgroundColor(navBg);
 
         navList.append(navManage);
-        navList.append(navReports);
+        //navList.append(navReports);
 
         Component[] navComponents = navList.toArray(new Component[navList.getLength()]);
 
-        nFrame.ListLayout navLayout = new nFrame.ListLayout(frame,navComponents,new Dimension(sidebarWidth, sidebarHeight),sidebarX,sidebarY);
-        navLayout.backgroundColor = UITheme.BG_ELEVATED2;
-        navLayout.setPadding(6, 6);
-        navLayout.setStyle(nFrame.ListLayout.Style.NONE);
+        nFrame.GridLayout navLayout = new nFrame.GridLayout(frame,navComponents,new Dimension(sidebarWidth, sidebarHeight),sidebarX,sidebarY);
+        navLayout.setBackground(UITheme.BG_ELEVATED2);
+        navLayout.setOpaque(true);
+        navLayout.setPadding(6);
+        navLayout.setGridSize(1, 1);
 
         nFrame.ListLayout viewManage = PageViews.createManageView(frame, mainX, mainY, mainW, mainH, guiService, UserRole.admin);
         nFrame.ListLayout viewReports = PageViews.createReportsView(frame, mainX, mainY, mainW, mainH, guiService, UserRole.admin);
@@ -52,7 +53,7 @@ public class AdminPage {
         
 
         navManage.addActionListener(e -> {clearCenterView(views);viewManage.setVisible(true);});
-        navReports.addActionListener(e -> {clearCenterView(views);viewReports.setVisible(true);});
+        //navReports.addActionListener(e -> {clearCenterView(views);viewReports.setVisible(true);});
 
     }
     private void clearCenterView(Component[] views) {
