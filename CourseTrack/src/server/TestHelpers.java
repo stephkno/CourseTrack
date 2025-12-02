@@ -270,40 +270,34 @@ public class TestHelpers {
         csusmRequirements.Push(csusmCS102);
         Course csusmCS201 = AddCourse("Algorithms", 201, 3, "CSU San Marcos", "CS", csusmRequirements, client);
 
-        // --- Sections ---
-        MeetTime[] defaultTimes = new MeetTime[]{
-            new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(9, 0), LocalTime.of(10, 15)),
-            new MeetTime(MeetTime.Day.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(10, 15))
-        };
-
         Term fall2025 = new Term(Term.Season.FALL, 2025);
 
         // CSU East Bay Sections
-        AddSection(csEB101, "CSU East Bay", "CS", fall2025, "Dr. Alan Turing", 30, defaultTimes, client);
-        AddSection(csEB102, "CSU East Bay", "CS", fall2025, "Dr. Ada Lovelace", 25, defaultTimes, client);
-        AddSection(csEB201, "CSU East Bay", "CS", fall2025, "Dr. Grace Hopper", 28, defaultTimes, client);
-        AddSection(csEB301, "CSU East Bay", "CS", fall2025, "Dr. Donald Knuth", 32, defaultTimes, client);
-        AddSection(csEB555, "CSU East Bay", "CS", fall2025, "Dr. B", 1, defaultTimes, client);
+        AddSection(csEB101, "CSU East Bay", "CS", fall2025, "Dr. Alan Turing", 30, MeetTime.random(), client);
+        AddSection(csEB102, "CSU East Bay", "CS", fall2025, "Dr. Ada Lovelace", 25, MeetTime.random(), client);
+        AddSection(csEB201, "CSU East Bay", "CS", fall2025, "Dr. Grace Hopper", 28, MeetTime.random(), client);
+        AddSection(csEB301, "CSU East Bay", "CS", fall2025, "Dr. Donald Knuth", 32, MeetTime.random(), client);
+        AddSection(csEB555, "CSU East Bay", "CS", fall2025, "Dr. B", 1, MeetTime.random(), client);
 
         // SFSU Sections
-        AddSection(sfsuCS101, "SFSU", "CS", fall2025, "Dr. Linus Torvalds", 35, defaultTimes, client);
-        AddSection(sfsuCS102, "SFSU", "CS", fall2025, "Dr. Tim Berners-Lee", 30, defaultTimes, client);
-        AddSection(sfsuCS201, "SFSU", "CS", fall2025, "Dr. Barbara Liskov", 28, defaultTimes, client);
+        AddSection(sfsuCS101, "SFSU", "CS", fall2025, "Dr. Linus Torvalds", 35, MeetTime.random(), client);
+        AddSection(sfsuCS102, "SFSU", "CS", fall2025, "Dr. Tim Berners-Lee", 30, MeetTime.random(), client);
+        AddSection(sfsuCS201, "SFSU", "CS", fall2025, "Dr. Barbara Liskov", 28, MeetTime.random(), client);
 
         // CSU Long Beach Sections
-        AddSection(csulbCS101, "CSU Long Beach", "CS", fall2025, "Dr. John McCarthy", 40, defaultTimes, client);
-        AddSection(csulbCS102, "CSU Long Beach", "CS", fall2025, "Dr. Margaret Hamilton", 35, defaultTimes, client);
-        AddSection(csulbCS201, "CSU Long Beach", "CS", fall2025, "Dr. Edsger Dijkstra", 30, defaultTimes, client);
+        AddSection(csulbCS101, "CSU Long Beach", "CS", fall2025, "Dr. John McCarthy", 40, MeetTime.random(), client);
+        AddSection(csulbCS102, "CSU Long Beach", "CS", fall2025, "Dr. Margaret Hamilton", 35, MeetTime.random(), client);
+        AddSection(csulbCS201, "CSU Long Beach", "CS", fall2025, "Dr. Edsger Dijkstra", 30, MeetTime.random(), client);
 
         // CSU Fullerton Sections
-        AddSection(csufCS101, "CSU Fullerton", "CS", fall2025, "Dr. Brian Kernighan", 28, defaultTimes, client);
-        AddSection(csufCS102, "CSU Fullerton", "CS", fall2025, "Dr. Dennis Ritchie", 25, defaultTimes, client);
-        AddSection(csufCS201, "CSU Fullerton", "CS", fall2025, "Dr. Niklaus Wirth", 30, defaultTimes, client);
+        AddSection(csufCS101, "CSU Fullerton", "CS", fall2025, "Dr. Brian Kernighan", 28, MeetTime.random(), client);
+        AddSection(csufCS102, "CSU Fullerton", "CS", fall2025, "Dr. Dennis Ritchie", 25, MeetTime.random(), client);
+        AddSection(csufCS201, "CSU Fullerton", "CS", fall2025, "Dr. Niklaus Wirth", 30, MeetTime.random(), client);
 
         // CSU San Marcos Sections
-        AddSection(csusmCS101, "CSU San Marcos", "CS", fall2025, "Dr. Richard Stallman", 32, defaultTimes, client);
-        AddSection(csusmCS102, "CSU San Marcos", "CS", fall2025, "Dr. Ken Thompson", 28, defaultTimes, client);
-        AddSection(csusmCS201, "CSU San Marcos", "CS", fall2025, "Dr. A", 25, defaultTimes, client);
+        AddSection(csusmCS101, "CSU San Marcos", "CS", fall2025, "Dr. Richard Stallman", 32, MeetTime.random(), client);
+        AddSection(csusmCS102, "CSU San Marcos", "CS", fall2025, "Dr. Ken Thompson", 28, MeetTime.random(), client);
+        AddSection(csusmCS201, "CSU San Marcos", "CS", fall2025, "Dr. A", 25, MeetTime.random(), client);
 
         AdminGetCourses(client);
         Logout(client);

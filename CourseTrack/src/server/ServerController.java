@@ -792,6 +792,8 @@ public class ServerController {
         }
 
         GetScheduleResponse res = new GetScheduleResponse(schedule);
+
+        Log.Msg("Sending schedule results: " + schedule.Length());
         
         client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.SUCCESS, res);
 
