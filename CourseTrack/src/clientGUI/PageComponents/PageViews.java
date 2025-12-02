@@ -1006,12 +1006,8 @@ public class PageViews {
     public static nFrame.ListLayout createReportsView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService, UserRole userRole) {
         Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS, MessageStatus.REQUEST,
                 new GetTermsRequest());
-        LinkedList<Term> terms = getTermsResponse.get().terms();
-        final LinkedList<Term> termsFinal = terms; 
-
-        if (terms == null) {
-            terms = new LinkedList<Term>();
-        }
+        LinkedList<Term> _termsTemp = getTermsResponse.get().terms();
+        final LinkedList<Term> terms = (_termsTemp == null) ? new LinkedList<Term>() : _termsTemp;
         nPanelPlainText heading = new nPanelPlainText("Generate Reports");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
