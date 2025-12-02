@@ -598,6 +598,9 @@ public class ServerController {
         BrowseSectionRequest request = msg.get();
         
         String query = request.searchQuery();
+
+
+
         Campus campus = Campus.get(request.campus());
         Department department = campus.getDepartment(request.department());
         Term term = Term.get(request.term());
@@ -618,22 +621,36 @@ public class ServerController {
 
         int i = 0;
 
-        for(Section section : sections){
 
-            if(i++ > max_results){
-                break;
-            }
+        if(query.equals("")){
 
-            if(!section.getDepartment().equals(department) || !section.getDepartment().getCampus().equals(campus)){
-                continue;
-            }
+            for(Section section : sections){
+                if(i++ > max_results){
+                    break;
+                }
 
-            if(section.Search(query)){
-                Log.Msg("Adding section to search results!" + section);
                 results.Push(section);
-                continue;
-            } 
+            }
+            
+        }else{
 
+            for(Section section : sections){
+
+                if(i++ > max_results){
+                    break;
+                }
+
+                if(!section.getDepartment().equals(department) || !section.getDepartment().getCampus().equals(campus)){
+                    continue;
+                }
+
+                if(section.Search(query)){
+                    Log.Msg("Adding section to search results!" + section);
+                    results.Push(section);
+                    continue;
+                } 
+
+            }
         }
 
         BrowseSectionResponse res = new BrowseSectionResponse(results);
