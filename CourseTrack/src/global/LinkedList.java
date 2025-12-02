@@ -79,12 +79,10 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 	public boolean Remove(T t) {
 		
 		if(first == null){
-			Log.Msg("first null");
 			return false;
 		}		
 
 		if(first.data.equals(t)) {
-			Log.Msg("A LinkedList: " + first.data.toString() + " " + t.toString());
 			first = first.next;
 			numItems--;
 			return true;
@@ -96,8 +94,6 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 			
 			if(curr.data.equals(t)) {
 
-				Log.Msg("B LinkedList: " + first.data.toString() + " " + t.toString());
-
 				curr = curr.next;
 				return true;
 			}
@@ -105,7 +101,6 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 			curr = curr.next;
 	    
 		} 
-		Log.Msg("out");
 
 		return false;
 	}

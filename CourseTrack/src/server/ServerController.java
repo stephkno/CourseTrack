@@ -516,6 +516,10 @@ public class ServerController {
         }
 
         LinkedList<Section> list = ((Admin)client.getUser()).getSections();
+        for(Section item : list){
+            Log.Msg(item);
+        }
+
         client.sendMessage(MessageType.ADMIN_GET_SECTIONS, MessageStatus.SUCCESS, new AdminGetSectionsResponse(list));
     
     }
@@ -621,7 +625,6 @@ public class ServerController {
 
         int i = 0;
 
-
         if(query.equals("")){
 
             for(Section section : sections){
@@ -654,6 +657,8 @@ public class ServerController {
         }
 
         BrowseSectionResponse res = new BrowseSectionResponse(results);
+
+        
         client.sendMessage(MessageType.STUDENT_BROWSE_SECTION, MessageStatus.SUCCESS, res);
 
     }
@@ -812,6 +817,10 @@ public class ServerController {
 
         Log.Msg("Sending schedule results: " + schedule.Length());
         
+        for(StudentScheduleItem item : schedule){
+            Log.Msg(item);
+        }
+
         client.sendMessage(MessageType.STUDENT_GET_SCHEDULE, MessageStatus.SUCCESS, res);
 
     }

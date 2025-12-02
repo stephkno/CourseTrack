@@ -147,8 +147,9 @@ public class Campus implements Serializable {
         return outlist;
     }
 
-    public boolean equals(Campus other){
-        return id == other.id;
+    @Override
+    public boolean equals(Object other){
+        return id == ((Campus)other).id;
     }
 
     public String toString(){

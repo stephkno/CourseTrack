@@ -126,8 +126,9 @@ public class Course implements Serializable {
         return outstring;
     }
 
-    public boolean equals(Campus other){
-        return id == other.id;
+    @Override
+    public boolean equals(Object other){
+        return id == ((Course)other).id;
     }
 
 }

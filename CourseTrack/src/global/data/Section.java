@@ -197,8 +197,9 @@ public class Section implements Serializable {
         return false;
     }
 
-    public boolean equals(Campus other){
-        return id == other.id;
+    @Override
+    public boolean equals(Object other){
+        return id == ((Section)other).id;
     }
     
     public double getPercentFull() {
