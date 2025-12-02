@@ -45,14 +45,32 @@ Notes: Talked about up coming midterm, discussed what needs to be done for the d
 
 Date: 10/27/25
 Time: 7:10PM-7:57
-Duration: 
+Duration: 47 mins
 Attendees: Stephen, Dylan, Harry, Nathan, Zang
 Notes: Just discussed design decisions. 
 ---
 
 Date: 10/27/25
-Time: 5:55PM-
-Duration: 
+Time: 5:55PM-6:15pm
+Duration: 20 mins
 Attendees: Stephen, Dylan, Nathan, Zang
 Notes: Prepared for the presentation.
+---
+Date: 11/12/25
+Time: 8:00PM-9:00pm
+Duration: 1 hour
+Attendees: Stephen, Dylan, Nathan, Zang, Harry
+Notes: Discussed our Code such as setting up the GUI, how the Admins and Students classes should work, browse courses, making sections
+---
+Date: 11/17/25
+Time: 8:00PM-9:00pm
+Duration: 1 hour
+Attendees: Stephen, Dylan, Nathan, Zang, Harry
+Notes: Working on code such as setters and getters, client and server implementation, wailist implementation, login implementation using client etc
+---
+Date: 12/01/25
+Time: 8:00PM-10:00pm
+Duration: 2 hours
+Attendees: Stephen, Dylan, Nathan, Zang, Harry
+Notes: Prepping for final presentation, finalizing our project, getting ready to submit everything
 ---
