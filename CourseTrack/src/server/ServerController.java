@@ -748,10 +748,11 @@ public class ServerController {
         student.removeSection(section);
 
         while(section.hasOpenSeats() && section.waitlistLength() > 0){
-            Student next = section.popWaitlist(); 
+            Student next = section.popWaitlist();
 
             if(!section.isEnrolled(next)){
-                section.addStudent(next);
+                section.addStudent(next); 
+                next.removeWaitlist(section);
                 next.addSection(section);
                 next.Notify("You have been enrolled in " + section.getCourse().getName());
             }

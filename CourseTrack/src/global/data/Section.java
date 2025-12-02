@@ -97,11 +97,11 @@ public class Section implements Serializable {
         return students; 
     }
 
-    public void addStudent(Student student) {
-
+    public boolean addStudent(Student student) {
+        if(this.students.Contains(student)) return false;
         this.students.Push(student);
         num_enrolled++;
-        
+        return true;
     }
 
     public boolean hasOpenSeats(){
