@@ -226,6 +226,9 @@ public class ClientController implements  IClientListenerService, IAppGUIService
 
         if (request.get() == null)
             return;
+
+        Log.Msg("Received notification: " + request.get().notifications().Get(0).getMessage());
+
         Thread notificationThread  = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -261,6 +264,9 @@ public class ClientController implements  IClientListenerService, IAppGUIService
     @Override
     @SuppressWarnings("unchecked")
     public void handleServerMessage(Message<?> request, Class<? extends Serializable> tClass) {
+
+        Log.Msg("Received message type: " + request.getType());
+
         switch (request.getType()) {
             case CLIENT_UPDATE -> {
                 receiveUpdateRequest((Message<UpdateRequest>) request);
@@ -275,7 +281,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
                 break;
             }
             default -> {
-                System.err.println("Unhandled message type: " + request.getType());
+                Log.Err("Unhandled message type: " + request.getType());
                 break;
             }
         }

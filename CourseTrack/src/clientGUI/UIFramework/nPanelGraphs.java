@@ -7,6 +7,8 @@ import java.awt.Rectangle;
 import java.awt.event.*;
 import java.awt.geom.*;
 
+import global.Log;
+
 @SuppressWarnings("unused")
 public class nPanelGraphs extends nPanel {
 
@@ -139,7 +141,7 @@ public class nPanelGraphs extends nPanel {
                 createLineGraph(g);
                 break;
             default:
-                System.err.println("Graph Type needs to be of enum GraphTypes!");
+                Log.Err("Graph Type needs to be of enum GraphTypes!");
         }
     }
 

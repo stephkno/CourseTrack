@@ -306,7 +306,10 @@ public class ServerController {
         Log.Msg("Login successful for user: " + username);
         client.sendMessage(MessageType.USER_LOGIN, MessageStatus.SUCCESS, new LoginResponse(clientUser) );
         
-        client.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( user.getNotifications() )));
+        //client.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( user.getNotifications() )));
+        LinkedList<Notification> testnotifs = new LinkedList<>();
+        testnotifs.Push(new Notification("Test notification"));
+        client.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( testnotifs )));
         
     }
 

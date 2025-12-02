@@ -1,6 +1,7 @@
 package global;
+import java.io.Serializable;
 
-public class Notification {
+public class Notification implements Serializable {
     String message;
     boolean sent = false;
 

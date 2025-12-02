@@ -1,12 +1,14 @@
 package client;
 
+import global.Log;
+
 public class ClientApp {
 	
 	public static void main(String[] args) {
 		var client = new Client("localhost", 7777);
 
 		if (!client.connect()) {
-            System.err.println("Could not connect to server.");
+            Log.Err("Could not connect to server.");
 			return;
 		}
 

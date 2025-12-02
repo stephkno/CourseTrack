@@ -32,7 +32,7 @@ public class Client {
             Log.Msg("Connected to server " + host + ":" + port);
             return true;
         } catch (IOException e) {
-            System.err.println("Connection failed: " + e.getMessage());
+            Log.Err("Connection failed: " + e.getMessage());
             return false;
         }
     }
@@ -62,7 +62,7 @@ public class Client {
             return (Message<TObjResponse>) future.get();
         } catch (InterruptedException | ExecutionException e) {
             pending.remove(request.getType());
-            System.err.println("Error waiting for response: " + e.getMessage());
+            Log.Err("Error waiting for response: " + e.getMessage());
             return null;
         }
     }
@@ -76,7 +76,7 @@ public class Client {
             outputStream.writeObject(request);
             outputStream.flush();
         } catch (IOException e) {
-            System.err.println("Error sending request: " + e.getMessage());
+            Log.Err("Error sending request: " + e.getMessage());
         }
     }
 

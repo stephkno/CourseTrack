@@ -63,7 +63,7 @@ public class TestHelpers {
     static client.User Login(String username, String password, Client client) {
         if (!client.isConnected()) {
             if (!client.connect()) {
-                System.err.println("Could not connect to server.");
+                Log.Err("Could not connect to server.");
                 return null;
             }
         }
@@ -275,6 +275,7 @@ public class TestHelpers {
             new MeetTime(MeetTime.Day.MONDAY, LocalTime.of(9, 0), LocalTime.of(10, 15)),
             new MeetTime(MeetTime.Day.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(10, 15))
         };
+
         Term fall2025 = new Term(Term.Season.FALL, 2025);
 
         // CSU East Bay Sections

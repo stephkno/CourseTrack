@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import clientGUI.UIInformations.*;
 
+import global.Log;
 
 public class nScrollableList extends nPanel implements MouseWheelListener {
 
@@ -132,7 +133,7 @@ public class nScrollableList extends nPanel implements MouseWheelListener {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        System.out.println("wheel on " + e.getSource());
+        Log.Msg("wheel on " + e.getSource());
         int rotation = e.getWheelRotation();
         int scrollAmount = 20;
 

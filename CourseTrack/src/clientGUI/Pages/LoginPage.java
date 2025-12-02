@@ -223,7 +223,7 @@ public class LoginPage {
         loginButton.setBackgroundColor(UITheme.ACCENT);
 
         
-        System.out.println("BUILDING TEST");
+        Log.Msg("BUILDING TEST");
         nPanelPlainText errorText = new nPanelPlainText("");
         errorText.textColor = UITheme.FAIL;
 
