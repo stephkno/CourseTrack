@@ -1039,7 +1039,7 @@ public class PageViews {
             }
           
         Term selectedTerm = null;
-            for (Term term : termsFinal) {
+            for (Term term : terms) {
                 if (term != null && term.getDisplayName().equals(selected.getText())) {
                     selectedTerm = term;
                     break;
