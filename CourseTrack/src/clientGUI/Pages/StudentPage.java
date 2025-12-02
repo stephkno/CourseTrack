@@ -58,7 +58,7 @@ public class StudentPage {
         nFrame.ListLayout viewBrowse = PageViews.createBrowseView(frame, mainX, mainY, mainW, mainH, guiService, role);
         nFrame.ListLayout viewDrop = PageViews.createDropView(frame, mainX, mainY, mainW, mainH, guiService);
         nFrame.ListLayout viewWaitlist = PageViews.createWaitlistView(frame, mainX, mainY, mainW, mainH, guiService);
-
+            
         nPanel[] views = {
                 viewBrowse,
                 viewDrop,
