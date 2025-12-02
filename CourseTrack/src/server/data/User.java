@@ -47,8 +47,11 @@ public class User implements Serializable {
         Notification n = new Notification(message);
 
         if(socket.isLoggedIn()){
+            
+            notifications.Push(n);
             socket.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( notifications )));
             n.send();
+            
         }else{
 
             // save notifications for later
