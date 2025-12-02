@@ -3,7 +3,6 @@ package client;
 import client.services.IAppGUIService;
 import client.services.IClientListenerService;
 import clientGUI.ClientUIManager;
-import clientGUI.UIFramework.nPanelModal;
 import clientGUI.UIInformations.LoginInformation;
 import global.*;
 import global.data.*;
