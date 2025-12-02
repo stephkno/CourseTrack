@@ -192,7 +192,7 @@ public class TestHelpers {
         StartClient();
 
         String username = "admin";
-        String password = "";
+        String password = "password";
         
         RegisterUser(username, password, UserType.ADMIN, client);
         Login(username, password, client);
@@ -302,9 +302,9 @@ public class TestHelpers {
         AdminGetCourses(client);
         Logout(client);
         
-        RegisterUser("student", "", UserType.STUDENT, client);
-        RegisterUser("student1", "", UserType.STUDENT, client);
-        RegisterUser("student2", "", UserType.STUDENT, client);
+        RegisterUser("student", "password", UserType.STUDENT, client);
+        RegisterUser("student1", "password", UserType.STUDENT, client);
+        RegisterUser("student2", "password", UserType.STUDENT, client);
 
     }
 

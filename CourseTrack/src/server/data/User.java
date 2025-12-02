@@ -124,7 +124,7 @@ public class User implements Serializable {
     }
 
     public static boolean validatePassword(String password) {
-        return password.length() > 0 || password.length() <= 32;
+        return password.length() > 0 && password.length() <= 32;
     }
 
     public void updatePassword(String newPassword) {
