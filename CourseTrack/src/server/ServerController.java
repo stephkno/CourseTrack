@@ -516,6 +516,10 @@ public class ServerController {
         }
 
         LinkedList<Section> list = ((Admin)client.getUser()).getSections();
+        for(Section item : list){
+            Log.Msg(item);
+        }
+
         client.sendMessage(MessageType.ADMIN_GET_SECTIONS, MessageStatus.SUCCESS, new AdminGetSectionsResponse(list));
     
     }
