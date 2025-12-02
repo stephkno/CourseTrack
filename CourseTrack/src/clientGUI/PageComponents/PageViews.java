@@ -1003,25 +1003,136 @@ public class PageViews {
 
     // #endregion
     // #region createReportsView
-    public static nFrame.ListLayout createReportsView(nFrame frame, int x, int y, int w, int h) {
+    public static nFrame.ListLayout createReportsView(nFrame frame, int x, int y, int w, int h, IAppGUIService guiService, UserRole userRole) {
+        Message<GetTermsResponse> getTermsResponse = guiService.sendAndWait(MessageType.GET_TERMS, MessageStatus.REQUEST,
+                new GetTermsRequest());
+        LinkedList<Term> terms = getTermsResponse.get().terms();
+        if (terms == null) {
+            terms = new LinkedList<Term>();
+        }
         nPanelPlainText heading = new nPanelPlainText("Generate Reports");
         heading.textColor = UITheme.TEXT_PRIMARY;
 
-        nPanelPlainText desc = new nPanelPlainText("Just a graph to show off the graphs while WIP");
+        nPanelPlainText desc = new nPanelPlainText("View enrollment and waitlist stats for each section.");
         desc.textColor = UITheme.TEXT_MUTED;
 
-        double[] xAxis = { 1, 2, 3, 4, 5 };
-        double[] yAxis = { 1, 6, 3, 7, 3 };
-        nPanelGraphs.GraphData gd = new nPanelGraphs.GraphData(xAxis, yAxis);
-        nPanelGraphs graph1 = new nPanelGraphs(nPanelGraphs.GraphTypes.BAR, gd, 10, 10);
-        nPanelGraphs graph2 = new nPanelGraphs(nPanelGraphs.GraphTypes.LINE, gd, 10, 10);
-        Component[] c = { graph1, graph2 };
-        nFrame.GridLayout subLayout = new nFrame.GridLayout(frame, c, new Dimension(1, 1), 1, 1);
+        nPanelDropDown termChoose = new nPanelDropDown();
+        termChoose.setDropDownHeight(140);
 
-        nPanel spacer = new nPanel();
-        spacer.setOpaque(false);
+        nButton loadButton = new nButton("Load Report");
+        loadButton.setBackgroundColor(UITheme.INFO);
 
-        Component[] comps = { heading, desc, subLayout, spacer };
+        nScrollableList reportList = new nScrollableList();
+        reportList.setInnerPadding(8);
+        reportList.setItemSpacing(8);
+
+        for (Term term : terms) {
+            nButton termButton = new nButton(term.getDisplayName());
+            termChoose.addOption(termButton);
+        }
+
+        Runnable loadReports = () -> {
+            reportList.clearItems();
+            nButton selected = termChoose.getSelected();
+            if (selected == null) {
+                reportList.revalidate();
+                reportList.repaint();
+                return;
+            }
+          
+        Term selectedTerm = null;
+            for (Term term : terms) {
+                if (term != null && term.getDisplayName().equals(selected.getText())) {
+                    selectedTerm = term;
+                    break;
+                }
+            }
+
+        if (selectedTerm == null) {
+                reportList.revalidate();
+                reportList.repaint();
+                return;
+            }
+
+            Message<DisplayReport> reportResponse = guiService.sendAndWait(MessageType.ADMIN_GET_REPORT,
+                    MessageStatus.REQUEST, new ReportRequest(selectedTerm));
+            LinkedList<String> reportEntries = reportResponse.get().reportEntries();
+            if (reportEntries == null) {
+                reportEntries = new LinkedList<String>();
+            }
+
+            for (String entry : reportEntries) {
+                reportList.addItem(createReportEntryPanel(frame, entry));
+            }
+
+            reportList.revalidate();
+            reportList.repaint();
+        };
+
+        loadButton.addActionListener(e -> {
+            loadReports.run();
+        });
+
+        if (termChoose.getSelected() != null) {
+            loadReports.run();
+        }
+
+        nPanel controlRow = new nPanel() {
+            @Override
+            public void doLayout() {
+                int padding = 10;
+                int w = getWidth();
+                int h = getHeight();
+
+                int buttonWidth = 120;
+                int controlHeight = h - padding * 2;
+                if (controlHeight < 28) {
+                    controlHeight = 28;
+                }
+
+                termChoose.setBounds(padding, padding, w - buttonWidth - padding * 3, controlHeight);
+                loadButton.setBounds(w - buttonWidth - padding, padding, buttonWidth, controlHeight);
+            }
+        };
+        controlRow.setLayout(null);
+        controlRow.setOpaque(false);
+        controlRow.add(termChoose);
+        controlRow.add(loadButton);
+
+        nPanel content = new nPanel() {
+            @Override
+            public void doLayout() {
+                int padding = 10;
+                int cw = getWidth();
+                int ch = getHeight();
+
+                int headingHeight = 32;
+                int descHeight = 24;
+                int controlHeight = 48;
+
+                heading.setBounds(padding, padding, cw - padding * 2, headingHeight);
+                desc.setBounds(padding, padding + headingHeight, cw - padding * 2, descHeight);
+
+                int controlY = padding + headingHeight + descHeight + padding;
+                controlRow.setBounds(padding, controlY, cw - padding * 2, controlHeight);
+
+                int listY = controlY + controlHeight + padding;
+                int listH = ch - listY - padding;
+                if (listH < 40) {
+                    listH = 40;
+                }
+
+                reportList.setBounds(padding, listY, cw - padding * 2, listH);
+            }
+        };
+        content.setLayout(null);
+        content.setOpaque(false);
+        content.add(heading);
+        content.add(desc);
+        content.add(controlRow);
+        content.add(reportList);
+
+        Component[] comps = { content };
 
         nFrame.ListLayout layout = new nFrame.ListLayout(frame, comps, new Dimension(w, h), x, y);
         layout.backgroundColor = UITheme.BG_ELEVATED2;
@@ -1031,6 +1142,22 @@ public class PageViews {
     }
     // #endregion
 
+    private static nFrame.ListLayout createReportEntryPanel(nFrame frame, String entry) {
+        if (entry == null) {
+            entry = "";
+        }
+
+        String[] lines = entry.split("\\n");
+        Component[] lineComponents = new Component[lines.length];
+        for (int i = 0; i < lines.length; i++) {
+            lineComponents[i] = new nPanelPlainText(lines[i], UITheme.TEXT_PRIMARY);
+        }
+
+        nFrame.ListLayout entryPanel = new nFrame.ListLayout(frame, lineComponents, new Dimension(100, 100), 0, 0, false);
+        entryPanel.setPadding(4, 4);
+        entryPanel.backgroundColor = UITheme.BG_ELEVATED;
+        return entryPanel;
+    }
 
     private static void printTree(Container c, String currText) {
         Component[] children = c.getComponents();

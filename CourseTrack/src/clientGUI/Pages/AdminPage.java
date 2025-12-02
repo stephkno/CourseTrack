@@ -44,7 +44,7 @@ public class AdminPage {
         navLayout.setStyle(nFrame.ListLayout.Style.NONE);
 
         nFrame.ListLayout viewManage = PageViews.createManageView(frame, mainX, mainY, mainW, mainH, guiService, UserRole.admin);
-        nFrame.ListLayout viewReports = PageViews.createReportsView(frame, mainX, mainY, mainW, mainH);
+        nFrame.ListLayout viewReports = PageViews.createReportsView(frame, mainX, mainY, mainW, mainH, guiService, UserRole.admin);
         Component[] views = {viewManage, viewReports};
         clearCenterView(views);
 
