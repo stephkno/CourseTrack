@@ -45,7 +45,6 @@ public class User implements Serializable {
     public void Notify(String message){
         
         Notification n = new Notification(message);
-        notifications.Push(n);
 
         if(socket.isLoggedIn()){
             socket.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( notifications )));

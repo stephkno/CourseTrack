@@ -122,7 +122,7 @@ public class ServerConnection implements Runnable {
             while(run) {
 
                 // scan for incoming messages
-                Message<?> message = (Message<?>) objectInputStream.readObject(); // java.io.EOFException after first messages received
+                Message<?> message = (Message<?>) objectInputStream.readObject();
 
                 // create copy received message with client info
                 messageCallback.call(message, this);
