@@ -670,11 +670,11 @@ public class ServerController {
             return;
         }
         
-        // validate that student not already registered for this section!
-        // wait is this necessary? schedule conflict should catch this.
-        //if(student.isEnrolled(section)){
-        //    client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null, 0));
-        //}
+        if(section.waitlisted(student)){
+            client.sendMessage(MessageType.STUDENT_ENROLL, MessageStatus.FAILURE, new EnrollSectionResponse(null,0,EnrollStatus.ALREADY_ENROLLED));
+            client.getUser().Notify("You are already waitlisted for this section.");
+            return;
+        }
 
         // validate schedule conflicts
         for(Section other : student.getEnrolledSections()){

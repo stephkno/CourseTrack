@@ -7,5 +7,6 @@ public enum EnrollStatus {
     MAX_CREDITS_EXCEEDED,
     SECTION_NOT_FOUND,
     WAS_WAITLISTED,
+    ALREADY_ENROLLED,
     WAS_ENROLLED
 }
