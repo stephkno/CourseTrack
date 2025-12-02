@@ -105,17 +105,32 @@ public class nPanelPlainText extends nPanel {
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setColor(textColor);
         Dimension size = getSize();
-        double cx = size.getWidth() / 2;// 2.0;
-        double cy = size.getHeight() / 2.0; //mainStringAlignment.CENTER
+        double h = getHeight();
+        double w = getWidth();
+        double cx = w / 2;// 2.0;
+        double cy = h / 2.0; //mainStringAlignment.CENTER
         switch(mainAlignment) {
                 case LEFT -> cx = 0;
-                case RIGHT -> cx = size.getWidth();
+                case RIGHT -> cx = w;
                 case CENTER -> {}
             }
             
         // draw the scaled, centered string
         textHeight = g.getFontMetrics().getHeight();
         Rectangle2D textRect = g.getFontMetrics().getStringBounds(text, g2d);
+        
+        /* //#region WORK HERE
+        if(textRect.getHeight() * 2 <= h && textRect.getWidth() > w) {
+            String builderString = "";
+            for(String s : text.split(" ")) {
+                Rectangle2D builderRect = g.getFontMetrics().getStringBounds(builderString+s, g2d);
+                if(builderRect.getWidth() < w) {
+                    builderString+=s;
+                    continue;
+                }
+                break;
+            }
+        }*/
         scale = Math.min(size.getWidth()/textRect.getWidth(), 1);
         drawScaledAlignedString(g2d,text,cx,cy,scale,scale,crossAlignment,mainAlignment);
         if (drawUnderline) {

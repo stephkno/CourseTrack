@@ -148,7 +148,7 @@ public class ClientController implements  IClientListenerService, IAppGUIService
         );
 
         if (resp == null) {
-            clientUI.setLoginValidationMessage("No response from server.");
+            Log.Msg("No response from server.");
             return false;
         }
 
@@ -159,10 +159,12 @@ public class ClientController implements  IClientListenerService, IAppGUIService
             }
 
             case FAILURE -> {
+                Log.Msg("Logout Failed!");
                 return false;
             }
 
             default -> {
+                Log.Msg("Unexpected MessageStatus for Logout");
                 return false;
             }
         }
@@ -234,18 +236,13 @@ public class ClientController implements  IClientListenerService, IAppGUIService
                 Log.Msg("Received " + request.get().notifications().Length() + " Notifications");
                 for(Notification notification : request.get().notifications()){
                     CountDownLatch latch = new CountDownLatch(1);
-
-                    // Show the modal on the EDT
                     SwingUtilities.invokeLater(() -> {
-                        nPanelModal modal = clientUI.DisplayNotification(
+                        clientUI.DisplayNotification(
                             notification.getMessage(),
-                            () -> {
-                                latch.countDown();
-                            }
+                            () -> { latch.countDown(); }
                         );
                     });
 
-                    // Block this background thread until the modal is closed
                     try {
                         latch.await();
                     } catch (InterruptedException e) {

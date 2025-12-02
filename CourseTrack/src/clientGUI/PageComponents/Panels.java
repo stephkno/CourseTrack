@@ -347,7 +347,7 @@ public class Panels {
         private Section course;
         private nButton[] buttonList;
         private Term currentTerm;
-        DropItemPanel(Section _course, Term currentTerm, IAppGUIService guiService) {
+        DropItemPanel(Section _course, Term currentTerm, IAppGUIService guiService, nButton b) {
             setName("CourseItemPanel");
             this.currentTerm = currentTerm;
             course = _course;
@@ -358,12 +358,12 @@ public class Panels {
             nButton DropButton = new nButton("Drop");
             DropButton.setBackgroundColor(UITheme.SUCCESS);
             add(DropButton);
-            DoDropButton(DropButton, guiService);
+            DoDropButton(DropButton, guiService, b);
             buttonList = new nButton[1];
             buttonList[0] = DropButton;
             doLayout();
         }
-        private void DoDropButton(nButton DropButton, IAppGUIService guiService){
+        private void DoDropButton(nButton DropButton, IAppGUIService guiService, nButton b){
             DropButton.addActionListener(e -> {
                 JFrame frame = getFrameWindow();
                 int w = 420;
@@ -388,6 +388,11 @@ public class Panels {
                 panel.setPadding(5, 7);
                 nPanelModal modal = new nPanelModal((nFrame)frame, panel, w, h);
                 enrollButton.addActionListener(ee -> {
+                    Message<DropSectionResponse> dropSectionRequest = guiService.sendAndWait(
+                        MessageType.STUDENT_DROP, MessageStatus.REQUEST,
+                        new DropSectionRequest(course.getId(), course.getTerm()));
+                    if(dropSectionRequest.getStatus() != MessageStatus.SUCCESS) {return;}
+                    b.simulateClick();
                     modal.close();
                 });
                 cancelButton.addActionListener(ee -> {
@@ -461,7 +466,7 @@ public class Panels {
     public static class WaitlistItemPanel extends nPanel {
         private StudentScheduleItem course;
         private nButton[] buttonList;
-        WaitlistItemPanel(StudentScheduleItem course, IAppGUIService guiService) {
+        WaitlistItemPanel(StudentScheduleItem course, IAppGUIService guiService, nButton b) {
             setName("CourseItemPanel");
             this.course = course;
             setOpaque(false);
@@ -471,12 +476,12 @@ public class Panels {
             nButton DropButton = new nButton("Unqueue");
             DropButton.setBackgroundColor(UITheme.SUCCESS);
             add(DropButton);
-            DoDropButton(DropButton, guiService);
+            DoDropButton(DropButton, guiService, b);
             buttonList = new nButton[1];
             buttonList[0] = DropButton;
             doLayout();
         }
-        private void DoDropButton(nButton DropButton, IAppGUIService guiService){
+        private void DoDropButton(nButton DropButton, IAppGUIService guiService, nButton b){
             DropButton.addActionListener(e -> {
                 JFrame frame = getFrameWindow();
                 int w = 420;
@@ -494,7 +499,7 @@ public class Panels {
                 lowerOptions.setGridSize(2, 1);
                 lowerOptions.setPadding(5);
                 Component[] enrollPanel = {
-                    new nPanelPlainText("Are you sure you want to drop this course?", UITheme.TEXT_PRIMARY),
+                    new nPanelPlainText("Are you sure you want to leave the queue?", UITheme.TEXT_PRIMARY),
                     lowerOptions
                 };
                 nFrame.ListLayout panel = new nFrame.ListLayout((nFrame)frame, enrollPanel, new Dimension(100, 100), 10, 10, false);
@@ -505,6 +510,7 @@ public class Panels {
                         MessageType.STUDENT_DROP, MessageStatus.REQUEST,
                         new DropSectionRequest(course.getSection().getId(), course.getSection().getTerm()));
                     if(dropSectionRequest.getStatus() != MessageStatus.SUCCESS) {return;}
+                    b.simulateClick();
                     modal.close();
                 });
                 cancelButton.addActionListener(ee -> {

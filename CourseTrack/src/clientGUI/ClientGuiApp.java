@@ -11,19 +11,16 @@ import global.Log;
 @SuppressWarnings("unused")
 public class ClientGuiApp {
 
-    static LoginInformation lInfo = new LoginInformation();
-
-    static Client client = new Client("localhost", 7777);
-    static ClientController controller = new ClientController(client);
-
     public static void main(String[] args) {
-        
-        controller.start();
+		var client = new Client("localhost", 7777);
 
-        if(!client.connect()){
-            Log.Err("Could not connect to server!");
-            System.exit(1);
-        }
+		if (!client.connect()) {
+            Log.Err("Could not connect to server.");
+			return;
+		}
 
-    }
+		var controller = new ClientController(client);
+		controller.start();
+		
+	}
 }

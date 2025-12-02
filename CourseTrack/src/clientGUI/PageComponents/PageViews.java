@@ -270,7 +270,7 @@ public class PageViews {
                 if(sections == null) {sections = new LinkedList<StudentScheduleItem>();}
                 for (StudentScheduleItem c : sections) {
                     if(c.getWaitlistPosition() == 0) {
-                        courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService));
+                        courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService, b));
                     }
                 }
                 courseList.revalidate();
@@ -366,7 +366,7 @@ public class PageViews {
                 if(sections == null) {sections = new LinkedList<StudentScheduleItem>();}
                 for (StudentScheduleItem c : sections) {
                     if(c.getWaitlistPosition() > 0) {
-                        courseList.addItem(new Panels.WaitlistItemPanel(c, guiService));
+                        courseList.addItem(new Panels.WaitlistItemPanel(c, guiService, b));
                     }
                 }
                 courseList.revalidate();
@@ -465,7 +465,7 @@ public class PageViews {
                 if(sections == null) {sections = new LinkedList<StudentScheduleItem>();}
                 for (StudentScheduleItem c : sections) {
                     if(c.getWaitlistPosition() == 0) {
-                        courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService));
+                        courseList.addItem(new Panels.DropItemPanel(c.getSection(), c.getSection().getTerm(), guiService, b));
                     }
                 }
                 courseList.revalidate();
