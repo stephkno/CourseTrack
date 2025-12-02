@@ -74,3 +74,9 @@ Duration: 2 hours
 Attendees: Stephen, Dylan, Nathan, Zang, Harry
 Notes: Prepping for final presentation, finalizing our project, getting ready to submit everything
 ---
+Date: 12/01/25
+Time: 8:00PM-10:00pm
+Duration: 2 hours
+Attendees: Stephen, Dylan, Nathan, Zang, Harry
+Notes: Prepping for final presentation, finalizing our project, getting ready to submit everything
+---
