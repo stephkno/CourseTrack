@@ -51,6 +51,7 @@ public class User implements Serializable {
             notifications.Push(n);
             socket.Send(new Message<NotificationRequest>(MessageType.NOTIFICATION, MessageStatus.REQUEST, new NotificationRequest( notifications )));
             n.send();
+            notifications.Clear();
             
         }else{
 

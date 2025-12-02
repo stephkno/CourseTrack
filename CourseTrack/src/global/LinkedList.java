@@ -70,6 +70,12 @@ public class LinkedList<T> implements Iterable<T>, Serializable {
 		
 	}
 	
+	public void Clear(){
+		for(int i = 0; i < Length(); i++){
+			Remove(i);
+		}	
+	}	
+
 	public boolean Remove(T t) {
 		
 		if(first == null){
